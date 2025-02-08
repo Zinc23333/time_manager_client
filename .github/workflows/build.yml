@@ -11,60 +11,56 @@ jobs:
           TEST: ${{ secrets.TEST }}
         run: |
           echo "$TEST" > .env
-        
-      - run: cat .env
-      - run: ls
   
-  
-  #     - name: Clone repository
-  #       uses: actions/checkout@v4
+      - name: Clone repository
+        uses: actions/checkout@v4
 
-  #     - name: Set up Flutter
-  #       uses: subosito/flutter-action@v2
-  #       with:
-  #         channel: stable # or: beta, master (or main)
-  #         cache: true
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable # or: beta, master (or main)
+          cache: true
 
-  #     - run: |
-  #         sudo apt-get update -y
-  #         sudo apt-get install -y ninja-build libgtk-3-dev
+      - run: |
+          sudo apt-get update -y
+          sudo apt-get install -y ninja-build libgtk-3-dev
 
-  #     - run: flutter --version
+      - run: flutter --version
 
-  #     - run: flutter pub get
-  #     - run: dart run build_runner build
+      - run: flutter pub get
+      - run: dart run build_runner build
 
-  #     - run: flutter build apk       --no-tree-shake-icons --release
-  #     - run: mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/release_android_universal.apk
+      - run: flutter build apk       --no-tree-shake-icons --release
+      - run: mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/release_android_universal.apk
 
-  #     - run: flutter build apk       --no-tree-shake-icons --release --target-platform android-arm64 
-  #     - run: mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/release_android_arm64.apk
+      - run: flutter build apk       --no-tree-shake-icons --release --target-platform android-arm64 
+      - run: mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/release_android_arm64.apk
 
-  #     - run: flutter build appbundle --no-tree-shake-icons --release
-  #     - run: mv build/app/outputs/bundle/release/app-release.aab build/app/outputs/flutter-apk/release_android.aab
+      - run: flutter build appbundle --no-tree-shake-icons --release
+      - run: mv build/app/outputs/bundle/release/app-release.aab build/app/outputs/flutter-apk/release_android.aab
       
-  #     - run: flutter build linux     --no-tree-shake-icons --release
-  #     - run: tar -czvf release_linux.tar.gz build/linux/x64/release/bundle
+      - run: flutter build linux     --no-tree-shake-icons --release
+      - run: tar -czvf release_linux.tar.gz build/linux/x64/release/bundle
 
-  #     - uses: actions/upload-artifact@v4
-  #       with:
-  #         name: release_apk_universal
-  #         path: build/app/outputs/flutter-apk/release_android_universal.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release_apk_universal
+          path: build/app/outputs/flutter-apk/release_android_universal.apk
 
-  #     - uses: actions/upload-artifact@v4
-  #       with:
-  #         name: release_apk_arm64
-  #         path: build/app/outputs/flutter-apk/release_android_arm64.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release_apk_arm64
+          path: build/app/outputs/flutter-apk/release_android_arm64.apk
 
-  #     - uses: actions/upload-artifact@v4
-  #       with:
-  #         name: release_app
-  #         path: build/app/outputs/flutter-apk/release_android.aab
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release_app
+          path: build/app/outputs/flutter-apk/release_android.aab
 
-  #     - uses: actions/upload-artifact@v4
-  #       with:
-  #         name: release_linux
-  #         path: release_linux.tar.gz
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release_linux
+          path: release_linux.tar.gz
 
 
   # build-windows:
