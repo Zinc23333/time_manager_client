@@ -8,9 +8,9 @@ jobs:
     steps:
       - shell: bash
         env:
-          TEST: ${{ secrets.TEST }}
+          DS_KEY: ${{ secrets.DS_KEY }}
         run: |
-          echo "$TEST" > .env
+          echo "DS_KEY=$DS_KEY" > .env
   
       - name: Clone repository
         uses: actions/checkout@v4
