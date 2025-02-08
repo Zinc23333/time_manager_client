@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:time_manager_client/data/controller.dart';
-import 'package:time_manager_client/data/task.dart';
+import 'package:time_manager_client/data/types/task.dart';
 import 'package:time_manager_client/helper/extension.dart';
 import 'package:time_manager_client/helper/helper.dart';
 
@@ -151,7 +151,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
                 validator: importanceTextValidator,
                 decoration: InputDecoration(
                   prefixIconConstraints: BoxConstraints.tightForFinite(),
-                  prefixIcon: Icon(Icons.star_outlined),
+                  prefixIcon: Icon(Icons.star_border_rounded),
                   labelText: "评分",
                   border: UnderlineInputBorder(),
                   suffix: GFRating(
@@ -161,7 +161,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
                     size: GFSize.SMALL,
                     padding: EdgeInsets.zero,
                     borderColor: theme.unselectedWidgetColor,
-                    color: theme.colorScheme.inversePrimary,
+                    color: theme.colorScheme.primary,
                   ),
                 ),
               ),

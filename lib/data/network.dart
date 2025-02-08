@@ -1,6 +1,6 @@
 import 'package:openai_dart/openai_dart.dart';
 import 'package:time_manager_client/data/env.dart';
-import 'package:time_manager_client/data/task.dart';
+import 'package:time_manager_client/data/types/task.dart';
 
 class Network {
   static const String aiApiKey = Env.dsApiKey;

@@ -1,4 +1,4 @@
-import 'package:time_manager_client/data/task.dart';
+import 'package:time_manager_client/data/types/task.dart';
 
 class Group {
   String title;

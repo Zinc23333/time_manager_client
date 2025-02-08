@@ -25,7 +25,7 @@ class _ListPageState extends State<ListPage> {
                     ? TextStyle(
                         fontStyle: FontStyle.italic,
                         decoration: TextDecoration.lineThrough,
-                        color: Colors.black54,
+                        color: Colors.grey,
                       )
                     : null,
               ),
@@ -37,7 +37,7 @@ class _ListPageState extends State<ListPage> {
                   Controller.to.changeTaskStatus(tasks[index]);
                   setState(() {});
                 },
-                icon: tasks[index].status.isFinished ? Icon(Icons.check_circle, color: Colors.black54) : Icon(Icons.circle_outlined),
+                icon: tasks[index].status.isFinished ? Icon(Icons.check_circle) : Icon(Icons.circle_outlined),
               ),
             );
           },

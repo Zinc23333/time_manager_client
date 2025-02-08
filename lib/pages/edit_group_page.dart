@@ -1,7 +1,7 @@
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:time_manager_client/data/controller.dart';
-import 'package:time_manager_client/data/group.dart';
+import 'package:time_manager_client/data/types/group.dart';
 import 'package:time_manager_client/helper/helper.dart';
 
 class EditGroupPage extends StatefulWidget {

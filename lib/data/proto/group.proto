@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+message Group {
+    string         title = 1;
+    string         icon  = 2;
+    repeated int64 tasks = 3;
+}

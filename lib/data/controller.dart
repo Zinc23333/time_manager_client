@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
-import 'package:time_manager_client/data/group.dart';
-import 'package:time_manager_client/data/task.dart';
+import 'package:time_manager_client/data/types/group.dart';
+import 'package:time_manager_client/data/types/task.dart';
 
 class Controller extends GetxController {
   static Controller get to => Get.find();
@@ -12,6 +12,8 @@ class Controller extends GetxController {
       tasks: [],
     ),
   ];
+
+  final Map<int, Group> rawData = {};
 
   late final currentGroup = groups.first.obs;
 

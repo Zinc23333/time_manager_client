@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+message Task {
+    string title = 1;
+    optional string summary = 2;
+    
+    optional int64  startTime = 3;
+    optional int32  startTimePrecision = 4;
+    optional int64  endTime = 5;
+    optional int32  endTimePrecision = 6;
+
+    optional int32  importance = 7;
+    optional string location = 8;
+    optional string participant = 9;
+    optional string note = 10;
+    optional string source = 11;
+    optional string content = 12;
+    optional int32  status = 13;
+}

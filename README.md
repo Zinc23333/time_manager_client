@@ -92,3 +92,9 @@ time_precision:
 
 若段信息不包含任何事件，则输出 []。
 ``` 
+
+## ProtoBuf 编译
+
+``` sh
+protoc --proto_path=src --dart_out=build/gen src/foo.proto src/bar/baz.proto
+```
