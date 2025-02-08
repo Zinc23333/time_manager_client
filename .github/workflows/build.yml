@@ -64,106 +64,119 @@ jobs:
           path: release_linux.tar.gz
 
 
-  # build-windows:
-  #   name: Build Flutter Windows app
-  #   runs-on: windows-latest
-  #   steps:
-  #     - name: Clone repository
-  #       uses: actions/checkout@v4
-  #     - name: Set up Flutter
-  #       uses: subosito/flutter-action@v2
-  #       with:
-  #         channel: stable
-  #         cache: true
-
-  #     - run: dart run build_runner build
-  #     - run: flutter build windows
-
-  #     - uses: actions/upload-artifact@v4
-  #       with:
-  #         name: release_exe
-  #         path: build/windows/x64/runner/Release/time_manager_client.exe
-
-  # build-macos:
-  #   name: Build Flutter MacOS app
-  #   runs-on: macos-latest
-  #   steps:
-  #     - name: Clone repository
-  #       uses: actions/checkout@v4
-  #     - name: Set up Flutter
-  #       uses: subosito/flutter-action@v2
-  #       with:
-  #         channel: stable
-  #         cache: true
-          
-  #     - run: dart run build_runner build
-  #     - run: flutter build macos
-
-  #     - uses: actions/upload-artifact@v4
-  #       with:
-  #         name: release_macos
-  #         path: build/macos/Build/Products/Release/time_manager_client.app
-
-  # release:
-  #   name: Release
-  #   runs-on: ubuntu-latest
-  #   needs: [build-linux, build-windows, build-macos]
-  #   steps:
-  #     - name: Download release_apk_universal
-  #       uses: actions/download-artifact@v4
-  #       with:
-  #         name: release_apk_universal
-
-  #     - name: Download release_apk_arm64
-  #       uses: actions/download-artifact@v4
-  #       with:
-  #         name: release_apk_arm64
-
-  #     - name: Download release_app
-  #       uses: actions/download-artifact@v4
-  #       with:
-  #         name: release_app
-
-  #     - name: Download release_linux
-  #       uses: actions/download-artifact@v4
-  #       with:
-  #         name: release_linux
-
-  #     - name: Download release_exe
-  #       uses: actions/download-artifact@v4
-  #       with:
-  #         name: release_exe
-
-  #     - name: Download release_macos
-  #       uses: actions/download-artifact@v4
-  #       with:
-  #         name: release_macos
+  build-windows:
+    name: Build Flutter Windows app
+    runs-on: windows-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
       
-  #     - name: Rename files
-  #       run: |
-  #         ls -la
-  #         mv release_android_universal.apk android-universal.apk
-  #         mv release_android_arm64.apk     android-arm64.apk
-  #         mv release_android.aab           android.aab
-  #         mv release_linux.tar.gz          linux.tar.gz
-  #         mv time_manager_client.exe       windows.exe
-  #         mv time_manager_client.app       macos.app
+      - shell: bash
+        env:
+          DS_KEY: ${{ secrets.DS_KEY }}
+        run: |
+          echo "DS_KEY=$DS_KEY" > .env
+
+      - run: dart run build_runner build
+      - run: flutter build windows
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release_exe
+          path: build/windows/x64/runner/Release/time_manager_client.exe
+
+  build-macos:
+    name: Build Flutter MacOS app
+    runs-on: macos-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+
+      - shell: bash
+        env:
+          DS_KEY: ${{ secrets.DS_KEY }}
+        run: |
+          echo "DS_KEY=$DS_KEY" > .env
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+          
+      - run: dart run build_runner build
+      - run: flutter build macos
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release_macos
+          path: build/macos/Build/Products/Release/time_manager_client.app
+
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    needs: [build-linux, build-windows, build-macos]
+    steps:
+      - name: Download release_apk_universal
+        uses: actions/download-artifact@v4
+        with:
+          name: release_apk_universal
+
+      - name: Download release_apk_arm64
+        uses: actions/download-artifact@v4
+        with:
+          name: release_apk_arm64
+
+      - name: Download release_app
+        uses: actions/download-artifact@v4
+        with:
+          name: release_app
+
+      - name: Download release_linux
+        uses: actions/download-artifact@v4
+        with:
+          name: release_linux
+
+      - name: Download release_exe
+        uses: actions/download-artifact@v4
+        with:
+          name: release_exe
+
+      - name: Download release_macos
+        uses: actions/download-artifact@v4
+        with:
+          name: release_macos
+      
+      - name: Rename files
+        run: |
+          ls -la
+          mv release_android_universal.apk android-universal.apk
+          mv release_android_arm64.apk     android-arm64.apk
+          mv release_android.aab           android.aab
+          mv release_linux.tar.gz          linux.tar.gz
+          mv time_manager_client.exe       windows.exe
+          mv time_manager_client.app       macos.app
 
 
-  #     - name: Release
-  #       uses: softprops/action-gh-release@v2
-  #       if: startsWith(github.ref, 'refs/tags/')
-  #       with:
-  #         tag_name: ${{ github.ref }}
-  #         name: Release ${{ github.ref }}
-  #         body: New Pre-Release.
-  #         draft: false
-  #         prerelease: true
-  #         files: |
-  #           android-universal-universal.apk
-  #           android-arm64-arm64.apk
-  #           android.aab.aab
-  #           linux.tar.gz
-  #           windows.exe
-  #           macos.app
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          tag_name: ${{ github.ref }}
+          name: Release ${{ github.ref }}
+          body: New Pre-Release.
+          draft: false
+          prerelease: true
+          files: |
+            android-universal-universal.apk
+            android-arm64-arm64.apk
+            android.aab.aab
+            linux.tar.gz
+            windows.exe
+            macos.app
             
