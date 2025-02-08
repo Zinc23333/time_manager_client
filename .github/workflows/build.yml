@@ -178,9 +178,9 @@ jobs:
           draft: false
           prerelease: true
           files: |
-            android-universal-universal.apk
-            android-arm64-arm64.apk
-            android.aab.aab
+            android-universal.apk
+            android-arm64.apk
+            android.aab
             linux.tar.gz
             windows.exe
             # macos.app
