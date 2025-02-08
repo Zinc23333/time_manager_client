@@ -24,7 +24,7 @@ class _FourQuadrantPageState extends State<FourQuadrantPage> {
   Widget build(BuildContext context) {
     return GetBuilder<Controller>(
       builder: (s) {
-        final tasks = Controller.to.currentGroup.value.tasks;
+        final tasks = Controller.to.currentGroupTasks;
         final fqts = _getTaskFourQuadrant(tasks);
         return Column(children: [
           Expanded(
@@ -107,7 +107,7 @@ class _FourQuadrantPageState extends State<FourQuadrantPage> {
       (t.endTime != null ? t.endTime!.difference(DateTime.now()).inDays <= 7 : false) ||
       (t.startTime != null ? t.startTime!.difference(DateTime.now()).inDays <= 7 : false);
 
-  List<List<Task>> _getTaskFourQuadrant(List<Task> tasks) {
+  List<List<Task>> _getTaskFourQuadrant(Iterable<Task> tasks) {
     List<List<Task>> ims = [[], []]; // 不重要，重要
     List<List<Task>> ius = [[], [], [], []]; // 不重要&紧急，重要&紧急，不重要&不紧急，重要&不紧急
 

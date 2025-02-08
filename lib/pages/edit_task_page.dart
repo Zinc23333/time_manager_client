@@ -175,6 +175,8 @@ class _EditTaskPageState extends State<EditTaskPage> {
                       endTime: endTime,
                       endTimePrecision: endTimePrecision,
                       importance: importance,
+                      content: widget.old?.content,
+                      status: widget.old?.status ?? TaskStatus.unfinished,
                     );
                     if (widget.old == null) {
                       Controller.to.addTask(task);

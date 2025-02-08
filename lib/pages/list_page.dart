@@ -15,7 +15,7 @@ class _ListPageState extends State<ListPage> {
   Widget build(BuildContext context) {
     return GetBuilder<Controller>(
       builder: (s) {
-        final tasks = Controller.to.currentGroup.value.tasks;
+        final tasks = Controller.to.currentGroupTasks.toList();
         return ListView.separated(
           itemBuilder: (context, index) {
             return ListTile(

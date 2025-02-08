@@ -1,9 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:time_manager_client/data/types/tw_data.dart';
 import 'package:time_manager_client/helper/extension.dart';
 
-class Task {
+class Task extends TwData {
   String title;
   String? summary;
 
@@ -20,21 +21,22 @@ class Task {
   String? content;
   TaskStatus status;
 
-  Task({
-    required this.title,
-    this.summary,
-    this.startTime,
-    this.startTimePrecision,
-    this.endTime,
-    this.endTimePrecision,
-    this.importance,
-    this.location,
-    this.participant,
-    this.note,
-    this.source,
-    this.content,
-    this.status = TaskStatus.unfinished,
-  }) {
+  Task(
+      {required this.title,
+      this.summary,
+      this.startTime,
+      this.startTimePrecision,
+      this.endTime,
+      this.endTimePrecision,
+      this.importance,
+      this.location,
+      this.participant,
+      this.note,
+      this.source,
+      this.content,
+      this.status = TaskStatus.unfinished,
+      int? updateTimestamp})
+      : super(updateTimestamp) {
     init();
   }
 

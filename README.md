@@ -96,5 +96,5 @@ time_precision:
 ## ProtoBuf 编译
 
 ``` sh
-protoc --proto_path=src --dart_out=build/gen src/foo.proto src/bar/baz.proto
+protoc --proto_path=. --dart_out=lib/data/proto.gen lib/data/proto/task.proto lib/data/proto/group.proto lib/data/proto/tw.proto
 ```
