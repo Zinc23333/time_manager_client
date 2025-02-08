@@ -11,7 +11,9 @@ jobs:
           TEST: ${{ secrets.TEST }}
         run: |
           echo "$TEST" > .env
-          cat .env
+        
+      - run: cat .env
+      - run: ls
   
   
   #     - name: Clone repository
