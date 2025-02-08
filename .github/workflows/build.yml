@@ -6,14 +6,15 @@ jobs:
     name: Build Flutter Linux Android App
     runs-on: ubuntu-latest
     steps:
+ 
+      - name: Clone repository
+        uses: actions/checkout@v4
+
       - shell: bash
         env:
           DS_KEY: ${{ secrets.DS_KEY }}
         run: |
           echo "DS_KEY=$DS_KEY" > .env
-  
-      - name: Clone repository
-        uses: actions/checkout@v4
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
