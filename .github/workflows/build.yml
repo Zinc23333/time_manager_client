@@ -8,7 +8,7 @@ jobs:
     steps:
       - shell: bash
         env:
-          DS_API: ${{ secrets.TEST }}
+          TEST: ${{ secrets.TEST }}
         run: |
           echo "$TEST" > .env
           cat .env
