@@ -154,6 +154,7 @@ jobs:
           name: release_macos
 
       - run : ls -la
+      - run : ls -la Contents
       
       - name: Rename files
         run: |
