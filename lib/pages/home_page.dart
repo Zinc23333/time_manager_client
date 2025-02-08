@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:time_manager_client/data/controller.dart';
+import 'package:time_manager_client/pages/edit_group_page.dart';
+import 'package:time_manager_client/pages/four_quadrant_page.dart';
 import 'package:time_manager_client/pages/list_page.dart';
 import 'package:time_manager_client/pages/setting_page.dart';
 import 'package:time_manager_client/widgets/add_task_widget.dart';
@@ -15,7 +19,7 @@ class _HomePageState extends State<HomePage> {
 
   final pages = [
     ListPage(),
-    Text("2"),
+    FourQuadrantPage(),
     Text("3"),
     Text("4"),
     SettingPage(),
@@ -26,7 +30,8 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text("时间助手"),
+        title: buildGroupSwitcher(),
+        centerTitle: true,
       ),
       bottomNavigationBar: BottomNavigationBar(
         // landscapeLayout: BottomNavigationBarLandscapeLayout.centered,
@@ -53,6 +58,62 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: pages[_currentIndex],
+    );
+  }
+
+  Widget buildGroupSwitcher() {
+    return InkWell(
+      onTap: bSwitchGroup,
+      child: GetBuilder<Controller>(
+        builder: (_) {
+          return Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(Controller.to.currentGroup.value.icon),
+              const SizedBox(width: 4),
+              Text(Controller.to.currentGroup.value.title),
+              const SizedBox(width: 4),
+              Icon(Icons.arrow_drop_down_rounded),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  void bSwitchGroup() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return SimpleDialog(
+          title: Text("选择分组"),
+          children: [
+            for (final group in Controller.to.groups)
+              if (group == Controller.to.currentGroup.value)
+                SimpleDialogOption(
+                  child: Text.rich(TextSpan(children: [
+                    TextSpan(text: group.iconAndTitle),
+                    TextSpan(text: "  "),
+                    TextSpan(text: "[当前]", style: TextStyle(color: Colors.green)),
+                  ])),
+                )
+              else
+                SimpleDialogOption(
+                  onPressed: () {
+                    Controller.to.changeCurrentGroup(group);
+                    Get.back();
+                  },
+                  child: Text(group.iconAndTitle),
+                ),
+            SimpleDialogOption(
+              onPressed: () {
+                Get.off(EditGroupPage());
+              },
+              child: Text("编辑分组"),
+            )
+          ],
+        );
+      },
     );
   }
 

@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:time_manager_client/data/group.dart';
 import 'package:time_manager_client/data/task.dart';
@@ -10,7 +9,6 @@ class Controller extends GetxController {
     Group(
       title: "默认分组",
       icon: "📢",
-      color: Colors.red,
       tasks: [],
     ),
   ];
@@ -38,6 +36,28 @@ class Controller extends GetxController {
   void changeTaskStatus(Task task, [TaskStatus? status]) {
     status ??= task.status == TaskStatus.finished ? TaskStatus.unfinished : TaskStatus.finished;
     task.status = status;
+    update();
+  }
+
+  Group addGroup() {
+    final g = Group.title("新建分组");
+    groups.add(g);
+    update();
+    return g;
+  }
+
+  void changeGroupTitle(Group group, String title) {
+    group.title = title;
+    update();
+  }
+
+  void changeGroupIcon(Group group, String icon) {
+    group.icon = icon;
+    update();
+  }
+
+  void changeCurrentGroup(Group group) {
+    currentGroup.value = group;
     update();
   }
 }

@@ -19,13 +19,16 @@ A new Flutter project.
 
 group > task
 
+```
 group
 |- name: <string>
 |- icon: <string> (emoji)
 |- color: <flutter.primaryColor> (random)
 |- tasks: [<task>]
+```
 
 
+```
 task
 |- title: <string>
 |- summary: <string?>
@@ -40,6 +43,7 @@ task
 |- source: <string?> (原文地址，用户输入为空)
 |- content: <string?>
 |- status: <enum(int)> 1(未完成) 2(已完成)
+```
 
 time_precision:
 | 状态 | 表示 |

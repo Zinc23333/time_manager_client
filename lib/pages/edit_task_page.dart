@@ -56,7 +56,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text("时间助手"),
+        title: Text("编辑任务"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),

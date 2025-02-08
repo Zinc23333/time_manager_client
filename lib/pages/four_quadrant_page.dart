@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:time_manager_client/data/controller.dart';
 import 'package:time_manager_client/widgets/view_task_widget.dart';
 
-class ListPage extends StatefulWidget {
-  const ListPage({super.key});
+class FourQuadrantPage extends StatefulWidget {
+  const FourQuadrantPage({super.key});
 
   @override
-  State<ListPage> createState() => _ListPageState();
+  State<FourQuadrantPage> createState() => _FourQuadrantPageState();
 }
 
-class _ListPageState extends State<ListPage> {
+class _FourQuadrantPageState extends State<FourQuadrantPage> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<Controller>(
@@ -48,5 +48,6 @@ class _ListPageState extends State<ListPage> {
         );
       },
     );
+    ;
   }
 }
