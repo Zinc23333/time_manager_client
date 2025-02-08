@@ -123,30 +123,30 @@ jobs:
     # needs: [build-linux, build-windows, build-macos]
     needs: [build-macos]
     steps:
-      - name: Download release_apk_universal
-        uses: actions/download-artifact@v4
-        with:
-          name: release_apk_universal
+      # - name: Download release_apk_universal
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     name: release_apk_universal
 
-      - name: Download release_apk_arm64
-        uses: actions/download-artifact@v4
-        with:
-          name: release_apk_arm64
+      # - name: Download release_apk_arm64
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     name: release_apk_arm64
 
-      - name: Download release_app
-        uses: actions/download-artifact@v4
-        with:
-          name: release_app
+      # - name: Download release_app
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     name: release_app
 
-      - name: Download release_linux
-        uses: actions/download-artifact@v4
-        with:
-          name: release_linux
+      # - name: Download release_linux
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     name: release_linux
 
-      - name: Download release_exe
-        uses: actions/download-artifact@v4
-        with:
-          name: release_exe
+      # - name: Download release_exe
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     name: release_exe
 
       - name: Download release_macos
         uses: actions/download-artifact@v4
