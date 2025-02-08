@@ -148,13 +148,13 @@ jobs:
         with:
           name: release_exe
 
-      - name: Download release_macos
-        uses: actions/download-artifact@v4
-        with:
-          name: release_macos
+      # - name: Download release_macos
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     name: release_macos
 
       - run : ls -la
-      - run : ls -la Contents
+      # - run : ls -la Contents
       
       - name: Rename files
         run: |
