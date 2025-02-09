@@ -6,7 +6,9 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:get/get.dart';
 import 'package:time_manager_client/data/controller.dart';
 import 'package:time_manager_client/data/local_storage.dart';
+import 'package:time_manager_client/data/types/user.dart';
 import 'package:time_manager_client/helper/helper.dart';
+import 'package:time_manager_client/widgets/login_bottom_sheet.dart';
 import 'package:time_manager_client/widgets/simple_text_bottom_sheet.dart';
 
 class SettingPage extends StatefulWidget {
@@ -31,12 +33,37 @@ class _SettingPageState extends State<SettingPage> {
   Widget build(BuildContext context) {
     return ListView(
       children: [
+        const SizedBox(height: 16),
+        buildCardUser(),
+        const SizedBox(height: 16),
         buildTileDarkmode(context),
         buildTileColorScheme(context),
         buildTileExportToFile(context),
         buildTileExportAsText(context),
         buildTileImportFromText(context),
       ],
+    );
+  }
+
+  Card buildCardUser() {
+    return Card(
+      child: ListTile(
+        leading: CircleAvatar(
+          child: Text("😊"),
+        ),
+        title: Text("未登陆"),
+        subtitle: Text("点击此处登陆"),
+        onTap: () async {
+          if (User.id == null) {
+            // 处理登陆逻辑
+            if (Platform.isAndroid || Platform.isIOS) {
+              // 移动端
+              final phone = await LoginBottomSheet.show(context);
+              if (phone == null) return;
+            }
+          }
+        },
+      ),
     );
   }
 

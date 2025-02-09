@@ -43,7 +43,7 @@ dependencies:
   protobuf: ^3.1.0
   fixnum: ^1.1.1
   path_provider: ^2.1.5
-  
+  supabase_flutter: ^2.8.3
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
 
@@ -60,6 +60,7 @@ dev_dependencies:
   envied_generator: ^1.1.0
   build_runner: ^2.4.14
   flutter_launcher_icons: ^0.14.3
+  
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
