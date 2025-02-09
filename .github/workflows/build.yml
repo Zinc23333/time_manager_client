@@ -29,7 +29,9 @@ jobs:
       - run: flutter --version
 
       - run: flutter pub get
-      - run: dart run build_runner build
+      - run: |
+          dart run build_runner build
+          dart run flutter_launcher_icons
 
       - run: flutter build apk       --no-tree-shake-icons --release
       - run: mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/release_android_universal.apk
@@ -82,7 +84,10 @@ jobs:
         run: |
           echo "DS_KEY=$DS_KEY" > .env
 
-      - run: dart run build_runner build
+      - run: |
+          dart run build_runner build
+          dart run flutter_launcher_icons
+          
       - run: flutter build windows
 
       - uses: actions/upload-artifact@v4

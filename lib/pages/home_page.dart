@@ -82,6 +82,8 @@ class _HomePageState extends State<HomePage> {
       currentIndex: _currentIndex,
       onTap: (index) {
         if (index == 2) return;
+        if (index > 2) index--;
+
         _currentIndex = index;
         setState(() {});
       },
@@ -91,11 +93,6 @@ class _HomePageState extends State<HomePage> {
             icon: Icon(pages[i].$1),
             label: pages[i].$2,
           ),
-        // BottomNavigationBarItem(icon: Icon(Icons.list), label: "列表"),
-        // BottomNavigationBarItem(icon: Icon(Icons.dangerous), label: "四象限"),
-        // BottomNavigationBarItem(icon: SizedBox(), label: ""),
-        // BottomNavigationBarItem(icon: Icon(Icons.calendar_month), label: "日历"),
-        // BottomNavigationBarItem(icon: Icon(Icons.settings), label: "设置"),
       ]..insert(2, BottomNavigationBarItem(icon: SizedBox(), label: "")),
     );
   }
