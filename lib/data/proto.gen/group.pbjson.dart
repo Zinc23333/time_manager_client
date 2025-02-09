@@ -1,6 +1,6 @@
 //
 //  Generated code. Do not modify.
-//  source: lib/data/proto/group.proto
+//  source: group.proto
 //
 // @dart = 2.12
 
@@ -19,12 +19,14 @@ const Group$json = {
   '2': [
     {'1': 'title', '3': 1, '4': 1, '5': 9, '10': 'title'},
     {'1': 'icon', '3': 2, '4': 1, '5': 9, '10': 'icon'},
-    {'1': 'tasks', '3': 3, '4': 3, '5': 3, '10': 'tasks'},
+    {'1': 'taskIds', '3': 3, '4': 3, '5': 3, '10': 'taskIds'},
+    {'1': 'updateTimestampAt', '3': 100, '4': 1, '5': 3, '10': 'updateTimestampAt'},
   ],
 };
 
 /// Descriptor for `Group`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List groupDescriptor = $convert.base64Decode(
-    'CgVHcm91cBIUCgV0aXRsZRgBIAEoCVIFdGl0bGUSEgoEaWNvbhgCIAEoCVIEaWNvbhIUCgV0YX'
-    'NrcxgDIAMoA1IFdGFza3M=');
+    'CgVHcm91cBIUCgV0aXRsZRgBIAEoCVIFdGl0bGUSEgoEaWNvbhgCIAEoCVIEaWNvbhIYCgd0YX'
+    'NrSWRzGAMgAygDUgd0YXNrSWRzEiwKEXVwZGF0ZVRpbWVzdGFtcEF0GGQgASgDUhF1cGRhdGVU'
+    'aW1lc3RhbXBBdA==');
 

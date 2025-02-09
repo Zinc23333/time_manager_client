@@ -12,7 +12,7 @@ class EditGroupPage extends StatefulWidget {
 }
 
 class _EditGroupPageState extends State<EditGroupPage> {
-  Group selectedGroup = Controller.to.currentGroup.value;
+  Group selectedGroup = Controller.to.currentGroup;
   late final controller = TextEditingController(text: selectedGroup.title);
   bool showEmojiPicker = false;
 

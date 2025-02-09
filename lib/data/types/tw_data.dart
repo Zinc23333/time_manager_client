@@ -8,13 +8,23 @@
 //   Tw.zero(this.data) : timestamp = 0;
 // }
 
-class TwData {
+import 'package:protobuf/protobuf.dart';
+
+class TsData {
   int updateTimestampAt;
-  TwData([timestamp]) : updateTimestampAt = timestamp ?? DateTime.now().millisecondsSinceEpoch;
-  TwData.zero() : updateTimestampAt = 0;
+  TsData([timestamp]) : updateTimestampAt = timestamp ?? DateTime.now().millisecondsSinceEpoch;
+  TsData.zero() : updateTimestampAt = 0;
   // String toJsonString() => "";
 
   void updateTimestamp() {
     updateTimestampAt = DateTime.now().millisecondsSinceEpoch;
+  }
+
+  GeneratedMessage toProto() {
+    throw UnimplementedError();
+  }
+
+  factory TsData.fromProto(GeneratedMessage proto) {
+    throw UnimplementedError();
   }
 }

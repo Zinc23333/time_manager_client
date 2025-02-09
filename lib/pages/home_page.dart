@@ -69,9 +69,9 @@ class _HomePageState extends State<HomePage> {
           return Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(Controller.to.currentGroup.value.icon),
+              Text(Controller.to.currentGroup.icon),
               const SizedBox(width: 4),
-              Text(Controller.to.currentGroup.value.title),
+              Text(Controller.to.currentGroup.title),
               const SizedBox(width: 4),
               Icon(Icons.arrow_drop_down_rounded),
             ],
@@ -89,7 +89,7 @@ class _HomePageState extends State<HomePage> {
           title: Text("选择分组"),
           children: [
             for (final group in Controller.to.groups)
-              if (group == Controller.to.currentGroup.value)
+              if (group == Controller.to.currentGroup)
                 SimpleDialogOption(
                   child: Text.rich(TextSpan(children: [
                     TextSpan(text: group.iconAndTitle),

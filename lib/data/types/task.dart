@@ -1,10 +1,13 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:time_manager_client/data/types/tw_data.dart';
 import 'package:time_manager_client/helper/extension.dart';
+import 'package:time_manager_client/data/proto.gen/task.pb.dart' as p;
+import 'package:time_manager_client/helper/helper.dart';
 
-class Task extends TwData {
+class Task extends TsData {
   String title;
   String? summary;
 
@@ -35,8 +38,8 @@ class Task extends TwData {
       this.source,
       this.content,
       this.status = TaskStatus.unfinished,
-      int? updateTimestamp})
-      : super(updateTimestamp) {
+      int? updateTimestampAt})
+      : super(updateTimestampAt) {
     init();
   }
 
@@ -90,6 +93,23 @@ class Task extends TwData {
     }
     return res;
   }
+
+  factory Task.fromProto(p.Task t) => Task(
+        title: t.title,
+        summary: Helper.if_(t.hasSummary(), t.summary),
+        startTime: Helper.if_(t.hasStartTime(), t.startTime.toDateTime()),
+        startTimePrecision: Helper.if_(t.hasStartTimePrecision(), t.startTimePrecision),
+        endTime: Helper.if_(t.hasEndTime(), t.endTime.toDateTime()),
+        endTimePrecision: Helper.if_(t.hasEndTimePrecision(), t.endTimePrecision),
+        importance: Helper.if_(t.hasImportance(), t.importance),
+        location: Helper.if_(t.hasLocation(), t.location),
+        participant: Helper.if_(t.hasParticipant(), t.participant),
+        note: Helper.if_(t.hasNote(), t.note),
+        source: Helper.if_(t.hasSource(), t.source),
+        content: Helper.if_(t.hasContent(), t.content),
+        status: TaskStatus.fromCode(t.status),
+        updateTimestampAt: t.updateTimestampAt.toInt(),
+      );
 
   void init() {
     if (startTime != null) startTimePrecision ??= 5;
@@ -161,6 +181,24 @@ class Task extends TwData {
     return "Task($title, $summary, $startTime($startTimePrecision), $endTime($endTimePrecision))";
   }
 
+  @override
+  p.Task toProto() => p.Task(
+        title: title,
+        summary: summary,
+        startTime: startTime?.millisecondsSinceEpoch.toInt64(),
+        startTimePrecision: startTimePrecision,
+        endTime: endTime?.millisecondsSinceEpoch.toInt64(),
+        endTimePrecision: endTimePrecision,
+        importance: importance,
+        location: location,
+        participant: participant,
+        note: note,
+        source: source,
+        content: content,
+        status: status.code,
+        updateTimestampAt: updateTimestampAt.toInt64(),
+      );
+
   static const importanceInfo = ["未设置", "不重要", "较不重要", "一般", "重要", "非常重要"];
   static const timePricisions = "年月日时分秒";
 }
@@ -175,4 +213,7 @@ enum TaskStatus {
   final int code;
   final String name;
   bool get isFinished => this == finished;
+  static TaskStatus fromCode(int code) {
+    return TaskStatus.values.firstWhereOrNull((element) => element.code == code) ?? unfinished;
+  }
 }

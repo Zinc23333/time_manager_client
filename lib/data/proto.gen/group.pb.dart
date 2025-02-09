@@ -1,6 +1,6 @@
 //
 //  Generated code. Do not modify.
-//  source: lib/data/proto/group.proto
+//  source: group.proto
 //
 // @dart = 2.12
 
@@ -18,7 +18,8 @@ class Group extends $pb.GeneratedMessage {
   factory Group({
     $core.String? title,
     $core.String? icon,
-    $core.Iterable<$fixnum.Int64>? tasks,
+    $core.Iterable<$fixnum.Int64>? taskIds,
+    $fixnum.Int64? updateTimestampAt,
   }) {
     final $result = create();
     if (title != null) {
@@ -27,8 +28,11 @@ class Group extends $pb.GeneratedMessage {
     if (icon != null) {
       $result.icon = icon;
     }
-    if (tasks != null) {
-      $result.tasks.addAll(tasks);
+    if (taskIds != null) {
+      $result.taskIds.addAll(taskIds);
+    }
+    if (updateTimestampAt != null) {
+      $result.updateTimestampAt = updateTimestampAt;
     }
     return $result;
   }
@@ -36,10 +40,11 @@ class Group extends $pb.GeneratedMessage {
   factory Group.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
   factory Group.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'Group', createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'Group', package: const $pb.PackageName(_omitMessageNames ? '' : 'time_manager'), createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'title')
     ..aOS(2, _omitFieldNames ? '' : 'icon')
-    ..p<$fixnum.Int64>(3, _omitFieldNames ? '' : 'tasks', $pb.PbFieldType.K6)
+    ..p<$fixnum.Int64>(3, _omitFieldNames ? '' : 'taskIds', $pb.PbFieldType.K6, protoName: 'taskIds')
+    ..aInt64(100, _omitFieldNames ? '' : 'updateTimestampAt', protoName: 'updateTimestampAt')
     ..hasRequiredFields = false
   ;
 
@@ -83,7 +88,16 @@ class Group extends $pb.GeneratedMessage {
   void clearIcon() => clearField(2);
 
   @$pb.TagNumber(3)
-  $core.List<$fixnum.Int64> get tasks => $_getList(2);
+  $core.List<$fixnum.Int64> get taskIds => $_getList(2);
+
+  @$pb.TagNumber(100)
+  $fixnum.Int64 get updateTimestampAt => $_getI64(3);
+  @$pb.TagNumber(100)
+  set updateTimestampAt($fixnum.Int64 v) { $_setInt64(3, v); }
+  @$pb.TagNumber(100)
+  $core.bool hasUpdateTimestampAt() => $_has(3);
+  @$pb.TagNumber(100)
+  void clearUpdateTimestampAt() => clearField(100);
 }
 
 

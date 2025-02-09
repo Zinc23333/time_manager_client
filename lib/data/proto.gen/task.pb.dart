@@ -1,6 +1,6 @@
 //
 //  Generated code. Do not modify.
-//  source: lib/data/proto/task.proto
+//  source: task.proto
 //
 // @dart = 2.12
 
@@ -29,6 +29,7 @@ class Task extends $pb.GeneratedMessage {
     $core.String? source,
     $core.String? content,
     $core.int? status,
+    $fixnum.Int64? updateTimestampAt,
   }) {
     final $result = create();
     if (title != null) {
@@ -70,13 +71,16 @@ class Task extends $pb.GeneratedMessage {
     if (status != null) {
       $result.status = status;
     }
+    if (updateTimestampAt != null) {
+      $result.updateTimestampAt = updateTimestampAt;
+    }
     return $result;
   }
   Task._() : super();
   factory Task.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
   factory Task.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'Task', createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'Task', package: const $pb.PackageName(_omitMessageNames ? '' : 'time_manager'), createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'title')
     ..aOS(2, _omitFieldNames ? '' : 'summary')
     ..aInt64(3, _omitFieldNames ? '' : 'startTime', protoName: 'startTime')
@@ -90,6 +94,7 @@ class Task extends $pb.GeneratedMessage {
     ..aOS(11, _omitFieldNames ? '' : 'source')
     ..aOS(12, _omitFieldNames ? '' : 'content')
     ..a<$core.int>(13, _omitFieldNames ? '' : 'status', $pb.PbFieldType.O3)
+    ..aInt64(100, _omitFieldNames ? '' : 'updateTimestampAt', protoName: 'updateTimestampAt')
     ..hasRequiredFields = false
   ;
 
@@ -230,6 +235,15 @@ class Task extends $pb.GeneratedMessage {
   $core.bool hasStatus() => $_has(12);
   @$pb.TagNumber(13)
   void clearStatus() => clearField(13);
+
+  @$pb.TagNumber(100)
+  $fixnum.Int64 get updateTimestampAt => $_getI64(13);
+  @$pb.TagNumber(100)
+  set updateTimestampAt($fixnum.Int64 v) { $_setInt64(13, v); }
+  @$pb.TagNumber(100)
+  $core.bool hasUpdateTimestampAt() => $_has(13);
+  @$pb.TagNumber(100)
+  void clearUpdateTimestampAt() => clearField(100);
 }
 
 

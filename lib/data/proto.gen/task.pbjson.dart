@@ -1,6 +1,6 @@
 //
 //  Generated code. Do not modify.
-//  source: lib/data/proto/task.proto
+//  source: task.proto
 //
 // @dart = 2.12
 
@@ -30,6 +30,7 @@ const Task$json = {
     {'1': 'source', '3': 11, '4': 1, '5': 9, '9': 9, '10': 'source', '17': true},
     {'1': 'content', '3': 12, '4': 1, '5': 9, '9': 10, '10': 'content', '17': true},
     {'1': 'status', '3': 13, '4': 1, '5': 5, '9': 11, '10': 'status', '17': true},
+    {'1': 'updateTimestampAt', '3': 100, '4': 1, '5': 3, '10': 'updateTimestampAt'},
   ],
   '8': [
     {'1': '_summary'},
@@ -57,8 +58,8 @@ final $typed_data.Uint8List taskDescriptor = $convert.base64Decode(
     'ggASgJSAZSCGxvY2F0aW9uiAEBEiUKC3BhcnRpY2lwYW50GAkgASgJSAdSC3BhcnRpY2lwYW50'
     'iAEBEhcKBG5vdGUYCiABKAlICFIEbm90ZYgBARIbCgZzb3VyY2UYCyABKAlICVIGc291cmNliA'
     'EBEh0KB2NvbnRlbnQYDCABKAlIClIHY29udGVudIgBARIbCgZzdGF0dXMYDSABKAVIC1IGc3Rh'
-    'dHVziAEBQgoKCF9zdW1tYXJ5QgwKCl9zdGFydFRpbWVCFQoTX3N0YXJ0VGltZVByZWNpc2lvbk'
-    'IKCghfZW5kVGltZUITChFfZW5kVGltZVByZWNpc2lvbkINCgtfaW1wb3J0YW5jZUILCglfbG9j'
-    'YXRpb25CDgoMX3BhcnRpY2lwYW50QgcKBV9ub3RlQgkKB19zb3VyY2VCCgoIX2NvbnRlbnRCCQ'
-    'oHX3N0YXR1cw==');
+    'dHVziAEBEiwKEXVwZGF0ZVRpbWVzdGFtcEF0GGQgASgDUhF1cGRhdGVUaW1lc3RhbXBBdEIKCg'
+    'hfc3VtbWFyeUIMCgpfc3RhcnRUaW1lQhUKE19zdGFydFRpbWVQcmVjaXNpb25CCgoIX2VuZFRp'
+    'bWVCEwoRX2VuZFRpbWVQcmVjaXNpb25CDQoLX2ltcG9ydGFuY2VCCwoJX2xvY2F0aW9uQg4KDF'
+    '9wYXJ0aWNpcGFudEIHCgVfbm90ZUIJCgdfc291cmNlQgoKCF9jb250ZW50QgkKB19zdGF0dXM=');
 
