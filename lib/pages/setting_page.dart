@@ -93,7 +93,7 @@ class _SettingPageState extends State<SettingPage> {
               SimpleDialogOption(
                 child: Text("跟随系统"),
                 onPressed: () {
-                  Get.changeThemeMode(ThemeMode.dark);
+                  Get.changeThemeMode(ThemeMode.system);
                   Box.setting.remove("darkmode");
                   Get.back();
                 },
