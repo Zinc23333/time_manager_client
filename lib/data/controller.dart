@@ -5,6 +5,7 @@ import 'dart:typed_data';
 
 import 'package:get/get.dart';
 import 'package:time_manager_client/data/local_storage.dart';
+import 'package:time_manager_client/data/remote_db.dart';
 import 'package:time_manager_client/data/types/group.dart';
 import 'package:time_manager_client/data/types/task.dart';
 import 'package:time_manager_client/data/proto.gen/storage.pb.dart' as p;
@@ -18,6 +19,7 @@ class Controller extends GetxController {
     LocalStorage.instance?.init().then((_) {
       loadLocally();
     });
+    RemoteDb.instance.init().then((_) {});
   }
 
   List<int> rawGroupIds = [0];
@@ -144,5 +146,19 @@ class Controller extends GetxController {
   bool loadFromText(String text) {
     final d = Base64Decoder().convert(text);
     return loadData(d);
+  }
+
+  // 数据库
+
+  // 登陆
+  Future<bool> loginWithPhoneNumber(int phone) async {
+    int? i = await RemoteDb.instance.signInWithPhoneNumber(phone);
+    print("Phone: $i");
+    if (i == null) {
+      i = await RemoteDb.instance.signUpWithPhoneNumber(phone);
+      print("Phone2: $i");
+    }
+
+    return false;
   }
 }

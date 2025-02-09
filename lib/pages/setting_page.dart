@@ -60,6 +60,7 @@ class _SettingPageState extends State<SettingPage> {
               // 移动端
               final phone = await LoginBottomSheet.show(context);
               if (phone == null) return;
+              await Controller.to.loginWithPhoneNumber(phone);
             }
           }
         },
