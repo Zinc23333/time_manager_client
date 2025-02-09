@@ -1,8 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:get/get.dart';
+import 'package:time_manager_client/data/controller.dart';
 import 'package:time_manager_client/data/local_storage.dart';
 import 'package:time_manager_client/helper/helper.dart';
+import 'package:time_manager_client/widgets/simple_text_bottom_sheet.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
@@ -28,7 +33,75 @@ class _SettingPageState extends State<SettingPage> {
       children: [
         buildTileDarkmode(context),
         buildTileColorScheme(context),
+        buildTileExportToFile(context),
+        buildTileExportAsText(context),
+        buildTileImportFromText(context),
       ],
+    );
+  }
+
+  ListTile buildTileImportFromText(BuildContext context) {
+    return ListTile(
+      title: Text("从文字导入"),
+      onTap: () async {
+        final s = await SimpleTextBottomSheet.show(context);
+        if (s?.isEmpty ?? true) {
+          Get.snackbar("导入失败", "文本为空");
+          return;
+        }
+
+        if (Controller.to.loadFromText(s!)) {
+          Get.snackbar("导入成功", "数据已导入");
+        } else {
+          Get.snackbar("导入失败", "数据格式错误");
+        }
+        // File? file = await Controller.to.saveDownloadDirectory();
+        // if (file == null) {
+        //   Get.snackbar("导出失败", "请检查是否有下载文件夹的写入权限");
+        //   return;
+        // }
+        // Get.snackbar("导出成功", "已保存到: ${file.path}");
+      },
+    );
+  }
+
+  ListTile buildTileExportToFile(BuildContext context) {
+    return ListTile(
+      title: Text("导出数据到文件"),
+      onTap: () async {
+        File? file = await Controller.to.saveDownloadDirectory();
+        if (file == null) {
+          Get.snackbar("导出失败", "请检查是否有下载文件夹的写入权限");
+          return;
+        }
+        Get.snackbar("导出成功", "已保存到: ${file.path}");
+      },
+    );
+  }
+
+  ListTile buildTileExportAsText(BuildContext context) {
+    return ListTile(
+      title: Text("导出数据为文本"),
+      onTap: () async {
+        String data = Controller.to.saveAsText();
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text("数据信息"),
+            content: SingleChildScrollView(
+              child: SelectableText(data),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Clipboard.setData(ClipboardData(text: data));
+                },
+                child: Text("复制"),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 

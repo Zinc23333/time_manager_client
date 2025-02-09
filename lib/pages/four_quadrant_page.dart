@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:time_manager_client/data/controller.dart';
 import 'package:time_manager_client/data/types/task.dart';
 import 'package:time_manager_client/widgets/view_task_widget.dart';
@@ -50,7 +49,7 @@ class _FourQuadrantPageState extends State<FourQuadrantPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(name),
+            Text(name, style: Theme.of(context).textTheme.titleSmall),
             Expanded(
               child: buildTasks(tasks),
             ),
@@ -115,19 +114,11 @@ class _FourQuadrantPageState extends State<FourQuadrantPage> {
       ims[_imp(t) ? 1 : 0].add(t);
     }
 
-    for (final t in ims[0]) {
-      ius[_urg(t) ? 0 : 2].add(t);
+    for (int i = 0; i < 2; i++) {
+      for (final t in ims[i]) {
+        ius[i + (_urg(t) ? 0 : 2)].add(t);
+      }
     }
-
-    for (final t in ims[1]) {
-      ius[_urg(t) ? 1 : 3].add(t);
-    }
-
-    // for (int i = 0; i < 1; i++) {
-    //   for (final t in ims[i]) {
-    //     ius[i + (_urg(t) ? 0 : 2)].add(t);
-    //   }
-    // }
 
     return ius;
   }

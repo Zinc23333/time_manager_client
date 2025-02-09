@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:time_manager_client/data/controller.dart';
+import 'package:time_manager_client/helper/helper.dart';
 import 'package:time_manager_client/widgets/view_task_widget.dart';
 
 class ListPage extends StatefulWidget {
@@ -11,6 +12,12 @@ class ListPage extends StatefulWidget {
 }
 
 class _ListPageState extends State<ListPage> {
+  final taskFinishedTextStyle = TextStyle(
+    fontStyle: FontStyle.italic,
+    decoration: TextDecoration.lineThrough,
+    color: Colors.grey,
+  );
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<Controller>(
@@ -18,17 +25,11 @@ class _ListPageState extends State<ListPage> {
         final tasks = Controller.to.currentGroupTasks.toList();
         return ListView.separated(
           itemBuilder: (context, index) {
+            final task = tasks[index];
+            final textStyle = Helper.if_(task.status.isFinished, taskFinishedTextStyle);
             return ListTile(
-              title: Text(
-                tasks[index].title,
-                style: tasks[index].status.isFinished
-                    ? TextStyle(
-                        fontStyle: FontStyle.italic,
-                        decoration: TextDecoration.lineThrough,
-                        color: Colors.grey,
-                      )
-                    : null,
-              ),
+              title: Text(tasks[index].title, style: textStyle),
+              subtitle: Helper.if_(task.summary?.isNotEmpty ?? false, Text(task.summary!, style: textStyle)),
               onTap: () {
                 ViewTaskWidget.show(context, tasks[index]);
               },

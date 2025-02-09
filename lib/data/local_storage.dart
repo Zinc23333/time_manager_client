@@ -16,6 +16,7 @@ class LocalStorage {
   LocalStorage._();
   static final LocalStorage _instance = LocalStorage._();
   static LocalStorage? get instance => kIsWeb ? null : _instance;
+  static const storageFileName = "storage.bin";
 
   bool _initialized = false;
   late final Directory storageDir;
@@ -24,24 +25,43 @@ class LocalStorage {
   Future<void> init() async {
     if (_initialized) return;
     storageDir = await getApplicationDocumentsDirectory();
-    storageFile = File("${storageDir.path}/storage.proto");
+    storageFile = File("${storageDir.path}/$storageFileName");
 
     _initialized = true;
   }
 
+  // 写出
   void write(p.Storage storage) {
     storageFile.writeAsBytesSync(storage.writeToBuffer());
   }
 
-  (Map<int, Group> groups, Map<int, Task> tasks, List<int> groupIds, int currentGroup)? read() {
+  // 导出
+  Future<File?> writeTo(p.Storage storage, String path) async {
+    if (kIsWeb) return null;
+    write(storage);
+    return await storageFile.copy(path);
+  }
+
+  Future<File?> writeToDownloadDirectory(p.Storage storage) async {
+    if (kIsWeb) return null;
+
+    final d = await getDownloadsDirectory();
+    if (d == null) return null;
+    if (!d.existsSync()) return null;
+
+    return await writeTo(storage, "${d.path}/待办备份 ${DateTime.now()}.bin");
+  }
+
+  // 导入
+  (Map<int, Group> groups, Map<int, Task> tasks, List<int> groupIds, int currentGroup)? read([Uint8List? rawData]) {
     final Map<int, Group> g = {};
     final Map<int, Task> t = {};
     final List<int> gis = [];
 
-    if (!storageFile.existsSync()) return null;
+    if (rawData == null && !storageFile.existsSync()) return null;
 
-    final raw = storageFile.readAsBytesSync();
-    final s = p.Storage.fromBuffer(raw);
+    rawData ??= storageFile.readAsBytesSync();
+    final s = p.Storage.fromBuffer(rawData);
 
     s.groups.forEach((key, value) {
       g[key.toInt()] = Group.fromProto(value);

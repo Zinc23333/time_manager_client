@@ -1,4 +1,7 @@
+import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:get/get.dart';
 import 'package:time_manager_client/data/local_storage.dart';
@@ -111,14 +114,34 @@ class Controller extends GetxController {
         currentGroupId: currentGroupIndex.value.toInt64(),
       );
 
+  Future<File?> saveDownloadDirectory() => LocalStorage.instance?.writeToDownloadDirectory(toProto()) ?? Future.value(null);
+
+  String saveAsText() => Base64Encoder().convert(toProto().writeToBuffer());
+
   // 导入
   void loadLocally() {
-    final r = LocalStorage.instance?.read();
-    if (r == null) return;
-    rawGroup = r.$1;
-    rawTask = r.$2;
-    rawGroupIds = r.$3;
-    currentGroupIndex.value = r.$4;
-    update();
+    if (!loadData(null)) throw Exception("LocalStorage is not available");
+  }
+
+  bool loadData(Uint8List? data) {
+    // data 非空 则从外部导入
+    try {
+      final r = LocalStorage.instance?.read(data);
+      if (r == null) return false;
+      rawGroup = r.$1;
+      rawTask = r.$2;
+      rawGroupIds = r.$3;
+      currentGroupIndex.value = r.$4;
+      update();
+      if (data != null) LocalStorage.instance?.write(toProto());
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  bool loadFromText(String text) {
+    final d = Base64Decoder().convert(text);
+    return loadData(d);
   }
 }
