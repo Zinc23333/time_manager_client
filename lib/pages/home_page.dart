@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:time_manager_client/data/controller.dart';
+import 'package:time_manager_client/helper/helper.dart';
 import 'package:time_manager_client/pages/edit_group_page.dart';
 import 'package:time_manager_client/pages/four_quadrant_page.dart';
 import 'package:time_manager_client/pages/list_page.dart';
@@ -18,46 +19,84 @@ class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
 
   final pages = [
-    ListPage(),
-    FourQuadrantPage(),
-    Text("3"),
-    Text("4"),
-    SettingPage(),
+    (Icons.list, "列表", ListPage()),
+    (Icons.dangerous, "四象限", FourQuadrantPage()),
+    (Icons.calendar_month, "日历", Text("4")),
+    (Icons.settings, "设置", SettingPage()),
   ];
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: buildGroupSwitcher(),
-        centerTitle: true,
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        // landscapeLayout: BottomNavigationBarLandscapeLayout.centered,
-        type: BottomNavigationBarType.fixed,
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          if (index == 2) return;
-          _currentIndex = index;
-          setState(() {});
-        },
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.list), label: "列表"),
-          BottomNavigationBarItem(icon: Icon(Icons.dangerous), label: "四象限"),
-          BottomNavigationBarItem(icon: SizedBox(), label: ""),
-          BottomNavigationBarItem(icon: Icon(Icons.calendar_month), label: "日历"),
-          BottomNavigationBarItem(icon: Icon(Icons.settings), label: "设置"),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _addTask,
-        tooltip: "添加",
-        shape: CircleBorder(),
-        child: Icon(Icons.add),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      body: pages[_currentIndex],
+    return OrientationBuilder(
+      builder: (context, orientation) {
+        final isPortrait = orientation == Orientation.portrait;
+        return Scaffold(
+          appBar: AppBar(
+            backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+            title: buildGroupSwitcher(),
+            centerTitle: true,
+          ),
+          bottomNavigationBar: Helper.if_(isPortrait, buildBottomNavigationBar()),
+          floatingActionButton: FloatingActionButton(
+            onPressed: _addTask,
+            tooltip: "添加",
+            shape: CircleBorder(),
+            child: Icon(Icons.add),
+          ),
+          floatingActionButtonLocation: Helper.if_(isPortrait, FloatingActionButtonLocation.centerDocked),
+          body: buildBody(orientation),
+        );
+      },
+    );
+  }
+
+  Widget buildBody(Orientation orientation) => orientation == Orientation.landscape
+      ? Row(
+          children: [
+            SizedBox(
+              width: 250,
+              child: Column(
+                children: [
+                  for (int i = 0; i < pages.length; i++)
+                    ListTile(
+                      leading: Icon(pages[i].$1),
+                      title: Text(pages[i].$2),
+                      onTap: () {
+                        _currentIndex = i;
+                        setState(() {});
+                      },
+                    )
+                ],
+              ),
+            ),
+            VerticalDivider(),
+            Expanded(child: pages[_currentIndex].$3),
+          ],
+        )
+      : pages[_currentIndex].$3;
+
+  BottomNavigationBar buildBottomNavigationBar() {
+    return BottomNavigationBar(
+      // landscapeLayout: BottomNavigationBarLandscapeLayout.centered,
+      type: BottomNavigationBarType.fixed,
+      currentIndex: _currentIndex,
+      onTap: (index) {
+        if (index == 2) return;
+        _currentIndex = index;
+        setState(() {});
+      },
+      items: [
+        for (int i = 0; i < pages.length; i++)
+          BottomNavigationBarItem(
+            icon: Icon(pages[i].$1),
+            label: pages[i].$2,
+          ),
+        // BottomNavigationBarItem(icon: Icon(Icons.list), label: "列表"),
+        // BottomNavigationBarItem(icon: Icon(Icons.dangerous), label: "四象限"),
+        // BottomNavigationBarItem(icon: SizedBox(), label: ""),
+        // BottomNavigationBarItem(icon: Icon(Icons.calendar_month), label: "日历"),
+        // BottomNavigationBarItem(icon: Icon(Icons.settings), label: "设置"),
+      ]..insert(2, BottomNavigationBarItem(icon: SizedBox(), label: "")),
     );
   }
 

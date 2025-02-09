@@ -120,7 +120,8 @@ class Controller extends GetxController {
 
   // 导入
   void loadLocally() {
-    if (!loadData(null)) throw Exception("LocalStorage is not available");
+    loadData(null);
+    // if (!loadData(null)) throw Exception("LocalStorage is not available");
   }
 
   bool loadData(Uint8List? data) {
