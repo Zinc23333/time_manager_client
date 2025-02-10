@@ -13,43 +13,45 @@ class UserProfileDialog extends StatelessWidget {
       );
 
   @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      content: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          ListTile(
-            leading: CircleAvatar(child: Text(UserController.icon)),
-            title: Text("用户 ${UserController.id}"),
-          ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8.0),
-            child: Divider(),
-          ),
-          for (final a in UserController.accounts)
-            ListTile(
-              leading: Icon(a.icon),
-              title: Text(a.account),
-            ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8.0),
-            child: Divider(),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+  Widget build(BuildContext context) => GetBuilder(
+      id: User.getControllerId,
+      builder: (c) {
+        return AlertDialog(
+          content: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              TextButton(
-                onPressed: () {
-                  DataController.to.logout();
-                  Get.back();
-                },
-                child: Text("退出登录"),
+              ListTile(
+                leading: CircleAvatar(child: Text(User.icon)),
+                title: Text("用户 ${User.id}"),
+              ),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8.0),
+                child: Divider(),
+              ),
+              for (final a in User.accounts)
+                ListTile(
+                  leading: Icon(a.icon),
+                  title: Text(a.account),
+                ),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8.0),
+                child: Divider(),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      DataController.to.logout();
+                      Get.back();
+                    },
+                    child: Text("退出登录"),
+                  ),
+                ],
               ),
             ],
           ),
-        ],
-      ),
-    );
-  }
+        );
+      });
 }

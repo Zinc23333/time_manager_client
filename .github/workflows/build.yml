@@ -30,7 +30,7 @@ jobs:
 
       - run: flutter pub get
       - run: |
-          dart run build_runner build
+          dart run build_runner build -d 1 -r
           dart run flutter_launcher_icons
 
       - run: flutter build apk       --no-tree-shake-icons --release
@@ -85,7 +85,7 @@ jobs:
           echo "DS_KEY=$DS_KEY" > .env
 
       - run: |
-          dart run build_runner build
+          dart run build_runner build -d 1 -r
           dart run flutter_launcher_icons
           
       - run: flutter build windows

@@ -69,11 +69,11 @@ class _SettingPageState extends State<SettingPage> {
     return Card(
       margin: EdgeInsets.symmetric(horizontal: 16),
       child: ListTile(
-        leading: CircleAvatar(child: Text(UserController.icon)),
-        title: Text(UserController.id != null ? "用户 ${UserController.id}" : "未登陆"),
-        subtitle: Text(UserController.accounts.firstOrNull?.account ?? "点击此处登陆"),
+        leading: CircleAvatar(child: Text(User.icon)),
+        title: Text(User.id != null ? "用户 ${User.id}" : "未登陆"),
+        subtitle: Text(User.accounts.firstOrNull?.account ?? "点击此处登陆"),
         onTap: () async {
-          if (UserController.id == null) {
+          if (User.id == null) {
             // 处理登陆逻辑
             if (Platform.isAndroid || Platform.isIOS) {
               // 移动端

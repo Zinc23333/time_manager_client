@@ -14,7 +14,7 @@ import 'package:time_manager_client/data/controller/user_controller.dart';
 import 'package:time_manager_client/helper/extension.dart';
 
 class DataController extends GetxController {
-  static DataController get to => Get.find();
+  static DataController get to => Get.find<DataController>();
 
   // 初始化
   DataController() {
@@ -157,16 +157,16 @@ class DataController extends GetxController {
     int? i = await RemoteDb.instance.signInWithPhoneNumber(phone);
     i ??= await RemoteDb.instance.signUpWithPhoneNumber(phone);
     print(i);
-    UserController.id = i;
-    UserController.accounts.clear();
-    UserController.accounts.add(UserAccountPhone(phone));
+    User.id = i;
+    User.accounts.clear();
+    User.accounts.add(UserAccountPhone(phone));
 
     return true;
   }
 
   // 登出
   void logout() {
-    UserController.id = null;
-    UserController.accounts.clear();
+    User.id = null;
+    User.accounts.clear();
   }
 }
