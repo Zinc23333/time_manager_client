@@ -8,9 +8,10 @@ import 'package:get/get.dart';
 import 'package:time_manager_client/3rd/warp_indicator.dart';
 import 'package:time_manager_client/data/controller/data_controller.dart';
 import 'package:time_manager_client/data/repository/local_storage.dart';
-import 'package:time_manager_client/data/controller/user_controller.dart';
+import 'package:time_manager_client/data/types/user.dart';
 import 'package:time_manager_client/helper/helper.dart';
 import 'package:time_manager_client/widgets/login_bottom_sheet.dart';
+import 'package:time_manager_client/widgets/qr_login_request_dialog.dart';
 import 'package:time_manager_client/widgets/simple_text_bottom_sheet.dart';
 import 'package:time_manager_client/widgets/user_profile_dialog.dart';
 
@@ -69,11 +70,11 @@ class _SettingPageState extends State<SettingPage> {
       child: GetBuilder<DataController>(
         id: User.getControllerId,
         builder: (c) => ListTile(
-          leading: CircleAvatar(child: Text(User.icon)),
-          title: Text(User.id != null ? "用户 ${User.id}" : "未登陆"),
-          subtitle: Text(User.accounts.firstOrNull?.account ?? "点击此处登陆"),
+          leading: CircleAvatar(child: Text(c.user?.icon ?? "❔")),
+          title: Text(c.user != null ? "用户 ${c.user!.id}" : "未登陆"),
+          subtitle: Text(c.user?.accounts.firstOrNull?.account ?? "点击此处登陆"),
           onTap: () async {
-            if (User.id == null) {
+            if (c.user == null) {
               // 处理登陆逻辑
               if (Platform.isAndroid || Platform.isIOS) {
                 // 移动端
@@ -86,9 +87,10 @@ class _SettingPageState extends State<SettingPage> {
                 await DataController.to.loginWithPhoneNumber(phone);
                 await indicatorKey.currentState?.hide();
                 if (mounted) setState(() {});
-                // 结束登陆
-
-                //刷新界面
+                // 结束登陆 刷新界面
+              } else {
+                // 桌面端 / Web
+                QrLoginRequestDialog.show(context);
               }
             } else {
               // 查看用户详情

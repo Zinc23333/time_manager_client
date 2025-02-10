@@ -40,7 +40,7 @@ class WarpIndicator extends StatefulWidget {
 }
 
 class _WarpIndicatorState extends State<WarpIndicator> with SingleTickerProviderStateMixin {
-  static const _indicatorSize = 150.0;
+  static const _indicatorSize = 200.0;
   final _random = Random();
   WarpAnimationState _state = WarpAnimationState.stopped;
 

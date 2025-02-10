@@ -4,14 +4,16 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:get/get.dart';
+import 'package:time_manager_client/data/environment/constant.dart';
 import 'package:time_manager_client/data/repository/local_storage.dart';
 import 'package:time_manager_client/data/repository/remote_db.dart';
 import 'package:time_manager_client/data/types/group.dart';
 import 'package:time_manager_client/data/types/task.dart';
 import 'package:time_manager_client/data/proto.gen/storage.pb.dart' as p;
 import 'package:time_manager_client/data/types/user_account.dart';
-import 'package:time_manager_client/data/controller/user_controller.dart';
+import 'package:time_manager_client/data/types/user.dart';
 import 'package:time_manager_client/helper/extension.dart';
+import 'package:time_manager_client/helper/helper.dart';
 
 class DataController extends GetxController {
   static DataController get to => Get.find<DataController>();
@@ -29,6 +31,8 @@ class DataController extends GetxController {
 
   Map<int, Group> rawGroup = {0: Group(title: "默认分组", icon: "📢", taskIds: [], updateTimestamp: 0)};
   Map<int, Task> rawTask = {};
+  User? get user => _rawUser.value;
+  final _rawUser = Rx<User?>(null);
 
   // late final currentGroup = groups.first.obs;
   final currentGroupIndex = 0.obs;
@@ -53,7 +57,7 @@ class DataController extends GetxController {
     rawTask[index] = task;
     group.taskIds.add(index);
 
-    onDataChanged();
+    _onDataChanged();
   }
 
   void editTask(Task oldTask, Task newTask, [Group? group]) {
@@ -66,14 +70,14 @@ class DataController extends GetxController {
     }
     rawTask[index] = newTask;
 
-    onDataChanged();
+    _onDataChanged();
   }
 
   void changeTaskStatus(Task task, [TaskStatus? status]) {
     status ??= task.status == TaskStatus.finished ? TaskStatus.unfinished : TaskStatus.finished;
     task.status = status;
     task.updateTimestamp();
-    onDataChanged();
+    _onDataChanged();
   }
 
   Group addGroup() {
@@ -81,7 +85,7 @@ class DataController extends GetxController {
     final index = getGroupIndexNo();
     rawGroup[index] = g;
     rawGroupIds.add(index);
-    onDataChanged();
+    _onDataChanged();
 
     return g;
   }
@@ -89,33 +93,53 @@ class DataController extends GetxController {
   void changeGroupTitle(Group group, String title) {
     group.title = title;
     group.updateTimestamp();
-    onDataChanged();
+    _onDataChanged();
   }
 
   void changeGroupIcon(Group group, String icon) {
     group.icon = icon;
     group.updateTimestamp();
-    onDataChanged();
+    _onDataChanged();
   }
 
   void changeCurrentGroup(Group group) {
     // currentGroup.value = group;
     currentGroupIndex.value = rawGroup.entries.where((e) => e.value == group).single.key;
-    onDataChanged();
+    _onDataChanged();
+  }
+
+  // QR 处理
+  void handleQrCode(String code) async {
+    if (code.startsWith(Constant.qrLoginPrefix)) {
+      if (user == null) return;
+
+      var token = code.substring(Constant.qrLoginPrefix.length);
+      var r = await RemoteDb.instance.verifyQrLoginToken(token, user!.id);
+      if (r) Get.snackbar("🎉验证成功", "请前往桌面端/Web端查看");
+      // print("qr code: $token");
+    }
   }
 
   // 数据写入
-  void onDataChanged() {
-    update();
-    LocalStorage.instance?.write(toProto());
+  void _onDataChanged([_DataChangeType t = _DataChangeType.groupOrTask]) {
+    switch (t) {
+      case _DataChangeType.groupOrTask:
+        update();
+        break;
+      case _DataChangeType.user:
+        update([User.getControllerId]);
+        break;
+    }
+    LocalStorage.instance?.write(toProto(true));
   }
 
   // 导出
-  p.Storage toProto() => p.Storage(
+  p.Storage toProto([bool needUserInfo = false]) => p.Storage(
         groups: rawGroup.map((k, v) => MapEntry(k.toInt64(), v.toProto())),
         tasks: rawTask.map((k, v) => MapEntry(k.toInt64(), v.toProto())),
         groupIds: rawGroupIds.map((e) => e.toInt64()),
         currentGroupId: currentGroupIndex.value.toInt64(),
+        user: Helper.if_(needUserInfo, user?.toProto()),
       );
 
   Future<File?> saveDownloadDirectory() => LocalStorage.instance?.writeToDownloadDirectory(toProto()) ?? Future.value(null);
@@ -133,12 +157,18 @@ class DataController extends GetxController {
     try {
       final r = LocalStorage.instance?.read(data);
       if (r == null) return false;
-      rawGroup = r.$1;
-      rawTask = r.$2;
-      rawGroupIds = r.$3;
-      currentGroupIndex.value = r.$4;
+      rawGroup = r.groups;
+      rawTask = r.tasks;
+      rawGroupIds = r.groupIds;
+      currentGroupIndex.value = r.currentGroup; // todo
       update();
-      if (data != null) LocalStorage.instance?.write(toProto());
+      if (data != null) {
+        // 外部导入 -> 保存
+        LocalStorage.instance?.write(toProto());
+      } else {
+        // 本地存储(内部导入) -> 加载用户信息
+        _rawUser.value = r.user;
+      }
       return true;
     } catch (e) {
       return false;
@@ -157,19 +187,47 @@ class DataController extends GetxController {
     int? i = await RemoteDb.instance.signInWithPhoneNumber(phone);
     i ??= await RemoteDb.instance.signUpWithPhoneNumber(phone);
     // print(i);
-    User.id = i;
-    User.accounts.clear();
-    User.accounts.add(UserAccountPhone(phone));
+    _rawUser.value = User(
+      id: i,
+      accounts: [UserAccountPhone(phone)],
+    );
 
-    update([User.getControllerId]);
+    // _onDataChanged(_DataChangeType.user);
+    getUserInfo();
     return true;
+  }
+
+  // Qr 验证
+  Future<bool> loginWithQr(String token) async {
+    final i = await RemoteDb.instance.listenQrLoginUser(token);
+    if (i != null) {
+      _rawUser.value = User(id: i);
+      _onDataChanged(_DataChangeType.user);
+      getUserInfo();
+      return true;
+    } else {
+      return false;
+    }
   }
 
   // 登出
   void logout() {
-    User.id = null;
-    User.accounts.clear();
-
-    update([User.getControllerId]);
+    _rawUser.value = null;
+    _onDataChanged(_DataChangeType.user);
   }
+
+  // 获取用户账号
+  void getUserInfo() async {
+    if (user == null) return;
+    final r = await RemoteDb.instance.getUserAccounts(user!.id);
+    _rawUser.update((u) {
+      u?.accounts = r;
+    });
+    _onDataChanged(_DataChangeType.user);
+  }
+}
+
+enum _DataChangeType {
+  groupOrTask,
+  user,
 }

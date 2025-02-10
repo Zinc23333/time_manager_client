@@ -5,7 +5,11 @@ import 'package:get_storage/get_storage.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:time_manager_client/data/proto.gen/storage.pb.dart' as p;
 import 'package:time_manager_client/data/types/group.dart';
+import 'package:time_manager_client/data/types/storage.dart';
 import 'package:time_manager_client/data/types/task.dart';
+import 'package:time_manager_client/data/types/user.dart';
+import 'package:time_manager_client/data/types/user_account.dart';
+import 'package:time_manager_client/helper/helper.dart';
 
 class Box {
   static String settingKey = "Get-Settings";
@@ -53,7 +57,7 @@ class LocalStorage {
   }
 
   // 导入
-  (Map<int, Group> groups, Map<int, Task> tasks, List<int> groupIds, int currentGroup)? read([Uint8List? rawData]) {
+  Storage? read([Uint8List? rawData]) {
     final Map<int, Group> g = {};
     final Map<int, Task> t = {};
     final List<int> gis = [];
@@ -75,6 +79,18 @@ class LocalStorage {
       gis.add(element.toInt());
     }
 
-    return (g, t, gis, s.currentGroupId.toInt());
+    return Storage(
+      groups: g,
+      tasks: t,
+      groupIds: gis,
+      currentGroup: s.currentGroupId.toInt(),
+      user: Helper.if_(
+        s.hasUser(),
+        User(
+          id: s.user.id.toInt(),
+          accounts: s.user.accounts.map((e) => UserAccount.fromProto(e)).toList(),
+        ),
+      ),
+    );
   }
 }

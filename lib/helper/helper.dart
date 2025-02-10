@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 
 class Helper {
-  static T? if_<T>(bool condition, T thing, [T? other]) => condition ? thing : other;
+  static T? if_<T>(bool condition, T? thing, [T? other]) => condition ? thing : other;
 
   static Future<T?> showModalBottomSheetWithTextField<T>(BuildContext context, Widget child) => showModalBottomSheet<T>(
         context: context,

@@ -7,7 +7,15 @@ class UserAccount {
   String get account => throw UnimplementedError();
   IconData get icon => throw UnimplementedError();
   p.UserAccount toProto() => throw UnimplementedError();
-  UserAccount.fromProto(p.UserAccount proto);
+
+  static UserAccount fromProto(p.UserAccount proto) {
+    switch (proto.type) {
+      case p.UserAccountType.PHONE:
+        return UserAccountPhone.fromProto(proto);
+      default:
+        throw Exception("Unknown UserAccountType");
+    }
+  }
 }
 
 class UserAccountPhone extends UserAccount {

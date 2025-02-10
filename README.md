@@ -98,3 +98,16 @@ time_precision:
 ``` sh
 protoc --proto_path=. --dart_out=lib/data/proto.gen lib/data/proto/task.proto lib/data/proto/group.proto lib/data/proto/tw.proto
 ```
+
+## QR登陆信息
+编码: `http://todo.zinc233.top/qrlogin?token=<token>`
+
+## 数据库定时调度
+
+``` sql
+-- 安装 pg_cron 扩展（如果尚未安装）
+CREATE EXTENSION IF NOT EXISTS pg_cron;
+
+-- 创建定时任务，每20分钟执行一次删除操作
+SELECT cron.schedule('*/20 * * * *', $$DELETE FROM qr_login_request WHERE created_at < NOW() - INTERVAL '40 minutes'$$);
+```

@@ -5,6 +5,7 @@ import 'package:time_manager_client/helper/helper.dart';
 import 'package:time_manager_client/pages/edit_group_page.dart';
 import 'package:time_manager_client/pages/four_quadrant_page.dart';
 import 'package:time_manager_client/pages/list_page.dart';
+import 'package:time_manager_client/pages/qr_scanner_page.dart';
 import 'package:time_manager_client/pages/setting_page.dart';
 import 'package:time_manager_client/widgets/add_task_widget.dart';
 
@@ -35,6 +36,14 @@ class _HomePageState extends State<HomePage> {
             backgroundColor: Theme.of(context).colorScheme.inversePrimary,
             title: buildGroupSwitcher(),
             centerTitle: true,
+            actions: [
+              IconButton(
+                icon: Icon(Icons.qr_code_scanner_rounded),
+                onPressed: () {
+                  Get.to(QrScannerPage());
+                },
+              ),
+            ],
           ),
           bottomNavigationBar: Helper.if_(isPortrait, buildBottomNavigationBar()),
           floatingActionButton: FloatingActionButton(
@@ -79,7 +88,7 @@ class _HomePageState extends State<HomePage> {
     return BottomNavigationBar(
       // landscapeLayout: BottomNavigationBarLandscapeLayout.centered,
       type: BottomNavigationBarType.fixed,
-      currentIndex: _currentIndex,
+      currentIndex: _currentIndex <= 1 ? _currentIndex : _currentIndex + 1,
       onTap: (index) {
         if (index == 2) return;
         if (index > 2) index--;
