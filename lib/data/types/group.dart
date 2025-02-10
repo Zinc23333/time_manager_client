@@ -1,4 +1,4 @@
-import 'package:time_manager_client/data/types/tw_data.dart';
+import 'package:time_manager_client/data/types/ts_data.dart';
 
 import 'package:time_manager_client/data/proto.gen/group.pb.dart' as p;
 import 'package:time_manager_client/helper/extension.dart';
@@ -39,5 +39,23 @@ class Group extends TsData {
       taskIds: g.taskIds.map((e) => e.toInt()).toList(),
       updateTimestamp: g.updateTimestampAt.toInt(),
     );
+  }
+
+  // Map
+  @override
+  Map<String, dynamic> toMap() => {
+        "title": title,
+        "icon": icon,
+        "taskIds": taskIds,
+      };
+
+  Group.fromMap(Map<String, dynamic> map)
+      : title = map["title"],
+        icon = map["icon"],
+        taskIds = map["taskIds"];
+
+  static Group? fromMapNullable(Map<String, dynamic> map) {
+    if (map.isEmpty) return null;
+    return Group.fromMap(map);
   }
 }

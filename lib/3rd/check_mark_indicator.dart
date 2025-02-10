@@ -30,11 +30,11 @@ class CheckMarkStyle {
       background: Colors.blueAccent,
     ),
     success: CheckMarkColors(
-      content: Colors.black,
+      content: Colors.white,
       background: Colors.greenAccent,
     ),
     error: CheckMarkColors(
-      content: Colors.black,
+      content: Colors.white,
       background: Colors.redAccent,
     ),
   );
@@ -76,6 +76,7 @@ class _CheckMarkIndicatorState extends State<CheckMarkIndicator> with SingleTick
       setState(() {
         _hasError = true;
       });
+
       rethrow;
     }
   }

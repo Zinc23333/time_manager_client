@@ -225,6 +225,45 @@ class DataController extends GetxController {
     });
     _onDataChanged(_DataChangeType.user);
   }
+
+  // 数据同步
+  // 全量同步
+  // Task
+  Future<void> syncTask() async {
+    if (user == null) return;
+
+    // 1. 数据新旧比较
+    Set<int> cloudNewIds = {}; // 数据库数据新  -> 更新本地
+    Set<int> localNewIds = {}; // 本地数据新    -> 上数据库
+
+    // 1.1 云端数据
+    final tt = await RemoteDb.instance.getTaskWithTime(user!.id);
+    for (final (id, updateAt) in tt) {
+      if (!rawTask.containsKey(id) || rawTask[id]!.updateTimestampAt < updateAt) {
+        cloudNewIds.add(id);
+      } else {
+        localNewIds.add(id);
+      }
+    }
+    // 1.2 本地数据
+    for (final i in rawTask.keys) {
+      if (!cloudNewIds.contains(i)) {
+        localNewIds.add(i);
+      }
+    }
+
+    print("ddd cloud: $cloudNewIds");
+    print("ddd local: $localNewIds");
+
+    // 2. 更新本地数据
+    final it = await RemoteDb.instance.getTask(user!.id, cloudNewIds.toList());
+    rawTask.cover(it);
+
+    // 3. 更新数据库数据
+    await RemoteDb.instance.updateTask(user!.id, {for (var i in localNewIds) i: rawTask[i]!});
+
+    _onDataChanged();
+  }
 }
 
 enum _DataChangeType {

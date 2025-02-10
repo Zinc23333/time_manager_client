@@ -19,3 +19,15 @@ extension Int64Ex on fixnum.Int64 {
     return DateTime.fromMillisecondsSinceEpoch(milliseconds);
   }
 }
+
+extension MapEx<K, V> on Map<K, V> {
+  void cover(Map<K, V?> m) {
+    m.forEach((k, v) {
+      if (v != null) {
+        this[k] = v;
+      } else {
+        remove(k);
+      }
+    });
+  }
+}

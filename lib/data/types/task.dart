@@ -1,8 +1,7 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:time_manager_client/data/types/tw_data.dart';
+import 'package:time_manager_client/data/types/ts_data.dart';
 import 'package:time_manager_client/helper/extension.dart';
 import 'package:time_manager_client/data/proto.gen/task.pb.dart' as p;
 import 'package:time_manager_client/helper/helper.dart';
@@ -62,7 +61,7 @@ class Task extends TsData {
     init();
   }
 
-  Task.fromMap(
+  Task.importFromMap(
     Map map, [
     this.status = TaskStatus.unfinished,
     this.source = "自动识别",
@@ -79,6 +78,26 @@ class Task extends TsData {
     init();
   }
 
+  Task.fromMap(Map<String, dynamic> map)
+      : title = map["title"],
+        summary = map["summary"],
+        startTime = map["start_time"],
+        startTimePrecision = map["start_time_precision"],
+        endTime = map["end_time"],
+        endTimePrecision = map["end_time_precision"],
+        importance = map["importance"],
+        location = map["location"],
+        participant = map["participant"],
+        note = map["note"],
+        source = map["source"],
+        content = map["content"],
+        status = TaskStatus.fromCode(1);
+
+  static Task? fromMapNullable(Map<String, dynamic> map) {
+    if (map.isEmpty || !map.containsKey("title")) return null;
+    return Task.fromMap(map);
+  }
+
   static List<Task> fromJsonString(String text) {
     final List<Task> res = [];
     final jl = jsonDecode(text);
@@ -86,7 +105,7 @@ class Task extends TsData {
       for (final j in jl) {
         if (j is Map) {
           j.containsKey("title");
-          final r = Task.fromMap(j);
+          final r = Task.importFromMap(j);
           res.add(r);
         }
       }
@@ -111,6 +130,8 @@ class Task extends TsData {
         updateTimestampAt: t.updateTimestampAt.toInt(),
       );
 
+  // factory Task.fromUint8List(Uint8List data) => Task.fromProto(p.Task.fromBuffer(data));
+
   void init() {
     if (startTime != null) startTimePrecision ??= 5;
     if (endTime != null) endTimePrecision ??= 5;
@@ -130,7 +151,8 @@ class Task extends TsData {
   String get startTimeWithPrecision => startTime?.formatWithPrecision(startTimePrecision ?? 5) ?? "";
   String get endTimeWithPrecision => endTime?.formatWithPrecision(endTimePrecision ?? 5) ?? "";
 
-  Map<String, Object?> toJson() => {
+  @override
+  Map<String, dynamic> toMap() => {
         "title": title,
         "summary": summary,
         "startTime": startTime?.millisecondsSinceEpoch,
@@ -146,7 +168,7 @@ class Task extends TsData {
         "status": status.code,
       };
 
-  String toJsonString() => JsonEncoder().convert(toJson());
+  String toJsonString() => JsonEncoder().convert(toMap());
 
   static const List<(String label, IconData icon, bool nullable)> inputFieldParams = [
     ("标题", Icons.flag_outlined, false),

@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:time_manager_client/data/controller/data_controller.dart';
+
 import 'package:time_manager_client/helper/helper.dart';
 import 'package:time_manager_client/pages/edit_group_page.dart';
 import 'package:time_manager_client/pages/four_quadrant_page.dart';
@@ -37,11 +40,20 @@ class _HomePageState extends State<HomePage> {
             title: buildGroupSwitcher(),
             centerTitle: true,
             actions: [
+              if (Platform.isAndroid || Platform.isIOS)
+                IconButton(
+                  icon: Icon(Icons.qr_code_scanner_rounded),
+                  onPressed: () {
+                    Get.to(QrScannerPage());
+                  },
+                ),
               IconButton(
-                icon: Icon(Icons.qr_code_scanner_rounded),
-                onPressed: () {
-                  Get.to(QrScannerPage());
+                onPressed: () async {
+                  await DataController.to.syncTask();
+                  print("ddd fin");
+                  // RemoteDb.instance.submitTask(7, 1, Task(title: "HEl==="));
                 },
+                icon: Icon(Icons.refresh),
               ),
             ],
           ),
