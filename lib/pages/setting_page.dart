@@ -68,37 +68,40 @@ class _SettingPageState extends State<SettingPage> {
   Card buildCardUser() {
     return Card(
       margin: EdgeInsets.symmetric(horizontal: 16),
-      child: ListTile(
-        leading: CircleAvatar(child: Text(User.icon)),
-        title: Text(User.id != null ? "用户 ${User.id}" : "未登陆"),
-        subtitle: Text(User.accounts.firstOrNull?.account ?? "点击此处登陆"),
-        onTap: () async {
-          if (User.id == null) {
-            // 处理登陆逻辑
-            if (Platform.isAndroid || Platform.isIOS) {
-              // 移动端
-              final phone = await LoginBottomSheet.show(context);
-              if (phone == null) return;
+      child: GetBuilder(
+        id: User.getControllerId,
+        builder: (_) => ListTile(
+          leading: CircleAvatar(child: Text(User.icon)),
+          title: Text(User.id != null ? "用户 ${User.id}" : "未登陆"),
+          subtitle: Text(User.accounts.firstOrNull?.account ?? "点击此处登陆"),
+          onTap: () async {
+            if (User.id == null) {
+              // 处理登陆逻辑
+              if (Platform.isAndroid || Platform.isIOS) {
+                // 移动端
+                final phone = await LoginBottomSheet.show(context);
+                if (phone == null) return;
 
-              // 开始登陆
-              await indicatorKey.currentState!.show(draggingCurve: Curves.easeOutBack);
-              if (mounted) setState(() {});
-              await DataController.to.loginWithPhoneNumber(phone);
-              await indicatorKey.currentState!.hide();
-              if (mounted) setState(() {});
-              // 结束登陆
+                // 开始登陆
+                await indicatorKey.currentState!.show(draggingCurve: Curves.easeOutBack);
+                if (mounted) setState(() {});
+                await DataController.to.loginWithPhoneNumber(phone);
+                await indicatorKey.currentState!.hide();
+                if (mounted) setState(() {});
+                // 结束登陆
 
-              //刷新界面
+                //刷新界面
+              }
+            } else {
+              // 查看用户详情
+              UserProfileDialog.show(context);
+
+              // Controller.to.logout();
+              // setState(() {});
+              // Get.snackbar("提示", "登出成功");
             }
-          } else {
-            // 查看用户详情
-            UserProfileDialog.show(context);
-
-            // Controller.to.logout();
-            // setState(() {});
-            // Get.snackbar("提示", "登出成功");
-          }
-        },
+          },
+        ),
       ),
     );
   }

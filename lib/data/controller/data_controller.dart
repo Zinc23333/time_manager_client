@@ -156,11 +156,12 @@ class DataController extends GetxController {
   Future<bool> loginWithPhoneNumber(int phone) async {
     int? i = await RemoteDb.instance.signInWithPhoneNumber(phone);
     i ??= await RemoteDb.instance.signUpWithPhoneNumber(phone);
-    print(i);
+    // print(i);
     User.id = i;
     User.accounts.clear();
     User.accounts.add(UserAccountPhone(phone));
 
+    update([User.getControllerId]);
     return true;
   }
 
@@ -168,5 +169,7 @@ class DataController extends GetxController {
   void logout() {
     User.id = null;
     User.accounts.clear();
+
+    update([User.getControllerId]);
   }
 }

@@ -30,6 +30,7 @@ jobs:
 
       - run: flutter pub get
       - run: |
+          dart run build_runner clean
           dart run build_runner build -d 1 -r
           dart run flutter_launcher_icons
 
@@ -85,6 +86,7 @@ jobs:
           echo "DS_KEY=$DS_KEY" > .env
 
       - run: |
+          dart run build_runner clean
           dart run build_runner build -d 1 -r
           dart run flutter_launcher_icons
           
