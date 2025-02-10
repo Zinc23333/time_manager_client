@@ -61,16 +61,14 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
-  Future<void> _onRefresh() async {
-    print("hi");
-  }
+  Future<void> _onRefresh() async {}
 
   Card buildCardUser() {
     return Card(
       margin: EdgeInsets.symmetric(horizontal: 16),
       child: GetBuilder<DataController>(
         id: User.getControllerId,
-        builder: (_) => ListTile(
+        builder: (c) => ListTile(
           leading: CircleAvatar(child: Text(User.icon)),
           title: Text(User.id != null ? "用户 ${User.id}" : "未登陆"),
           subtitle: Text(User.accounts.firstOrNull?.account ?? "点击此处登陆"),
@@ -83,10 +81,10 @@ class _SettingPageState extends State<SettingPage> {
                 if (phone == null) return;
 
                 // 开始登陆
-                await indicatorKey.currentState!.show(draggingCurve: Curves.easeOutBack);
+                await indicatorKey.currentState?.show(draggingCurve: Curves.easeOutBack);
                 if (mounted) setState(() {});
                 await DataController.to.loginWithPhoneNumber(phone);
-                await indicatorKey.currentState!.hide();
+                await indicatorKey.currentState?.hide();
                 if (mounted) setState(() {});
                 // 结束登陆
 
@@ -95,10 +93,6 @@ class _SettingPageState extends State<SettingPage> {
             } else {
               // 查看用户详情
               UserProfileDialog.show(context);
-
-              // Controller.to.logout();
-              // setState(() {});
-              // Get.snackbar("提示", "登出成功");
             }
           },
         ),
