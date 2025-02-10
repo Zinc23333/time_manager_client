@@ -68,7 +68,7 @@ class _SettingPageState extends State<SettingPage> {
   Card buildCardUser() {
     return Card(
       margin: EdgeInsets.symmetric(horizontal: 16),
-      child: GetBuilder(
+      child: GetBuilder<DataController>(
         id: User.getControllerId,
         builder: (_) => ListTile(
           leading: CircleAvatar(child: Text(User.icon)),
