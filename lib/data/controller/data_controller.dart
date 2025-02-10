@@ -4,18 +4,20 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:get/get.dart';
-import 'package:time_manager_client/data/local_storage.dart';
-import 'package:time_manager_client/data/remote_db.dart';
+import 'package:time_manager_client/data/repository/local_storage.dart';
+import 'package:time_manager_client/data/repository/remote_db.dart';
 import 'package:time_manager_client/data/types/group.dart';
 import 'package:time_manager_client/data/types/task.dart';
 import 'package:time_manager_client/data/proto.gen/storage.pb.dart' as p;
+import 'package:time_manager_client/data/types/user_account.dart';
+import 'package:time_manager_client/data/controller/user_controller.dart';
 import 'package:time_manager_client/helper/extension.dart';
 
-class Controller extends GetxController {
-  static Controller get to => Get.find();
+class DataController extends GetxController {
+  static DataController get to => Get.find();
 
   // 初始化
-  Controller() {
+  DataController() {
     LocalStorage.instance?.init().then((_) {
       loadLocally();
     });
@@ -153,12 +155,18 @@ class Controller extends GetxController {
   // 登陆
   Future<bool> loginWithPhoneNumber(int phone) async {
     int? i = await RemoteDb.instance.signInWithPhoneNumber(phone);
-    print("Phone: $i");
-    if (i == null) {
-      i = await RemoteDb.instance.signUpWithPhoneNumber(phone);
-      print("Phone2: $i");
-    }
+    i ??= await RemoteDb.instance.signUpWithPhoneNumber(phone);
+    print(i);
+    UserController.id = i;
+    UserController.accounts.clear();
+    UserController.accounts.add(UserAccountPhone(phone));
 
-    return false;
+    return true;
+  }
+
+  // 登出
+  void logout() {
+    UserController.id = null;
+    UserController.accounts.clear();
   }
 }

@@ -1,15 +1,18 @@
 import 'dart:io';
 
+import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:get/get.dart';
-import 'package:time_manager_client/data/controller.dart';
-import 'package:time_manager_client/data/local_storage.dart';
-import 'package:time_manager_client/data/types/user.dart';
+import 'package:time_manager_client/3rd/warp_indicator.dart';
+import 'package:time_manager_client/data/controller/data_controller.dart';
+import 'package:time_manager_client/data/repository/local_storage.dart';
+import 'package:time_manager_client/data/controller/user_controller.dart';
 import 'package:time_manager_client/helper/helper.dart';
 import 'package:time_manager_client/widgets/login_bottom_sheet.dart';
 import 'package:time_manager_client/widgets/simple_text_bottom_sheet.dart';
+import 'package:time_manager_client/widgets/user_profile_dialog.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
@@ -21,6 +24,9 @@ class SettingPage extends StatefulWidget {
 class _SettingPageState extends State<SettingPage> {
   late Color colorseed;
 
+  final indicatorController = IndicatorController(refreshEnabled: false);
+  final indicatorKey = GlobalKey<CustomRefreshIndicatorState>();
+
   @override
   void initState() {
     super.initState();
@@ -31,37 +37,66 @@ class _SettingPageState extends State<SettingPage> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: [
-        const SizedBox(height: 16),
-        buildCardUser(),
-        const SizedBox(height: 16),
-        buildTileDarkmode(context),
-        buildTileColorScheme(context),
-        buildTileExportToFile(context),
-        buildTileExportAsText(context),
-        buildTileImportFromText(context),
-      ],
+    return IgnorePointer(
+      ignoring: !indicatorController.isIdle,
+      child: WarpIndicator(
+        controller: indicatorController,
+        indicatorKey: indicatorKey,
+        onRefresh: _onRefresh,
+        child: Scaffold(
+          body: ListView(
+            children: [
+              const SizedBox(height: 16),
+              buildCardUser(),
+              const SizedBox(height: 16),
+              buildTileDarkmode(context),
+              buildTileColorScheme(context),
+              buildTileExportToFile(context),
+              buildTileExportAsText(context),
+              buildTileImportFromText(context),
+            ],
+          ),
+        ),
+      ),
     );
+  }
+
+  Future<void> _onRefresh() async {
+    print("hi");
   }
 
   Card buildCardUser() {
     return Card(
+      margin: EdgeInsets.symmetric(horizontal: 16),
       child: ListTile(
-        leading: CircleAvatar(
-          child: Text("😊"),
-        ),
-        title: Text("未登陆"),
-        subtitle: Text("点击此处登陆"),
+        leading: CircleAvatar(child: Text(UserController.icon)),
+        title: Text(UserController.id != null ? "用户 ${UserController.id}" : "未登陆"),
+        subtitle: Text(UserController.accounts.firstOrNull?.account ?? "点击此处登陆"),
         onTap: () async {
-          if (User.id == null) {
+          if (UserController.id == null) {
             // 处理登陆逻辑
             if (Platform.isAndroid || Platform.isIOS) {
               // 移动端
               final phone = await LoginBottomSheet.show(context);
               if (phone == null) return;
-              await Controller.to.loginWithPhoneNumber(phone);
+
+              // 开始登陆
+              await indicatorKey.currentState!.show(draggingCurve: Curves.easeOutBack);
+              if (mounted) setState(() {});
+              await DataController.to.loginWithPhoneNumber(phone);
+              await indicatorKey.currentState!.hide();
+              if (mounted) setState(() {});
+              // 结束登陆
+
+              //刷新界面
             }
+          } else {
+            // 查看用户详情
+            UserProfileDialog.show(context);
+
+            // Controller.to.logout();
+            // setState(() {});
+            // Get.snackbar("提示", "登出成功");
           }
         },
       ),
@@ -78,7 +113,7 @@ class _SettingPageState extends State<SettingPage> {
           return;
         }
 
-        if (Controller.to.loadFromText(s!)) {
+        if (DataController.to.loadFromText(s!)) {
           Get.snackbar("导入成功", "数据已导入");
         } else {
           Get.snackbar("导入失败", "数据格式错误");
@@ -97,7 +132,7 @@ class _SettingPageState extends State<SettingPage> {
     return ListTile(
       title: Text("导出数据到文件"),
       onTap: () async {
-        File? file = await Controller.to.saveDownloadDirectory();
+        File? file = await DataController.to.saveDownloadDirectory();
         if (file == null) {
           Get.snackbar("导出失败", "请检查是否有下载文件夹的写入权限");
           return;
@@ -111,7 +146,7 @@ class _SettingPageState extends State<SettingPage> {
     return ListTile(
       title: Text("导出数据为文本"),
       onTap: () async {
-        String data = Controller.to.saveAsText();
+        String data = DataController.to.saveAsText();
         showDialog(
           context: context,
           builder: (context) => AlertDialog(

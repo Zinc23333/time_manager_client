@@ -1,6 +1,6 @@
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:time_manager_client/data/controller.dart';
+import 'package:time_manager_client/data/controller/data_controller.dart';
 import 'package:time_manager_client/data/types/group.dart';
 import 'package:time_manager_client/helper/helper.dart';
 
@@ -12,7 +12,7 @@ class EditGroupPage extends StatefulWidget {
 }
 
 class _EditGroupPageState extends State<EditGroupPage> {
-  Group selectedGroup = Controller.to.currentGroup;
+  Group selectedGroup = DataController.to.currentGroup;
   late final controller = TextEditingController(text: selectedGroup.title);
   bool showEmojiPicker = false;
 
@@ -56,7 +56,7 @@ class _EditGroupPageState extends State<EditGroupPage> {
                 bottomActionBarConfig: BottomActionBarConfig(enabled: false),
               ),
               onEmojiSelected: (category, emoji) {
-                Controller.to.changeGroupIcon(selectedGroup, emoji.emoji);
+                DataController.to.changeGroupIcon(selectedGroup, emoji.emoji);
                 setState(() {});
               },
             ),
@@ -70,7 +70,7 @@ class _EditGroupPageState extends State<EditGroupPage> {
       spacing: 8,
       runSpacing: 8,
       children: [
-        for (final group in Controller.to.groups)
+        for (final group in DataController.to.groups)
           RawChip(
             avatar: Text(group.icon),
             label: Text(group.title),
@@ -85,7 +85,7 @@ class _EditGroupPageState extends State<EditGroupPage> {
           avatar: Icon(Icons.add),
           label: Text("新增"),
           onPressed: () {
-            selectedGroup = Controller.to.addGroup();
+            selectedGroup = DataController.to.addGroup();
             controller.text = selectedGroup.title;
             setState(() {});
           },
@@ -119,7 +119,7 @@ class _EditGroupPageState extends State<EditGroupPage> {
                 IconButton(
                   onPressed: () {
                     if (controller.text.isNotEmpty) {
-                      Controller.to.changeGroupTitle(selectedGroup, controller.text);
+                      DataController.to.changeGroupTitle(selectedGroup, controller.text);
                       setState(() {});
                     }
                   },

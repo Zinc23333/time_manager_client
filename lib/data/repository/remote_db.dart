@@ -1,5 +1,5 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:time_manager_client/data/env.dart';
+import 'package:time_manager_client/data/environment/env.dart';
 
 class RemoteDb {
   RemoteDb._();
@@ -20,8 +20,8 @@ class RemoteDb {
   // 登录
   // 返回: userId
   Future<int?> signInWithPhoneNumber(int phone) async {
-    final d = await supabase.from("user_info_phone").select("id").eq("phone", phone);
-    return d.singleOrNull?["id"];
+    final d = await supabase.from("user_info_phone").select("userId").eq("phone", phone);
+    return d.singleOrNull?["userId"];
   }
 
   // 注册

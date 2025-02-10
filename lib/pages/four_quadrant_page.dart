@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:time_manager_client/data/controller.dart';
+import 'package:time_manager_client/data/controller/data_controller.dart';
 import 'package:time_manager_client/data/types/task.dart';
 import 'package:time_manager_client/widgets/view_task_widget.dart';
 
@@ -21,9 +21,9 @@ class _FourQuadrantPageState extends State<FourQuadrantPage> {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<Controller>(
+    return GetBuilder<DataController>(
       builder: (s) {
-        final tasks = Controller.to.currentGroupTasks;
+        final tasks = DataController.to.currentGroupTasks;
         final fqts = _getTaskFourQuadrant(tasks);
         return Column(children: [
           Expanded(
@@ -73,7 +73,7 @@ class _FourQuadrantPageState extends State<FourQuadrantPage> {
               children: [
                 InkWell(
                   onTap: () {
-                    Controller.to.changeTaskStatus(tasks[index]);
+                    DataController.to.changeTaskStatus(tasks[index]);
                     setState(() {});
                   },
                   child: IconTheme.merge(

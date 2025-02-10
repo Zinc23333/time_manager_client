@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:time_manager_client/data/controller.dart';
+import 'package:time_manager_client/data/controller/data_controller.dart';
 import 'package:time_manager_client/helper/helper.dart';
 import 'package:time_manager_client/pages/edit_group_page.dart';
 import 'package:time_manager_client/pages/four_quadrant_page.dart';
@@ -100,14 +100,14 @@ class _HomePageState extends State<HomePage> {
   Widget buildGroupSwitcher() {
     return InkWell(
       onTap: bSwitchGroup,
-      child: GetBuilder<Controller>(
+      child: GetBuilder<DataController>(
         builder: (_) {
           return Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(Controller.to.currentGroup.icon),
+              Text(DataController.to.currentGroup.icon),
               const SizedBox(width: 4),
-              Text(Controller.to.currentGroup.title),
+              Text(DataController.to.currentGroup.title),
               const SizedBox(width: 4),
               Icon(Icons.arrow_drop_down_rounded),
             ],
@@ -124,8 +124,8 @@ class _HomePageState extends State<HomePage> {
         return SimpleDialog(
           title: Text("选择分组"),
           children: [
-            for (final group in Controller.to.groups)
-              if (group == Controller.to.currentGroup)
+            for (final group in DataController.to.groups)
+              if (group == DataController.to.currentGroup)
                 SimpleDialogOption(
                   child: Text.rich(TextSpan(children: [
                     TextSpan(text: group.iconAndTitle),
@@ -136,7 +136,7 @@ class _HomePageState extends State<HomePage> {
               else
                 SimpleDialogOption(
                   onPressed: () {
-                    Controller.to.changeCurrentGroup(group);
+                    DataController.to.changeCurrentGroup(group);
                     Get.back();
                   },
                   child: Text(group.iconAndTitle),

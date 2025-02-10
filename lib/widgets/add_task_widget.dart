@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:time_manager_client/data/controller.dart';
+import 'package:time_manager_client/data/controller/data_controller.dart';
 import 'package:time_manager_client/data/types/task.dart';
 import 'package:time_manager_client/helper/helper.dart';
 import 'package:time_manager_client/widgets/add_task_from_text_widget.dart';
@@ -137,7 +137,7 @@ class _AddTaskWidgetState extends State<AddTaskWidget> {
 
   void bFinish() {
     if (_inputList[0].$4.text.isEmpty) return;
-    Controller.to.addTask(
+    DataController.to.addTask(
       Task.fromController(
         _inputList.map((e) => e.$4).toList(),
         startTime: startDateTime,

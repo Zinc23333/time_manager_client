@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:time_manager_client/data/controller.dart';
+import 'package:time_manager_client/data/controller/data_controller.dart';
 import 'package:time_manager_client/helper/helper.dart';
 import 'package:time_manager_client/widgets/view_task_widget.dart';
 
@@ -20,9 +20,9 @@ class _ListPageState extends State<ListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<Controller>(
+    return GetBuilder<DataController>(
       builder: (s) {
-        final tasks = Controller.to.currentGroupTasks.toList();
+        final tasks = DataController.to.currentGroupTasks.toList();
         return ListView.separated(
           itemBuilder: (context, index) {
             final task = tasks[index];
@@ -35,7 +35,7 @@ class _ListPageState extends State<ListPage> {
               },
               leading: IconButton(
                 onPressed: () {
-                  Controller.to.changeTaskStatus(tasks[index]);
+                  DataController.to.changeTaskStatus(tasks[index]);
                   setState(() {});
                 },
                 icon: tasks[index].status.isFinished ? Icon(Icons.check_circle) : Icon(Icons.circle_outlined),

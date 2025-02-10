@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/getwidget.dart';
-import 'package:time_manager_client/data/controller.dart';
+import 'package:time_manager_client/data/controller/data_controller.dart';
 import 'package:time_manager_client/data/types/task.dart';
 import 'package:time_manager_client/helper/extension.dart';
 import 'package:time_manager_client/helper/helper.dart';
@@ -179,9 +179,9 @@ class _EditTaskPageState extends State<EditTaskPage> {
                       status: widget.old?.status ?? TaskStatus.unfinished,
                     );
                     if (widget.old == null) {
-                      Controller.to.addTask(task);
+                      DataController.to.addTask(task);
                     } else {
-                      Controller.to.editTask(widget.old!, task);
+                      DataController.to.editTask(widget.old!, task);
                     }
                     Get.back();
                   }

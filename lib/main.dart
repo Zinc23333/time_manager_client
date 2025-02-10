@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:time_manager_client/data/controller.dart';
-import 'package:time_manager_client/data/local_storage.dart';
+import 'package:time_manager_client/data/controller/data_controller.dart';
+import 'package:time_manager_client/data/repository/local_storage.dart';
 import 'package:time_manager_client/helper/helper.dart';
 import 'package:time_manager_client/pages/home_page.dart';
 
@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
 
     return GetMaterialApp(
       onInit: () {
-        Get.put(Controller());
+        Get.put(DataController());
       },
       title: '时间助手',
       theme: ThemeData(
