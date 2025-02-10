@@ -83,7 +83,9 @@ jobs:
         env:
           DS_KEY: ${{ secrets.DS_KEY }}
         run: |
-          echo "DS_KEY=$DS_KEY" > .env
+          echo -e "DS_KEY=$DS_KEY       \n"  > .env
+          echo -e "SUPA_URL=$SUPA_URL   \n" >> .env
+          echo -e "SUPA_ANON=$SUPA_ANON"    >> .env
 
       - run: |
           dart run build_runner clean

@@ -10,6 +10,8 @@ class UserAccount {
   IconData get icon {
     throw UnimplementedError();
   }
+
+  //  toProto
 }
 
 class UserAccountPhone extends UserAccount {
