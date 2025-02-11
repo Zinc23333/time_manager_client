@@ -52,7 +52,7 @@ class Group extends TsData {
   Group.fromMap(Map<String, dynamic> map)
       : title = map["title"],
         icon = map["icon"],
-        taskIds = map["taskIds"];
+        taskIds = map["taskIds"].cast<int>();
 
   static Group? fromMapNullable(Map<String, dynamic> map) {
     if (map.isEmpty) return null;

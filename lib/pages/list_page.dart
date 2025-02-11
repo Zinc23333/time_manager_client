@@ -22,7 +22,7 @@ class _ListPageState extends State<ListPage> {
   @override
   Widget build(BuildContext context) {
     return CheckMarkIndicator(
-      onRefresh: DataController.to.syncTask,
+      onRefresh: DataController.to.syncAll,
       child: GetBuilder<DataController>(
         builder: (s) {
           final tasks = DataController.to.currentGroupTasks.toList();

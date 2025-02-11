@@ -73,33 +73,6 @@ class RemoteDb {
     return d.map((e) => UserAccountPhone(e["phone"])).toList();
   }
 
-  // 获取数据库的 task (id, updateAt)
-  Future<Iterable<(int id, int updateAt)>> getTaskWithTime(int userId) async {
-    final d = await _supa.from("tasks").select("id, updateAt").eq("userId", userId);
-    return d.map((e) => (e["id"] as int, e["updateAt"] as int));
-  }
-
-  // 获取数据库给定 ids 的 task
-  Future<Map<int, Task?>> getTask(int userId, List<int> ids) async {
-    final d = await _supa.from("tasks").select("id, data").eq("userId", userId).inFilter("id", ids);
-    return {for (final m in d) m["id"]: Task.fromMapNullable(m["data"])};
-  }
-
-  // 更新数据库 task
-  // param tasks: 需要更新的tasks
-  Future<void> updateTask(int userId, Map<int, Task> tasks) async {
-    await _supa.from("tasks").upsert(
-        tasks.entries
-            .map((e) => {
-                  "userId": userId,
-                  "id": e.key,
-                  "updateAt": e.value.updateTimestampAt,
-                  "data": e.value.toMap(),
-                })
-            .toList(),
-        onConflict: "userId, id");
-  }
-
   // 获取数据库的 task/group (id, updateAt)
   Future<Iterable<(int id, int updateAt)>> getWithTime<T>(int userId) async {
     final d = await _supa.from(TsData.getTableName<T>()).select("id, updateAt").eq("userId", userId);

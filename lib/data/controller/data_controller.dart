@@ -10,6 +10,7 @@ import 'package:time_manager_client/data/repository/remote_db.dart';
 import 'package:time_manager_client/data/types/group.dart';
 import 'package:time_manager_client/data/types/task.dart';
 import 'package:time_manager_client/data/proto.gen/storage.pb.dart' as p;
+import 'package:time_manager_client/data/types/ts_data.dart';
 import 'package:time_manager_client/data/types/user_account.dart';
 import 'package:time_manager_client/data/types/user.dart';
 import 'package:time_manager_client/helper/extension.dart';
@@ -229,24 +230,67 @@ class DataController extends GetxController {
   // 数据同步
   // 全量同步
   // Task
-  Future<void> syncTask() async {
+  // Future<void> syncTask() async {
+  //   if (user == null) return;
+
+  //   // 1. 数据新旧比较
+  //   Set<int> cloudNewIds = {}; // 数据库数据新  -> 更新本地
+  //   Set<int> localNewIds = {}; // 本地数据新    -> 上数据库
+
+  //   // 1.1 云端数据
+  //   final tt = await RemoteDb.instance.getTaskWithTime(user!.id);
+  //   for (final (id, updateAt) in tt) {
+  //     if (!rawTask.containsKey(id) || rawTask[id]!.updateTimestampAt < updateAt) {
+  //       cloudNewIds.add(id);
+  //     } else {
+  //       localNewIds.add(id);
+  //     }
+  //   }
+  //   // 1.2 本地数据
+  //   for (final i in rawTask.keys) {
+  //     if (!cloudNewIds.contains(i)) {
+  //       localNewIds.add(i);
+  //     }
+  //   }
+
+  //   print("ddd cloud: $cloudNewIds");
+  //   print("ddd local: $localNewIds");
+
+  //   // 2. 更新本地数据
+  //   final it = await RemoteDb.instance.getTask(user!.id, cloudNewIds.toList());
+  //   rawTask.cover(it);
+
+  //   // 3. 更新数据库数据
+  //   await RemoteDb.instance.updateTask(user!.id, {for (var i in localNewIds) i: rawTask[i]!});
+
+  //   _onDataChanged();
+  // }
+
+  Future<void> syncAll() async {
+    await syncData<Group>();
+    await syncData<Task>();
+    _onDataChanged();
+  }
+
+  Future<void> syncData<T extends TsData>() async {
     if (user == null) return;
 
     // 1. 数据新旧比较
     Set<int> cloudNewIds = {}; // 数据库数据新  -> 更新本地
     Set<int> localNewIds = {}; // 本地数据新    -> 上数据库
+    final rawMap = _getRaw<T>();
 
     // 1.1 云端数据
-    final tt = await RemoteDb.instance.getTaskWithTime(user!.id);
+    final tt = await RemoteDb.instance.getWithTime<T>(user!.id);
     for (final (id, updateAt) in tt) {
-      if (!rawTask.containsKey(id) || rawTask[id]!.updateTimestampAt < updateAt) {
+      if (!rawMap.containsKey(id) || rawMap[id]!.updateTimestampAt < updateAt) {
         cloudNewIds.add(id);
       } else {
         localNewIds.add(id);
       }
     }
     // 1.2 本地数据
-    for (final i in rawTask.keys) {
+    for (final i in rawMap.keys) {
       if (!cloudNewIds.contains(i)) {
         localNewIds.add(i);
       }
@@ -256,13 +300,30 @@ class DataController extends GetxController {
     print("ddd local: $localNewIds");
 
     // 2. 更新本地数据
-    final it = await RemoteDb.instance.getTask(user!.id, cloudNewIds.toList());
-    rawTask.cover(it);
+    final it = await RemoteDb.instance.getData<T>(user!.id, cloudNewIds.toList());
+    rawMap.cover(it);
 
     // 3. 更新数据库数据
-    await RemoteDb.instance.updateTask(user!.id, {for (var i in localNewIds) i: rawTask[i]!});
+    await RemoteDb.instance.update<T>(user!.id, {for (var i in localNewIds) i: rawMap[i]!});
+  }
 
-    _onDataChanged();
+  Map<int, T> _getRaw<T extends TsData>() {
+    print(T.runtimeType);
+    print("ddd ty: ${T}");
+
+    if (T == Task) return rawTask as Map<int, T>;
+    if (T == Group) return rawGroup as Map<int, T>;
+    throw Exception("Unknown type");
+
+    // (T _).;
+    // switch (T.runtimeType) {
+    //   case Task _:
+    //     return rawTask as Map<int, T>;
+    //   case Group _:
+    //     return rawGroup as Map<int, T>;
+    //   default:
+    //     throw Exception("Unknown type");
+    // }
   }
 }
 

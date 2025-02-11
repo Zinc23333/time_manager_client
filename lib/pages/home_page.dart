@@ -49,7 +49,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               IconButton(
                 onPressed: () async {
-                  await DataController.to.syncTask();
+                  await DataController.to.syncAll();
                   print("ddd fin");
                   // RemoteDb.instance.submitTask(7, 1, Task(title: "HEl==="));
                 },
