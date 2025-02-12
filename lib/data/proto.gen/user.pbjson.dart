@@ -19,12 +19,14 @@ const UserAccountType$json = {
   '2': [
     {'1': 'UNKNOWN', '2': 0},
     {'1': 'PHONE', '2': 1},
+    {'1': 'WECHAT_OPENID', '2': 2},
   ],
 };
 
 /// Descriptor for `UserAccountType`. Decode as a `google.protobuf.EnumDescriptorProto`.
 final $typed_data.Uint8List userAccountTypeDescriptor = $convert.base64Decode(
-    'Cg9Vc2VyQWNjb3VudFR5cGUSCwoHVU5LTk9XThAAEgkKBVBIT05FEAE=');
+    'Cg9Vc2VyQWNjb3VudFR5cGUSCwoHVU5LTk9XThAAEgkKBVBIT05FEAESEQoNV0VDSEFUX09QRU'
+    '5JRBAC');
 
 @$core.Deprecated('Use userDescriptor instead')
 const User$json = {

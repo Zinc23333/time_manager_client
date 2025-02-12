@@ -299,7 +299,6 @@ class DataController extends GetxController {
   }
 
   void afterLogin() async {
-    getUserInfo();
     await syncAll();
     startSync();
   }
@@ -362,6 +361,7 @@ class DataController extends GetxController {
   Future<void> syncAll() async {
     await syncData<Group>();
     await syncData<Task>();
+    getUserInfo();
     _onDataChanged();
   }
 

@@ -12,6 +12,8 @@ class UserAccount {
     switch (proto.type) {
       case p.UserAccountType.PHONE:
         return UserAccountPhone.fromProto(proto);
+      case p.UserAccountType.WECHAT_OPENID:
+        return UserAccountWechatOpenId.fromProto(proto);
       default:
         throw Exception("Unknown UserAccountType");
     }
@@ -36,4 +38,24 @@ class UserAccountPhone extends UserAccount {
 
   @override
   UserAccountPhone.fromProto(p.UserAccount proto) : phone = int.parse(proto.account);
+}
+
+class UserAccountWechatOpenId extends UserAccount {
+  final String openId;
+  const UserAccountWechatOpenId(this.openId);
+
+  @override
+  String get account => openId;
+
+  @override
+  IconData get icon => Icons.wechat;
+
+  @override
+  p.UserAccount toProto() => p.UserAccount(
+        account: openId,
+        type: p.UserAccountType.WECHAT_OPENID,
+      );
+
+  @override
+  UserAccountWechatOpenId.fromProto(p.UserAccount proto) : openId = proto.account;
 }

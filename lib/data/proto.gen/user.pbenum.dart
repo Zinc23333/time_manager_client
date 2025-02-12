@@ -16,10 +16,12 @@ import 'package:protobuf/protobuf.dart' as $pb;
 class UserAccountType extends $pb.ProtobufEnum {
   static const UserAccountType UNKNOWN = UserAccountType._(0, _omitEnumNames ? '' : 'UNKNOWN');
   static const UserAccountType PHONE = UserAccountType._(1, _omitEnumNames ? '' : 'PHONE');
+  static const UserAccountType WECHAT_OPENID = UserAccountType._(2, _omitEnumNames ? '' : 'WECHAT_OPENID');
 
   static const $core.List<UserAccountType> values = <UserAccountType> [
     UNKNOWN,
     PHONE,
+    WECHAT_OPENID,
   ];
 
   static final $core.Map<$core.int, UserAccountType> _byValue = $pb.ProtobufEnum.initByValue(values);

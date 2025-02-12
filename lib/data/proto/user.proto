@@ -17,4 +17,5 @@ message UserAccount {
 enum UserAccountType {
     UNKNOWN = 0;
     PHONE = 1;
+    WECHAT_OPENID = 2;
 }

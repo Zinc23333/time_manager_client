@@ -70,8 +70,12 @@ class RemoteDb {
 
   // 获取用户账号
   Future<List<UserAccount>> getUserAccounts(int userId) async {
-    final d = await _supa.from("user_info_phone").select("phone").eq("userId", userId);
-    return d.map((e) => UserAccountPhone(e["phone"])).toList();
+    final pl = await _supa.from("user_info_phone").select("phone").eq("userId", userId);
+    final wl = await _supa.from("user_info_wechat").select("openid").eq("userId", userId);
+    return [
+      ...pl.map((e) => UserAccountPhone(e["phone"])),
+      ...wl.map((e) => UserAccountWechatOpenId(e["openid"])),
+    ];
   }
 
   // 获取数据库的 task/group (id, updateAt)
@@ -124,33 +128,4 @@ class RemoteDb {
             TsData.fromMapNullable<T>(m["data"]),
           )))
       .expand((ld) => ld);
-  // Stream<(int, T?)> listenDataChange<T extends TsData>(int userId) => _supa
-  // .channel("public:${TsData.getTableName<T>()}")
-  // .onPostgresChanges(event: PostgresChangeEvent.insert, callback: (payload) {
-  //   payload.
-  // }).
-
-  // final _sc = StreamController<(int, TsData?)>();
-  // Stream<(int, TsData?)> listenDataChange(int userId) {
-  //   final t = _supa.from("tasks").stream(primaryKey: ["id, userId"]).eq("userId", userId);
-  //   // final g = _supa.from("groups").stream(primaryKey: ["id, userId"]).eq("userId", userId);
-
-  //   t.listen((d) {
-  //     for (final l in d) {
-  //       // print("dddA: $l");
-  //       _sc.add((l["id"] as int, TsData.fromMapNullable<Task>(l["data"])));
-  //     }
-  //   });
-
-  // final lts = [(t, Task), (g, Group)];
-  // for (final lt in lts) {
-  //   lt.$1.listen((d) {
-  //     for (final l in d) {
-  //       _sc.add((l["id"] as int, TsData.fromMapNullable(l["data"], lt.$2)));
-  //     }
-  //   });
-  // }
-
-  //   return _sc.stream;
-  // }
 }
