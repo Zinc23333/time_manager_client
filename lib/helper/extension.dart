@@ -7,6 +7,10 @@ extension DateTimeEx on DateTime {
     final r = List.generate(precision + 1, (i) => i).map((i) => "${l[i].toString().padLeft(2, "0")}${s[i]}").join();
     return r.substring(0, r.length - 1);
   }
+
+  bool isSameDay(DateTime other) {
+    return year == other.year && month == other.month && day == other.day;
+  }
 }
 
 extension IntEx on int {

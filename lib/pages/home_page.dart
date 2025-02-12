@@ -1,3 +1,4 @@
+import 'package:time_manager_client/pages/calendar_page.dart';
 import 'package:universal_io/io.dart';
 
 import 'package:flutter/foundation.dart';
@@ -26,7 +27,7 @@ class _HomePageState extends State<HomePage> {
   final pages = [
     (Icons.list, "列表", ListPage()),
     (Icons.dangerous, "四象限", FourQuadrantPage()),
-    (Icons.calendar_month, "日历", Text("4")),
+    (Icons.calendar_month, "日历", CalendarPage()),
     (Icons.settings, "设置", SettingPage()),
   ];
 

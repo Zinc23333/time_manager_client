@@ -44,7 +44,13 @@ class _ListPageState extends State<ListPage> {
               final textStyle = Helper.if_(task.status.isFinished, taskFinishedTextStyle);
               return ListTile(
                 title: Text(tasks[index].title, style: textStyle),
-                subtitle: (task.summary?.isNotEmpty ?? false) ? Text(task.summary!, style: textStyle) : null,
+                subtitle: (task.summary?.isNotEmpty ?? false)
+                    ? Text(
+                        task.summary!,
+                        style: textStyle,
+                        overflow: TextOverflow.ellipsis,
+                      )
+                    : null,
                 onTap: () {
                   ViewTaskWidget.show(context, tasks[index]);
                 },

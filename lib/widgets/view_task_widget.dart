@@ -73,7 +73,7 @@ class ViewTaskWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.date_range),
+                      Icon(Icons.date_range, color: iconColor),
                       SizedBox(width: 8),
                       Text(task.startTimeWithPrecision),
                       if (task.endTime != null) Text(" ~ "),

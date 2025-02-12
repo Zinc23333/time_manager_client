@@ -33,6 +33,7 @@ class DataController extends GetxController {
   }
 
   Iterable<Group> get groups => rawGroup.values;
+  Iterable<Task> get tasks => rawTask.values;
   User? get user => _rawUser.value;
 
   // List<int> rawGroupIds = [0];
