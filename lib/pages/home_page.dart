@@ -49,14 +49,15 @@ class _HomePageState extends State<HomePage> {
                     Get.to(QrScannerPage());
                   },
                 ),
-              IconButton(
-                onPressed: () async {
-                  await DataController.to.syncAll();
-                  print("ddd fin");
-                  // RemoteDb.instance.submitTask(7, 1, Task(title: "HEl==="));
-                },
-                icon: Icon(Icons.refresh),
-              ),
+              if (!Platform.isAndroid && !Platform.isIOS)
+                IconButton(
+                  onPressed: () async {
+                    await DataController.to.syncAll();
+                    print("ddd fin");
+                    // RemoteDb.instance.submitTask(7, 1, Task(title: "HEl==="));
+                  },
+                  icon: Icon(Icons.refresh),
+                ),
             ],
           ),
           bottomNavigationBar: Helper.if_(isPortrait, buildBottomNavigationBar()),
