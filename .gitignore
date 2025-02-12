@@ -36,7 +36,7 @@ migrate_working_dir/
 .metadata
 analysis_options.yaml
 devtools_options.yaml
-
+pubspec.lock
 
 # Symbolication related
 app.*.symbols
