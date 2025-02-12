@@ -42,6 +42,15 @@ class Task extends TsData {
     init();
   }
 
+  Task.delete()
+      : title = "",
+        status = TaskStatus.finished;
+
+  Task.loading()
+      : title = "",
+        status = TaskStatus.finished,
+        super.loading();
+
   Task.fromController(
     List<TextEditingController> controllers, {
     this.startTime,
@@ -61,16 +70,16 @@ class Task extends TsData {
     init();
   }
 
-  Task.importFromMap(
+  Task.importFromAiMap(
     Map map, [
     this.status = TaskStatus.unfinished,
     this.source = "自动识别",
   ])  : title = map["title"],
         summary = map["summary"],
-        startTime = map["start_time"] == null ? null : DateTime.fromMillisecondsSinceEpoch(map["start_time"] * 1000),
-        startTimePrecision = map["start_time_precision"],
-        endTime = map["end_time"] == null ? null : DateTime.fromMillisecondsSinceEpoch(map["end_time"] * 1000),
-        endTimePrecision = map["end_time_precision"],
+        startTime = map["startTime"] == null ? null : DateTime.fromMillisecondsSinceEpoch(map["startTime"] * 1000),
+        startTimePrecision = map["startTimePrecision"],
+        endTime = map["endTime"] == null ? null : DateTime.fromMillisecondsSinceEpoch(map["endTime"] * 1000),
+        endTimePrecision = map["endTimePrecision"],
         importance = map["importance"],
         location = map["location"],
         participant = map["participant"],
@@ -81,20 +90,20 @@ class Task extends TsData {
   Task.fromMap(Map<String, dynamic> map)
       : title = map["title"],
         summary = map["summary"],
-        startTime = map["start_time"],
-        startTimePrecision = map["start_time_precision"],
-        endTime = map["end_time"],
-        endTimePrecision = map["end_time_precision"],
+        startTime = map["startTime"] == null ? null : DateTime.fromMillisecondsSinceEpoch(map["startTime"]),
+        startTimePrecision = map["startTimePrecision"],
+        endTime = map["endTime"] == null ? null : DateTime.fromMillisecondsSinceEpoch(map["endTime"]),
+        endTimePrecision = map["endTimePrecision"],
         importance = map["importance"],
         location = map["location"],
         participant = map["participant"],
         note = map["note"],
         source = map["source"],
         content = map["content"],
-        status = TaskStatus.fromCode(1);
+        status = TaskStatus.fromCode(map["status"] ?? 1);
 
-  static Task? fromMapNullable(Map<String, dynamic> map) {
-    if (map.isEmpty || !map.containsKey("title")) return null;
+  static Task? fromMapNullable(Map<String, dynamic>? map) {
+    if (map == null || map.isEmpty || !map.containsKey("title")) return null;
     return Task.fromMap(map);
   }
 
@@ -105,7 +114,7 @@ class Task extends TsData {
       for (final j in jl) {
         if (j is Map) {
           j.containsKey("title");
-          final r = Task.importFromMap(j);
+          final r = Task.importFromAiMap(j);
           res.add(r);
         }
       }
@@ -136,6 +145,7 @@ class Task extends TsData {
     if (startTime != null) startTimePrecision ??= 5;
     if (endTime != null) endTimePrecision ??= 5;
     if (importance != null && (importance! <= 0 || importance! > 5)) importance = null;
+    if (title.isEmpty) throw ArgumentError("title cannot be empty");
   }
 
   String getState() {
@@ -150,6 +160,13 @@ class Task extends TsData {
 
   String get startTimeWithPrecision => startTime?.formatWithPrecision(startTimePrecision ?? 5) ?? "";
   String get endTimeWithPrecision => endTime?.formatWithPrecision(endTimePrecision ?? 5) ?? "";
+
+  @override
+  bool get isDeleted => title.isEmpty;
+  // @override
+  bool get isLoading => title.isEmpty && updateTimestampAt == -1;
+  @override
+  String get tableName => "tasks";
 
   @override
   Map<String, dynamic> toMap() => {

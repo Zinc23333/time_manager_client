@@ -31,3 +31,8 @@ extension MapEx<K, V> on Map<K, V> {
     });
   }
 }
+
+extension IntIterableEx on Iterable<int> {
+  int min() => reduce((value, element) => value < element ? value : element);
+  int max() => reduce((value, element) => value > element ? value : element);
+}

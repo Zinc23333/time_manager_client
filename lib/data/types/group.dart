@@ -13,13 +13,25 @@ class Group extends TsData {
     required this.icon,
     required this.taskIds,
     int? updateTimestamp,
-  }) : super(updateTimestamp);
+  }) : super(updateTimestamp) {
+    if (title.isEmpty) throw ArgumentError("title cannot be empty");
+  }
 
   Group.title(this.title)
       : icon = "📂",
         taskIds = [];
 
+  Group.delete()
+      : title = "",
+        icon = "",
+        taskIds = [];
+
   String get iconAndTitle => "$icon $title";
+  @override
+  bool get isDeleted => title.isEmpty;
+
+  @override
+  String get tableName => "groups";
 
   @override
   String toString() => "Group($iconAndTitle, $taskIds)";
@@ -54,8 +66,8 @@ class Group extends TsData {
         icon = map["icon"],
         taskIds = map["taskIds"].cast<int>();
 
-  static Group? fromMapNullable(Map<String, dynamic> map) {
-    if (map.isEmpty) return null;
+  static Group? fromMapNullable(Map<String, dynamic>? map) {
+    if (map == null || map.isEmpty) return null;
     return Group.fromMap(map);
   }
 }

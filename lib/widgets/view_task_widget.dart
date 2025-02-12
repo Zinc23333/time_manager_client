@@ -34,7 +34,7 @@ class ViewTaskWidget extends StatelessWidget {
                 ),
                 IconButton(
                   onPressed: () {
-                    Get.off(EditTaskPage(old: task));
+                    Get.off(() => EditTaskPage(old: task));
                   },
                   icon: Icon(Icons.edit),
                 ),

@@ -28,7 +28,8 @@ class LocalStorage {
 
   Future<void> init() async {
     if (_initialized) return;
-    storageDir = await getApplicationDocumentsDirectory();
+    storageDir = await getApplicationSupportDirectory();
+    print(storageDir.absolute);
     storageFile = File("${storageDir.path}/$storageFileName");
 
     _initialized = true;

@@ -1,5 +1,4 @@
-import 'dart:io';
-
+import 'package:universal_io/io.dart';
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -89,6 +88,7 @@ class _SettingPageState extends State<SettingPage> {
                 if (mounted) setState(() {});
                 // 结束登陆 刷新界面
               } else {
+                // print("DDD");
                 // 桌面端 / Web
                 QrLoginRequestDialog.show(context);
               }

@@ -1,8 +1,10 @@
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:time_manager_client/data/controller/data_controller.dart';
 import 'package:time_manager_client/data/types/group.dart';
 import 'package:time_manager_client/helper/helper.dart';
+import 'package:time_manager_client/widgets/confirm_dialog.dart';
 
 class EditGroupPage extends StatefulWidget {
   const EditGroupPage({super.key});
@@ -36,31 +38,36 @@ class _EditGroupPageState extends State<EditGroupPage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text("编辑分组"),
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                buildGroupChoicer(),
-                SizedBox(height: 24),
-                buildEditBar(),
-              ],
-            ),
-          ),
-          Expanded(child: SizedBox()),
-          if (showEmojiPicker)
-            EmojiPicker(
-              config: Config(
-                bottomActionBarConfig: BottomActionBarConfig(enabled: false),
+      body: GetBuilder<DataController>(
+        init: DataController.to,
+        builder: (_) {
+          return Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    buildGroupChoicer(),
+                    SizedBox(height: 24),
+                    buildEditBar(),
+                  ],
+                ),
               ),
-              onEmojiSelected: (category, emoji) {
-                DataController.to.changeGroupIcon(selectedGroup, emoji.emoji);
-                setState(() {});
-              },
-            ),
-        ],
+              Expanded(child: SizedBox()),
+              if (showEmojiPicker)
+                EmojiPicker(
+                  config: Config(
+                    bottomActionBarConfig: BottomActionBarConfig(enabled: false),
+                  ),
+                  onEmojiSelected: (category, emoji) {
+                    DataController.to.changeGroupIcon(selectedGroup, emoji.emoji);
+                    setState(() {});
+                  },
+                ),
+            ],
+          );
+        },
       ),
     );
   }
@@ -95,6 +102,7 @@ class _EditGroupPageState extends State<EditGroupPage> {
   }
 
   Row buildEditBar() {
+    final dc = DataController.to;
     return Row(
       children: [
         IconButton.outlined(
@@ -119,7 +127,7 @@ class _EditGroupPageState extends State<EditGroupPage> {
                 IconButton(
                   onPressed: () {
                     if (controller.text.isNotEmpty) {
-                      DataController.to.changeGroupTitle(selectedGroup, controller.text);
+                      dc.changeGroupTitle(selectedGroup, controller.text);
                       setState(() {});
                     }
                   },
@@ -136,6 +144,24 @@ class _EditGroupPageState extends State<EditGroupPage> {
             },
           ),
         ),
+        if (selectedGroup != dc.groups.first)
+          IconButton(
+            onPressed: () async {
+              final c = selectedGroup.taskIds.length;
+              final r = await ConfirmDialog.show(
+                context: context,
+                content: c == 0 ? "是否删除 ${selectedGroup.title}" : "该分组 (${selectedGroup.title}) 下还有 $c 个任务，确定删除？",
+              );
+              if (r == true) {
+                final willDelete = selectedGroup;
+                selectedGroup = dc.groups.first;
+                controller.text = selectedGroup.title;
+
+                dc.deleteGroup(willDelete);
+              }
+            },
+            icon: Icon(Icons.delete),
+          ),
       ],
     );
   }

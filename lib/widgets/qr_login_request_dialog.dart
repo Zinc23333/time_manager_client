@@ -44,7 +44,7 @@ class _QrLoginRequestDialogState extends State<QrLoginRequestDialog> {
                         Get.back();
                       } else {
                         Get.snackbar("二维码失效", "请重新扫描二维码");
-                        Get.off(QrLoginRequestDialog());
+                        Get.off(() => QrLoginRequestDialog());
                       }
                     });
                     listened = true;

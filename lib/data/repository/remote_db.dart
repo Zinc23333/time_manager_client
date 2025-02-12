@@ -1,6 +1,7 @@
+import 'dart:async';
+
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:time_manager_client/data/environment/env.dart';
-import 'package:time_manager_client/data/types/task.dart';
 import 'package:time_manager_client/data/types/ts_data.dart';
 import 'package:time_manager_client/data/types/user_account.dart';
 
@@ -99,4 +100,57 @@ class RemoteDb {
             .toList(),
         onConflict: "userId, id");
   }
+
+  // 更新数据库 单条数据 task/group
+  // param tasks: 需要更新的tasks
+  Future<void> updateOne<T extends TsData>(int userId, (int, T) it) async {
+    await _supa.from(it.$2.tableName).upsert({
+      "userId": userId,
+      "id": it.$1,
+      "updateAt": it.$2.updateTimestampAt,
+      // if (!it.$2.isDeleted )
+      "data": it.$2.isDeleted ? null : it.$2.toMap(),
+    }, onConflict: "userId, id");
+  }
+
+  // 监听数据库数据变化
+  Stream<(int, int, T?)> listenDataChange<T extends TsData>(int userId) => _supa
+      .from(TsData.getTableName<T>())
+      .stream(primaryKey: ["id, userId"])
+      .eq("userId", userId)
+      .map((lm) => lm.map((m) => (
+            m["id"] as int,
+            m["updateAt"] as int,
+            TsData.fromMapNullable<T>(m["data"]),
+          )))
+      .expand((ld) => ld);
+  // Stream<(int, T?)> listenDataChange<T extends TsData>(int userId) => _supa
+  // .channel("public:${TsData.getTableName<T>()}")
+  // .onPostgresChanges(event: PostgresChangeEvent.insert, callback: (payload) {
+  //   payload.
+  // }).
+
+  // final _sc = StreamController<(int, TsData?)>();
+  // Stream<(int, TsData?)> listenDataChange(int userId) {
+  //   final t = _supa.from("tasks").stream(primaryKey: ["id, userId"]).eq("userId", userId);
+  //   // final g = _supa.from("groups").stream(primaryKey: ["id, userId"]).eq("userId", userId);
+
+  //   t.listen((d) {
+  //     for (final l in d) {
+  //       // print("dddA: $l");
+  //       _sc.add((l["id"] as int, TsData.fromMapNullable<Task>(l["data"])));
+  //     }
+  //   });
+
+  // final lts = [(t, Task), (g, Group)];
+  // for (final lt in lts) {
+  //   lt.$1.listen((d) {
+  //     for (final l in d) {
+  //       _sc.add((l["id"] as int, TsData.fromMapNullable(l["data"], lt.$2)));
+  //     }
+  //   });
+  // }
+
+  //   return _sc.stream;
+  // }
 }

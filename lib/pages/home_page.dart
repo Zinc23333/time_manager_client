@@ -1,5 +1,6 @@
-import 'dart:io';
+import 'package:universal_io/io.dart';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:time_manager_client/data/controller/data_controller.dart';
@@ -40,7 +41,7 @@ class _HomePageState extends State<HomePage> {
             title: buildGroupSwitcher(),
             centerTitle: true,
             actions: [
-              if (Platform.isAndroid || Platform.isIOS)
+              if (!kIsWeb && (Platform.isAndroid || Platform.isIOS))
                 IconButton(
                   icon: Icon(Icons.qr_code_scanner_rounded),
                   onPressed: () {
@@ -122,13 +123,14 @@ class _HomePageState extends State<HomePage> {
     return InkWell(
       onTap: bSwitchGroup,
       child: GetBuilder<DataController>(
-        builder: (_) {
+        init: DataController.to,
+        builder: (c) {
           return Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(DataController.to.currentGroup.icon),
+              Text(c.currentGroup.icon),
               const SizedBox(width: 4),
-              Text(DataController.to.currentGroup.title),
+              Text(c.currentGroup.title),
               const SizedBox(width: 4),
               Icon(Icons.arrow_drop_down_rounded),
             ],
@@ -142,33 +144,38 @@ class _HomePageState extends State<HomePage> {
     showDialog(
       context: context,
       builder: (context) {
-        return SimpleDialog(
-          title: Text("选择分组"),
-          children: [
-            for (final group in DataController.to.groups)
-              if (group == DataController.to.currentGroup)
-                SimpleDialogOption(
-                  child: Text.rich(TextSpan(children: [
-                    TextSpan(text: group.iconAndTitle),
-                    TextSpan(text: "  "),
-                    TextSpan(text: "[当前]", style: TextStyle(color: Colors.green)),
-                  ])),
-                )
-              else
+        return GetBuilder<DataController>(
+          init: DataController.to,
+          builder: (c) {
+            return SimpleDialog(
+              title: Text("选择分组"),
+              children: [
+                for (final group in c.groups)
+                  if (group == c.currentGroup)
+                    SimpleDialogOption(
+                      child: Text.rich(TextSpan(children: [
+                        TextSpan(text: group.iconAndTitle),
+                        TextSpan(text: "  "),
+                        TextSpan(text: "[当前]", style: TextStyle(color: Colors.green)),
+                      ])),
+                    )
+                  else
+                    SimpleDialogOption(
+                      onPressed: () {
+                        c.changeCurrentGroup(group);
+                        Get.back();
+                      },
+                      child: Text(group.iconAndTitle),
+                    ),
                 SimpleDialogOption(
                   onPressed: () {
-                    DataController.to.changeCurrentGroup(group);
-                    Get.back();
+                    Get.off(() => EditGroupPage());
                   },
-                  child: Text(group.iconAndTitle),
-                ),
-            SimpleDialogOption(
-              onPressed: () {
-                Get.off(EditGroupPage());
-              },
-              child: Text("编辑分组"),
-            )
-          ],
+                  child: Text("编辑分组"),
+                )
+              ],
+            );
+          },
         );
       },
     );

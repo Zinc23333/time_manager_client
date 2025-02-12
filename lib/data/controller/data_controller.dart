@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
@@ -24,85 +25,173 @@ class DataController extends GetxController {
     LocalStorage.instance?.init().then((_) {
       loadLocally();
     });
-    RemoteDb.instance.init().then((_) {});
+    RemoteDb.instance.init().then((_) {
+      syncAll().then((_) {
+        startSync();
+      });
+    });
   }
 
-  List<int> rawGroupIds = [0];
-  Iterable<Group> get groups => rawGroupIds.map((e) => rawGroup[e]!);
+  Iterable<Group> get groups => rawGroup.values;
+  User? get user => _rawUser.value;
 
+  // List<int> rawGroupIds = [0];
   Map<int, Group> rawGroup = {0: Group(title: "默认分组", icon: "📢", taskIds: [], updateTimestamp: 0)};
   Map<int, Task> rawTask = {};
-  User? get user => _rawUser.value;
   final _rawUser = Rx<User?>(null);
+
+  // 数据同步->本地更新后 需要提交的数据
+  // final List<(int id, TsData data)> _needSubbmit = [];
+  StreamController<(int id, TsData data)> _needSubbmitDataController = StreamController();
+  StreamController<(int, int, Task?)> _taskStreamController = StreamController();
+  StreamController<(int, int, Group?)> _groupStreamController = StreamController();
+
+  final syncing = true.obs;
 
   // late final currentGroup = groups.first.obs;
   final currentGroupIndex = 0.obs;
-  Group get currentGroup => rawGroup[currentGroupIndex.value]!;
-
-  Iterable<Task> get currentGroupTasks => currentGroup.taskIds.map((e) => rawTask[e]!);
-
-  int getGroupIndexNo() {
-    if (rawGroup.keys.isEmpty) return 0;
-    return rawGroup.keys.reduce((v, e) => max(v, e)) + 1;
+  Group get currentGroup {
+    if (rawGroup.containsKey(currentGroupIndex.value)) {
+      return rawGroup[currentGroupIndex.value]!;
+    } else {
+      currentGroupIndex.value = rawGroup.keys.first;
+      return rawGroup[currentGroupIndex.value]!;
+    }
   }
 
-  int getTaskIndexNo() {
-    if (rawTask.keys.isEmpty) return 0;
-    return rawTask.keys.reduce((v, e) => max(v, e)) + 1;
+  Iterable<Task> get currentGroupTasks => currentGroup.taskIds.map((e) => rawTask[e] ?? Task.loading());
+
+  final _rawRadom = Random();
+  int getRawNewIndexNo<T extends TsData>() {
+    final r = _getRaw<T>();
+
+    int k = 0;
+    for (int i = 0; i < 100; i++) {
+      k = _rawRadom.nextInt(2147483647);
+      if (!r.containsKey(k)) break;
+    }
+    return k;
   }
 
+  int getRawIndexNo<T extends TsData>(T d) => _getRaw<T>().entries.where((e) => e.value == d).single.key;
+
+  // 添加任务
   void addTask(Task task, [Group? group]) {
     group ??= currentGroup;
 
-    final index = getTaskIndexNo();
+    final index = getRawNewIndexNo<Task>();
     rawTask[index] = task;
     group.taskIds.add(index);
+    group.updateTimestamp();
+
+    final groupId = getRawIndexNo(group);
+    _needSubbmitDataController.add((index, task));
+    _needSubbmitDataController.add((groupId, group));
 
     _onDataChanged();
   }
 
+  // 编辑任务
+  // param: oldTask: 需要被替换的任务 (不一定存在rawTask中)
+  // param: newTask: 替换的任务
   void editTask(Task oldTask, Task newTask, [Group? group]) {
     group ??= currentGroup;
 
     int? index = rawTask.entries.where((e) => e.value == oldTask).singleOrNull?.key;
     if (index == null) {
-      index = getTaskIndexNo();
+      // 不存在rawTask中  -> 新建任务
+      index = getRawNewIndexNo<Task>();
       group.taskIds.add(index);
+      group.updateTimestamp();
+
+      _needSubbmitDataController.add((getRawIndexNo(group), group));
     }
+
     rawTask[index] = newTask;
+    _needSubbmitDataController.add((index, newTask));
 
     _onDataChanged();
   }
 
+  // 修改任务状态
   void changeTaskStatus(Task task, [TaskStatus? status]) {
     status ??= task.status == TaskStatus.finished ? TaskStatus.unfinished : TaskStatus.finished;
     task.status = status;
     task.updateTimestamp();
+
+    _needSubbmitDataController.add((getRawIndexNo(task), task));
+
     _onDataChanged();
   }
 
+  // 删除任务
+  void deleteTask(Task task, [Group? group]) {
+    group ??= currentGroup;
+
+    final gId = getRawIndexNo(group);
+    final tId = getRawIndexNo(task);
+
+    rawTask.remove(tId);
+    rawGroup[gId]!.taskIds.remove(tId);
+
+    _needSubbmitDataController.add((gId, group));
+    _needSubbmitDataController.add((tId, Task.delete()));
+
+    _onDataChanged();
+  }
+
+  // 添加组
   Group addGroup() {
     final g = Group.title("新建分组");
-    final index = getGroupIndexNo();
+    final index = getRawNewIndexNo<Group>();
     rawGroup[index] = g;
-    rawGroupIds.add(index);
-    _onDataChanged();
+    // rawGroupIds.add(index);
 
+    _needSubbmitDataController.add((index, g));
+
+    _onDataChanged();
     return g;
   }
 
+  // 修改组标题
   void changeGroupTitle(Group group, String title) {
     group.title = title;
     group.updateTimestamp();
+
+    _needSubbmitDataController.add((getRawIndexNo(group), group));
+
     _onDataChanged();
   }
 
+  // 修改组图标
   void changeGroupIcon(Group group, String icon) {
     group.icon = icon;
     group.updateTimestamp();
+
+    _needSubbmitDataController.add((getRawIndexNo(group), group));
+
     _onDataChanged();
   }
 
+  // 删除组
+  void deleteGroup(Group group) {
+    for (final tId in group.taskIds) {
+      rawTask.remove(tId);
+      _needSubbmitDataController.add((tId, Task.delete()));
+    }
+
+    final gId = getRawIndexNo(group);
+    print(gId);
+    print(group);
+    print(rawGroup);
+    rawGroup.remove(gId);
+    _needSubbmitDataController.add((gId, Group.delete()));
+    currentGroupIndex.value = 0;
+
+    _onDataChanged();
+  }
+
+  // 修改当前组
   void changeCurrentGroup(Group group) {
     // currentGroup.value = group;
     currentGroupIndex.value = rawGroup.entries.where((e) => e.value == group).single.key;
@@ -123,14 +212,11 @@ class DataController extends GetxController {
 
   // 数据写入
   void _onDataChanged([_DataChangeType t = _DataChangeType.groupOrTask]) {
-    switch (t) {
-      case _DataChangeType.groupOrTask:
-        update();
-        break;
-      case _DataChangeType.user:
-        update([User.getControllerId]);
-        break;
-    }
+    final ids = switch (t) {
+      _DataChangeType.groupOrTask => null,
+      _DataChangeType.user => [User.getControllerId],
+    };
+    update(ids);
     LocalStorage.instance?.write(toProto(true));
   }
 
@@ -138,7 +224,7 @@ class DataController extends GetxController {
   p.Storage toProto([bool needUserInfo = false]) => p.Storage(
         groups: rawGroup.map((k, v) => MapEntry(k.toInt64(), v.toProto())),
         tasks: rawTask.map((k, v) => MapEntry(k.toInt64(), v.toProto())),
-        groupIds: rawGroupIds.map((e) => e.toInt64()),
+        // groupIds: rawGroupIds.map((e) => e.toInt64()),
         currentGroupId: currentGroupIndex.value.toInt64(),
         user: Helper.if_(needUserInfo, user?.toProto()),
       );
@@ -160,7 +246,7 @@ class DataController extends GetxController {
       if (r == null) return false;
       rawGroup = r.groups;
       rawTask = r.tasks;
-      rawGroupIds = r.groupIds;
+      // rawGroupIds = r.groupIds;
       currentGroupIndex.value = r.currentGroup; // todo
       update();
       if (data != null) {
@@ -194,7 +280,8 @@ class DataController extends GetxController {
     );
 
     // _onDataChanged(_DataChangeType.user);
-    getUserInfo();
+
+    afterLogin();
     return true;
   }
 
@@ -203,12 +290,17 @@ class DataController extends GetxController {
     final i = await RemoteDb.instance.listenQrLoginUser(token);
     if (i != null) {
       _rawUser.value = User(id: i);
-      _onDataChanged(_DataChangeType.user);
-      getUserInfo();
+      afterLogin();
       return true;
     } else {
       return false;
     }
+  }
+
+  void afterLogin() async {
+    getUserInfo();
+    await syncAll();
+    startSync();
   }
 
   // 登出
@@ -228,43 +320,43 @@ class DataController extends GetxController {
   }
 
   // 数据同步
-  // 全量同步
-  // Task
-  // Future<void> syncTask() async {
-  //   if (user == null) return;
 
-  //   // 1. 数据新旧比较
-  //   Set<int> cloudNewIds = {}; // 数据库数据新  -> 更新本地
-  //   Set<int> localNewIds = {}; // 本地数据新    -> 上数据库
+  void startSync() {
+    if (user == null) return;
 
-  //   // 1.1 云端数据
-  //   final tt = await RemoteDb.instance.getTaskWithTime(user!.id);
-  //   for (final (id, updateAt) in tt) {
-  //     if (!rawTask.containsKey(id) || rawTask[id]!.updateTimestampAt < updateAt) {
-  //       cloudNewIds.add(id);
-  //     } else {
-  //       localNewIds.add(id);
-  //     }
-  //   }
-  //   // 1.2 本地数据
-  //   for (final i in rawTask.keys) {
-  //     if (!cloudNewIds.contains(i)) {
-  //       localNewIds.add(i);
-  //     }
-  //   }
+    _needSubbmitDataController.close();
+    _needSubbmitDataController = StreamController();
+    _needSubbmitDataController.stream.listen((d) {
+      print("ddd submit: $d");
+      RemoteDb.instance.updateOne(user!.id, d).then((_) {});
+    });
 
-  //   print("ddd cloud: $cloudNewIds");
-  //   print("ddd local: $localNewIds");
+    print("ddd");
+    _taskStreamController.close();
+    _taskStreamController = StreamController()
+      ..addStream(RemoteDb.instance.listenDataChange<Task>(user!.id))
+      ..stream.listen(onDbChange);
 
-  //   // 2. 更新本地数据
-  //   final it = await RemoteDb.instance.getTask(user!.id, cloudNewIds.toList());
-  //   rawTask.cover(it);
+    _groupStreamController.close();
+    _groupStreamController = StreamController()
+      ..addStream(RemoteDb.instance.listenDataChange<Group>(user!.id))
+      ..stream.listen(onDbChange);
+  }
 
-  //   // 3. 更新数据库数据
-  //   await RemoteDb.instance.updateTask(user!.id, {for (var i in localNewIds) i: rawTask[i]!});
+  void onDbChange<T extends TsData>((int, int, T?) d) {
+    print("ddd: onDbChange: $d");
+    final rawMap = _getRaw<T>();
+    if (rawMap.containsKey(d.$1) && d.$2 <= rawMap[d.$1]!.updateTimestampAt) return;
+    print("ddd willDown $d");
+    // print("ddd ts:, ${(d.$3 as Task).status}");
 
-  //   _onDataChanged();
-  // }
+    if (d.$3 == null) {
+      rawMap.remove(d.$1);
+    } else {
+      rawMap[d.$1] = d.$3!;
+    }
+    _onDataChanged();
+  }
 
   Future<void> syncAll() async {
     await syncData<Group>();
@@ -272,6 +364,7 @@ class DataController extends GetxController {
     _onDataChanged();
   }
 
+  // 全量同步
   Future<void> syncData<T extends TsData>() async {
     if (user == null) return;
 
@@ -283,15 +376,17 @@ class DataController extends GetxController {
     // 1.1 云端数据
     final tt = await RemoteDb.instance.getWithTime<T>(user!.id);
     for (final (id, updateAt) in tt) {
+      // print("ddd: $id, ${rawMap[id]!.updateTimestampAt} $updateAt");
       if (!rawMap.containsKey(id) || rawMap[id]!.updateTimestampAt < updateAt) {
         cloudNewIds.add(id);
-      } else {
+      } else if (rawMap[id]!.updateTimestampAt > updateAt) {
         localNewIds.add(id);
       }
     }
-    // 1.2 本地数据
+    // 1.2 本地数据: 云端没有的 -> 本地新
+    final tti = tt.map((e) => e.$1);
     for (final i in rawMap.keys) {
-      if (!cloudNewIds.contains(i)) {
+      if (!tti.contains(i)) {
         localNewIds.add(i);
       }
     }
@@ -299,31 +394,33 @@ class DataController extends GetxController {
     print("ddd cloud: $cloudNewIds");
     print("ddd local: $localNewIds");
 
-    // 2. 更新本地数据
+    // 2.1 更新本地数据
     final it = await RemoteDb.instance.getData<T>(user!.id, cloudNewIds.toList());
     rawMap.cover(it);
 
+    // 2.2 检测未分组数据转移至默认分组
+    final defaultGroupId = rawGroup.keys.min();
+    final defaultGroup = rawGroup[defaultGroupId]!;
+    final okTaskIds = rawGroup.values.map((g) => g.taskIds).expand((l) => l);
+
+    for (final ti in rawTask.keys) {
+      if (!okTaskIds.contains(ti)) {
+        defaultGroup.taskIds.add(ti);
+        localNewIds.add(defaultGroupId);
+      }
+    }
+
     // 3. 更新数据库数据
     await RemoteDb.instance.update<T>(user!.id, {for (var i in localNewIds) i: rawMap[i]!});
+
+    // 4. 通知
+    _onDataChanged();
   }
 
-  Map<int, T> _getRaw<T extends TsData>() {
-    print(T.runtimeType);
-    print("ddd ty: ${T}");
-
-    if (T == Task) return rawTask as Map<int, T>;
-    if (T == Group) return rawGroup as Map<int, T>;
+  Map<int, T> _getRaw<T extends TsData>([T? d]) {
+    if (T == Task || d is Task) return rawTask as Map<int, T>;
+    if (T == Group || d is Group) return rawGroup as Map<int, T>;
     throw Exception("Unknown type");
-
-    // (T _).;
-    // switch (T.runtimeType) {
-    //   case Task _:
-    //     return rawTask as Map<int, T>;
-    //   case Group _:
-    //     return rawGroup as Map<int, T>;
-    //   default:
-    //     throw Exception("Unknown type");
-    // }
   }
 }
 

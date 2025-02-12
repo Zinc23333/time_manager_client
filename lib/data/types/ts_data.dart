@@ -6,31 +6,30 @@ class TsData {
   int updateTimestampAt;
   TsData([timestamp]) : updateTimestampAt = timestamp ?? DateTime.now().millisecondsSinceEpoch;
   TsData.zero() : updateTimestampAt = 0;
+  TsData.loading() : updateTimestampAt = -1;
+  // TsData.delete(): updateTimestampAt = -1;
   // String toJsonString() => "";
 
   void updateTimestamp() {
     updateTimestampAt = DateTime.now().millisecondsSinceEpoch;
   }
 
-  GeneratedMessage toProto() {
-    throw UnimplementedError();
-  }
-
-  factory TsData.fromProto(GeneratedMessage proto) {
-    throw UnimplementedError();
-  }
-
+  GeneratedMessage toProto() => throw UnimplementedError();
+  factory TsData.fromProto(GeneratedMessage proto) => throw UnimplementedError();
   Map<String, dynamic> toMap() => throw UnimplementedError();
+  bool get isDeleted => throw UnimplementedError();
 
-  static T? fromMapNullable<T>(Map<String, dynamic> map) {
-    if (T == Group) return Group.fromMapNullable(map) as T?;
-    if (T == Task) return Task.fromMapNullable(map) as T?;
+  static T? fromMapNullable<T>(Map<String, dynamic>? map, [Type? t]) {
+    if (T == Group || t is Group) return Group.fromMapNullable(map) as T?;
+    if (T == Task || t is Task) return Task.fromMapNullable(map) as T?;
     throw Exception("Unknown type");
   }
 
   static String getTableName<T>() {
     if (T == Group) return 'groups';
     if (T == Task) return 'tasks';
-    throw Exception("Unknown type");
+    throw Exception("Unknown type: $T");
   }
+
+  String get tableName => throw UnimplementedError();
 }

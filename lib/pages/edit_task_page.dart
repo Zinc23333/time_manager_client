@@ -57,6 +57,15 @@ class _EditTaskPageState extends State<EditTaskPage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text("编辑任务"),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.delete),
+            onPressed: () {
+              DataController.to.deleteTask(widget.old!);
+              Get.back();
+            },
+          )
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
