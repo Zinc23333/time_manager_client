@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:getwidget/getwidget.dart';
 import 'package:mobile_number/mobile_number.dart';
 import 'package:time_manager_client/helper/helper.dart';
 
@@ -48,14 +47,18 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
                 const SizedBox(height: 24),
                 SizedBox(
                   width: 250,
-                  child: GFButton(
+                  child: ElevatedButton(
                     onPressed: phoneNumber == null ? null : () => Get.back(result: phoneNumber),
-                    enableFeedback: phoneNumber != null,
-                    color: Theme.of(context).colorScheme.inversePrimary,
-                    shape: GFButtonShape.pills,
-                    fullWidthButton: true,
                     child: Text("登陆"),
                   ),
+                  // child: GFButton(
+                  //   onPressed: phoneNumber == null ? null : () => Get.back(result: phoneNumber),
+                  //   enableFeedback: phoneNumber != null,
+                  //   color: Theme.of(context).colorScheme.inversePrimary,
+                  //   shape: GFButtonShape.pills,
+                  //   fullWidthButton: true,
+                  //   child: Text("登陆"),
+                  // ),
                 ),
                 Row(children: [Expanded(child: SizedBox())]),
                 SizedBox(height: 24),
