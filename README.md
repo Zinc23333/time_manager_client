@@ -1,3 +1,3 @@
 # time manager client
 
-A new Flutter project.
+A New Flutter Project.
