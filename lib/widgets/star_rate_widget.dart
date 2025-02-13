@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:getwidget/components/rating/gf_rating.dart';
+import 'package:simple_star_rating/simple_star_rating.dart';
 import 'package:time_manager_client/data/types/task.dart';
 import 'package:time_manager_client/helper/helper.dart';
 
@@ -22,15 +22,15 @@ class _StarRateWidgetState extends State<StarRateWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-      GFRating(
-        value: rate,
+      SimpleStarRating(
         allowHalfRating: false,
-        borderColor: theme.unselectedWidgetColor,
-        color: theme.colorScheme.primary,
-        onChanged: (value) {
-          rate = value;
+        isReadOnly: false,
+        spacing: 4,
+        rating: rate,
+        onRated: (rating) {
+          if (rating == null) return;
+          rate = rating;
           controller = TextEditingController(text: rate.toInt().toString());
           setState(() {});
         },

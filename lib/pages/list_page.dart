@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:getwidget/components/shimmer/gf_shimmer.dart';
 import 'package:time_manager_client/3rd/check_mark_indicator.dart';
 import 'package:time_manager_client/data/controller/data_controller.dart';
 import 'package:time_manager_client/helper/helper.dart';
@@ -20,12 +19,9 @@ class _ListPageState extends State<ListPage> {
     color: Colors.grey,
   );
 
-  static final Widget _loading = GFShimmer(
-    mainColor: Colors.grey.shade400,
-    child: ListTile(
-      leading: IconButton(icon: Icon(Icons.circle), onPressed: () {}),
-      title: Row(children: [Container(width: 120, height: 20, color: Colors.white)]),
-    ),
+  static final Widget _loading = ListTile(
+    leading: IconButton(icon: Icon(Icons.circle, color: Colors.grey.withAlpha(40)), onPressed: () {}),
+    title: Row(children: [Container(width: 120, height: 20, color: Colors.grey.withAlpha(40))]),
   );
 
   @override

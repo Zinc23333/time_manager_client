@@ -2,11 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:getwidget/components/radio/gf_radio.dart';
-import 'package:getwidget/components/rating/gf_rating.dart';
-import 'package:getwidget/size/gf_size.dart';
-import 'package:getwidget/types/gf_radio_type.dart';
-// import 'package:getwidget/getwidget.dart';
+import 'package:simple_star_rating/simple_star_rating.dart';
 import 'package:time_manager_client/data/controller/data_controller.dart';
 import 'package:time_manager_client/data/types/task.dart';
 import 'package:time_manager_client/helper/extension.dart';
@@ -53,8 +49,8 @@ class _EditTaskPageState extends State<EditTaskPage> {
     final theme = Theme.of(context);
     final double expandTimePrecisionHeight = expandTimePrecision && startTime != null
         ? endTime != null
-            ? 64
-            : 34
+            ? 80
+            : 40
         : 0;
 
     return Scaffold(
@@ -115,12 +111,13 @@ class _EditTaskPageState extends State<EditTaskPage> {
                 height: expandTimePrecisionHeight,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     SizedBox(height: 4),
                     for (final tp in _timePrecisionList.sublist(0, endTime != null ? 2 : 1))
                       SizedBox(
-                        height: 30,
+                        height: 34,
                         child: Row(
                           children: [
                             Text(tp.$1),
@@ -132,20 +129,21 @@ class _EditTaskPageState extends State<EditTaskPage> {
                                 separatorBuilder: (context, index) => SizedBox(width: 8),
                                 itemBuilder: (context, index) {
                                   final s = Task.timePricisions[index];
-                                  return GFRadio(
-                                    value: index,
-                                    groupValue: tp.$2(),
-                                    onChanged: (value) {
-                                      tp.$3(value);
+                                  return InkWell(
+                                    onTap: () {
+                                      tp.$3(index);
                                       updateTimePrecision();
                                     },
-                                    inactiveIcon: Center(child: Text(s)),
-                                    type: GFRadioType.custom,
-                                    size: 28,
-                                    customBgColor: Colors.transparent,
-                                    inactiveBgColor: Colors.transparent,
-                                    activeBgColor: theme.colorScheme.inversePrimary,
-                                    activeIcon: Center(child: Text(s, style: TextStyle(color: Colors.white))),
+                                    child: Container(
+                                      width: 32,
+                                      height: 32,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8),
+                                        color: index == tp.$2() ? theme.colorScheme.inversePrimary : null,
+                                        border: Border.all(color: theme.colorScheme.primary),
+                                      ),
+                                      child: Center(child: Text(s)),
+                                    ),
                                   );
                                 },
                               ),
@@ -163,20 +161,17 @@ class _EditTaskPageState extends State<EditTaskPage> {
                 onChanged: importanceTextChanged,
                 validator: importanceTextValidator,
                 decoration: InputDecoration(
-                  prefixIconConstraints: BoxConstraints.tightForFinite(),
-                  prefixIcon: Icon(Icons.star_border_rounded),
-                  labelText: "评分",
-                  border: UnderlineInputBorder(),
-                  suffix: GFRating(
-                    onChanged: importanceRateChanged,
-                    value: importance.toDouble(),
-                    allowHalfRating: false,
-                    size: GFSize.SMALL,
-                    padding: EdgeInsets.zero,
-                    borderColor: theme.unselectedWidgetColor,
-                    color: theme.colorScheme.primary,
-                  ),
-                ),
+                    prefixIconConstraints: BoxConstraints.tightForFinite(),
+                    prefixIcon: Icon(Icons.star_border_rounded),
+                    labelText: "评分",
+                    border: UnderlineInputBorder(),
+                    suffix: SimpleStarRating(
+                      isReadOnly: false,
+                      allowHalfRating: false,
+                      spacing: 4,
+                      rating: importance.toDouble(),
+                      onRated: importanceRateChanged,
+                    )),
               ),
               ElevatedButton(
                 onPressed: () {
@@ -238,7 +233,8 @@ class _EditTaskPageState extends State<EditTaskPage> {
     if (refresh) setState(() {});
   }
 
-  void importanceRateChanged(double rating) {
+  void importanceRateChanged(double? rating) {
+    if (rating == null) return;
     importance = rating.toInt();
     importanceController.text = importance.toString();
     setState(() {});
