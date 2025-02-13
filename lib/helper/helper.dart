@@ -53,4 +53,18 @@ class Helper {
     if (r == null) return null;
     return Color(r);
   }
+
+  static final _phoneNumberPrefix = ["+", "86"];
+  static int? formatPhoneNumber(String? phoneNumber) {
+    if (phoneNumber == null) return null;
+
+    for (var p in _phoneNumberPrefix) {
+      if (phoneNumber!.startsWith(p)) {
+        phoneNumber = phoneNumber.substring(p.length);
+        return formatPhoneNumber(phoneNumber);
+      }
+    }
+
+    return int.tryParse(phoneNumber!.trim());
+  }
 }
