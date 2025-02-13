@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:getwidget/components/loader/gf_loader.dart';
-import 'package:getwidget/getwidget.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:time_manager_client/data/controller/data_controller.dart';
 import 'package:time_manager_client/data/environment/constant.dart';
@@ -67,7 +65,7 @@ class _QrLoginRequestDialogState extends State<QrLoginRequestDialog> {
                 //   return Text("${snapshot.error}");
                 // }
 
-                return const GFLoader(type: GFLoaderType.circle);
+                return Center(child: CircularProgressIndicator());
               },
             ),
           )

@@ -2,7 +2,11 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:getwidget/getwidget.dart';
+import 'package:getwidget/components/radio/gf_radio.dart';
+import 'package:getwidget/components/rating/gf_rating.dart';
+import 'package:getwidget/size/gf_size.dart';
+import 'package:getwidget/types/gf_radio_type.dart';
+// import 'package:getwidget/getwidget.dart';
 import 'package:time_manager_client/data/controller/data_controller.dart';
 import 'package:time_manager_client/data/types/task.dart';
 import 'package:time_manager_client/helper/extension.dart';
