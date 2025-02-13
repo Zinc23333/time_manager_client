@@ -23,15 +23,17 @@ class Network {
       ),
     );
 
-    final r = cccr.choices.first.message.content;
+    var r = cccr.choices.first.message.content;
     print(r);
     if (r == null) return [];
+
+    r = r.replaceAll("```json", "").replaceAll("```", "").trim();
 
     final tl = Task.fromJsonString(r);
     for (final element in tl) {
       element.content = text;
     }
-    // print(tl);
+    print(tl);
 
     return tl;
   }

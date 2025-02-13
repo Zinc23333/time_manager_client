@@ -49,7 +49,11 @@ class _FourQuadrantPageState extends State<FourQuadrantPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(name, style: Theme.of(context).textTheme.titleSmall),
+            Text(
+              name,
+              style: Theme.of(context).textTheme.titleSmall,
+              overflow: TextOverflow.ellipsis,
+            ),
             Expanded(
               child: buildTasks(tasks),
             ),
@@ -82,15 +86,18 @@ class _FourQuadrantPageState extends State<FourQuadrantPage> {
                   ),
                 ),
                 SizedBox(width: 4),
-                Text(
-                  tasks[index].title,
-                  style: tasks[index].status.isFinished
-                      ? TextStyle(
-                          fontStyle: FontStyle.italic,
-                          decoration: TextDecoration.lineThrough,
-                          color: Colors.grey,
-                        )
-                      : null,
+                Expanded(
+                  child: Text(
+                    tasks[index].title,
+                    overflow: TextOverflow.ellipsis,
+                    style: tasks[index].status.isFinished
+                        ? TextStyle(
+                            fontStyle: FontStyle.italic,
+                            decoration: TextDecoration.lineThrough,
+                            color: Colors.grey,
+                          )
+                        : null,
+                  ),
                 ),
               ],
             ),

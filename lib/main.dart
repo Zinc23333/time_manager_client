@@ -27,6 +27,7 @@ class MyApp extends StatelessWidget {
       onInit: () {
         Get.put(DataController());
       },
+      debugShowCheckedModeBanner: false,
       title: '时间助手',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: _colorSeed ?? Colors.deepPurple),
