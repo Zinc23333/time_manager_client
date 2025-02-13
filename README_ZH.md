@@ -100,6 +100,8 @@ task
 ## 编译相关
 编译环境可以参考本项目的 [`Github Action`](.github/workflows/build.yml) 
 
+已有自动构建: [Pre-Release](https://github.com/Zinc23333/time_manager_client/releases/tag/v0.8)
+
 ### ProtoBuf 编译
 ``` sh
 protoc --proto_path=lib/data/proto --dart_out=lib/data/proto.gen group.proto task.proto user.proto storage.proto
