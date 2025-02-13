@@ -1,3 +1,4 @@
+import 'package:time_manager_client/widgets/confirm_dialog.dart';
 import 'package:universal_io/io.dart';
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/material.dart';
@@ -54,10 +55,25 @@ class _SettingPageState extends State<SettingPage> {
               buildTileExportToFile(context),
               buildTileExportAsText(context),
               buildTileImportFromText(context),
+              buildTileDeleteAll(context)
             ],
           ),
         ),
       ),
+    );
+  }
+
+  ListTile buildTileDeleteAll(BuildContext context) {
+    return ListTile(
+      title: Text("删除本地数据"),
+      onTap: () {
+        ConfirmDialog.show(context: context, content: "是否删除本地所有数据?").then((v) {
+          if (v == true) {
+            LocalStorage.instance?.deleteAll();
+            exit(0);
+          }
+        });
+      },
     );
   }
 

@@ -94,4 +94,10 @@ class LocalStorage {
       ),
     );
   }
+
+  // 删除本地数据
+  void deleteAll() {
+    if (kIsWeb) return;
+    storageFile.deleteSync();
+  }
 }
