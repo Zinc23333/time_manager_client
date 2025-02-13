@@ -50,6 +50,7 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
                   width: 250,
                   child: GFButton(
                     onPressed: phoneNumber == null ? null : () => Get.back(result: phoneNumber),
+                    enableFeedback: phoneNumber != null,
                     color: Theme.of(context).colorScheme.inversePrimary,
                     shape: GFButtonShape.pills,
                     fullWidthButton: true,
