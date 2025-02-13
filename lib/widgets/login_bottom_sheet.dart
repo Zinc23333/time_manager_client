@@ -1,12 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/getwidget.dart';
+// import 'package:mobile_number/mobile_number.dart';
 import 'package:time_manager_client/helper/helper.dart';
 
-class LoginBottomSheet extends StatelessWidget {
+class LoginBottomSheet extends StatefulWidget {
   const LoginBottomSheet({super.key});
 
   static Future<int?> show(BuildContext context) => Helper.showModalBottomSheetWithTextField<int>(context, LoginBottomSheet());
+
+  @override
+  State<LoginBottomSheet> createState() => _LoginBottomSheetState();
+}
+
+class _LoginBottomSheetState extends State<LoginBottomSheet> {
+  @override
+  void initState() {
+    super.initState();
+
+    // MobileNumber.hasPhonePermission.then((isPermissionGranted) {
+    //   if (!isPermissionGranted) {
+    //     MobileNumber.requestPhonePermission.then((_) {});
+    //     if (!isPermissionGranted) {
+    //       Get.snackbar("错误", "无法获取手机信息");
+    //       Get.back();
+    //     }
+    //   }
+    // });
+  }
 
   @override
   Widget build(BuildContext context) {
