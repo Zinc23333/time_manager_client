@@ -38,6 +38,12 @@ class Helper {
     return (r[0], r[1]);
   }
 
+  static Future<DateTime?> showDateTimePicker(BuildContext context) => showOmniDateTimePicker(
+        context: context,
+        is24HourMode: true,
+        isShowSeconds: true,
+      );
+
   static Iterable<(R, S)> zip<R, S>(Iterable<R> r, Iterable<S> s) sync* {
     for (int i = 0; i < min(r.length, s.length); i++) {
       yield (r.elementAt(i), s.elementAt(i));

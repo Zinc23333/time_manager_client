@@ -29,6 +29,7 @@ class Task extends $pb.GeneratedMessage {
     $core.String? source,
     $core.String? content,
     $core.int? status,
+    $core.Iterable<$fixnum.Int64>? noticeTimes,
     $fixnum.Int64? updateTimestampAt,
   }) {
     final $result = create();
@@ -71,6 +72,9 @@ class Task extends $pb.GeneratedMessage {
     if (status != null) {
       $result.status = status;
     }
+    if (noticeTimes != null) {
+      $result.noticeTimes.addAll(noticeTimes);
+    }
     if (updateTimestampAt != null) {
       $result.updateTimestampAt = updateTimestampAt;
     }
@@ -94,6 +98,7 @@ class Task extends $pb.GeneratedMessage {
     ..aOS(11, _omitFieldNames ? '' : 'source')
     ..aOS(12, _omitFieldNames ? '' : 'content')
     ..a<$core.int>(13, _omitFieldNames ? '' : 'status', $pb.PbFieldType.O3)
+    ..p<$fixnum.Int64>(14, _omitFieldNames ? '' : 'noticeTimes', $pb.PbFieldType.K6, protoName: 'noticeTimes')
     ..aInt64(100, _omitFieldNames ? '' : 'updateTimestampAt', protoName: 'updateTimestampAt')
     ..hasRequiredFields = false
   ;
@@ -236,12 +241,15 @@ class Task extends $pb.GeneratedMessage {
   @$pb.TagNumber(13)
   void clearStatus() => clearField(13);
 
+  @$pb.TagNumber(14)
+  $core.List<$fixnum.Int64> get noticeTimes => $_getList(13);
+
   @$pb.TagNumber(100)
-  $fixnum.Int64 get updateTimestampAt => $_getI64(13);
+  $fixnum.Int64 get updateTimestampAt => $_getI64(14);
   @$pb.TagNumber(100)
-  set updateTimestampAt($fixnum.Int64 v) { $_setInt64(13, v); }
+  set updateTimestampAt($fixnum.Int64 v) { $_setInt64(14, v); }
   @$pb.TagNumber(100)
-  $core.bool hasUpdateTimestampAt() => $_has(13);
+  $core.bool hasUpdateTimestampAt() => $_has(14);
   @$pb.TagNumber(100)
   void clearUpdateTimestampAt() => clearField(100);
 }

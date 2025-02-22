@@ -145,6 +145,7 @@ class Task extends TsData {
         source: Helper.if_(t.hasSource(), t.source),
         content: Helper.if_(t.hasContent(), t.content),
         status: TaskStatus.fromCode(t.status),
+        noticeTimes: t.noticeTimes.map((e) => e.toDateTime()).toList(),
         updateTimestampAt: t.updateTimestampAt.toInt(),
       );
 
@@ -192,6 +193,7 @@ class Task extends TsData {
         "source": source,
         "content": content,
         "status": status.code,
+        "noticeTimes": noticeTimes.map((e) => e.millisecondsSinceEpoch),
       };
 
   String toJsonString() => JsonEncoder().convert(toMap());
@@ -244,6 +246,7 @@ class Task extends TsData {
         source: source,
         content: content,
         status: status.code,
+        noticeTimes: noticeTimes.map((e) => e.millisecondsSinceEpoch.toInt64()),
         updateTimestampAt: updateTimestampAt.toInt64(),
       );
 
@@ -262,6 +265,6 @@ enum TaskStatus {
   final String name;
   bool get isFinished => this == finished;
   static TaskStatus fromCode(int code) {
-    return TaskStatus.values.firstWhereOrNull((element) => element.code == code) ?? unfinished;
+    return TaskStatus.values.firstWhereOrNull((e) => e.code == code) ?? unfinished;
   }
 }

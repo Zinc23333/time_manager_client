@@ -33,6 +33,8 @@ class _EditTaskPageState extends State<EditTaskPage> {
   late final controllers = widget.old?.paramAndInfo().map((e) => TextEditingController(text: e.$3)).toList() ??
       List.generate(Task.inputFieldParams.length, (_) => TextEditingController());
 
+  late final List<DateTime> noticeTimes = widget.old?.noticeTimes ?? [];
+
   late final _timePrecisionList = [
     ("开始时间精度:", () => startTimePrecision, (index) => startTimePrecision = index),
     ("结束时间精度:", () => endTimePrecision, (index) => endTimePrecision = index),
@@ -69,136 +71,175 @@ class _EditTaskPageState extends State<EditTaskPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Form(
-          key: formKey,
-          child: ListView(
-            children: [
-              for (final pc in Helper.zip(Task.inputFieldParams, controllers))
-                TextFormField(
-                  keyboardType: TextInputType.text,
-                  controller: pc.$2,
-                  autofocus: true,
-                  decoration: InputDecoration(
-                    prefixIconConstraints: BoxConstraints.tightForFinite(),
-                    prefixIcon: Icon(pc.$1.$2),
-                    labelText: pc.$1.$1,
-                    border: UnderlineInputBorder(),
-                  ),
-                  validator: Helper.if_(!pc.$1.$3, (v) => Helper.if_(v == null || v.isEmpty, '请输入${pc.$1.$1}')),
-                ),
-              TextFormField(
-                autofocus: true,
-                readOnly: true,
-                controller: dateController,
-                onTap: dateEditClicked,
-                decoration: InputDecoration(
-                    prefixIconConstraints: BoxConstraints.tightForFinite(),
-                    prefixIcon: Icon(Icons.date_range_outlined),
-                    labelText: "日期",
-                    border: UnderlineInputBorder(),
-                    suffixIcon: Helper.if_(
-                        startTime != null,
-                        ExpandIcon(
-                          isExpanded: expandTimePrecision,
-                          onPressed: (_) {
-                            expandTimePrecision = !expandTimePrecision;
-                            setState(() {});
-                          },
-                        ))),
+        child: buildMain(expandTimePrecisionHeight, theme),
+      ),
+    );
+  }
+
+  Form buildMain(double expandTimePrecisionHeight, ThemeData theme) {
+    return Form(
+      key: formKey,
+      child: ListView(
+        children: [
+          for (final pc in Helper.zip(Task.inputFieldParams, controllers))
+            TextFormField(
+              keyboardType: TextInputType.text,
+              controller: pc.$2,
+              autofocus: true,
+              decoration: InputDecoration(
+                prefixIconConstraints: BoxConstraints.tightForFinite(),
+                prefixIcon: Icon(pc.$1.$2),
+                labelText: pc.$1.$1,
+                border: UnderlineInputBorder(),
               ),
-              AnimatedContainer(
-                duration: Durations.medium1,
-                height: expandTimePrecisionHeight,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SizedBox(height: 4),
-                    for (final tp in _timePrecisionList.sublist(0, endTime != null ? 2 : 1))
-                      SizedBox(
-                        height: 34,
-                        child: Row(
-                          children: [
-                            Text(tp.$1),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: ListView.separated(
-                                scrollDirection: Axis.horizontal,
-                                itemCount: Task.timePricisions.length,
-                                separatorBuilder: (context, index) => SizedBox(width: 8),
-                                itemBuilder: (context, index) {
-                                  final s = Task.timePricisions[index];
-                                  return InkWell(
-                                    onTap: () {
-                                      tp.$3(index);
-                                      updateTimePrecision();
-                                    },
-                                    child: Container(
-                                      width: 32,
-                                      height: 32,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(8),
-                                        color: index == tp.$2() ? theme.colorScheme.inversePrimary : null,
-                                        border: Border.all(color: theme.colorScheme.primary),
-                                      ),
-                                      child: Center(child: Text(s)),
-                                    ),
-                                  );
+              validator: Helper.if_(!pc.$1.$3, (v) => Helper.if_(v == null || v.isEmpty, '请输入${pc.$1.$1}')),
+            ),
+          TextFormField(
+            autofocus: true,
+            readOnly: true,
+            controller: dateController,
+            onTap: dateEditClicked,
+            decoration: InputDecoration(
+                prefixIconConstraints: BoxConstraints.tightForFinite(),
+                prefixIcon: Icon(Icons.date_range_outlined),
+                labelText: "日期",
+                border: UnderlineInputBorder(),
+                suffixIcon: Helper.if_(
+                    startTime != null,
+                    ExpandIcon(
+                      isExpanded: expandTimePrecision,
+                      onPressed: (_) {
+                        expandTimePrecision = !expandTimePrecision;
+                        setState(() {});
+                      },
+                    ))),
+          ),
+          AnimatedContainer(
+            duration: Durations.medium1,
+            height: expandTimePrecisionHeight,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(height: 4),
+                for (final tp in _timePrecisionList.sublist(0, endTime != null ? 2 : 1))
+                  SizedBox(
+                    height: 34,
+                    child: Row(
+                      children: [
+                        Text(tp.$1),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: ListView.separated(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: Task.timePricisions.length,
+                            separatorBuilder: (context, index) => SizedBox(width: 8),
+                            itemBuilder: (context, index) {
+                              final s = Task.timePricisions[index];
+                              return InkWell(
+                                onTap: () {
+                                  tp.$3(index);
+                                  updateTimePrecision();
                                 },
-                              ),
-                            ),
-                          ],
+                                child: Container(
+                                  width: 32,
+                                  height: 32,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: index == tp.$2() ? theme.colorScheme.inversePrimary : null,
+                                    border: Border.all(color: theme.colorScheme.primary),
+                                  ),
+                                  child: Center(child: Text(s)),
+                                ),
+                              );
+                            },
+                          ),
                         ),
-                      ),
-                  ],
+                      ],
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          TextFormField(
+            autofocus: true,
+            controller: importanceController,
+            keyboardType: TextInputType.numberWithOptions(decimal: false, signed: false),
+            onChanged: importanceTextChanged,
+            validator: importanceTextValidator,
+            decoration: InputDecoration(
+                prefixIconConstraints: BoxConstraints.tightForFinite(),
+                prefixIcon: Icon(Icons.star_border_rounded),
+                labelText: "评分",
+                border: UnderlineInputBorder(),
+                suffix: SimpleStarRating(
+                  isReadOnly: false,
+                  allowHalfRating: false,
+                  spacing: 4,
+                  rating: importance.toDouble(),
+                  onRated: importanceRateChanged,
+                )),
+          ),
+          Row(
+            // TODO
+            children: [
+              Text(
+                "提醒时间: ",
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              Expanded(
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: noticeTimes.length,
+                  separatorBuilder: (context, index) => SizedBox(width: 8),
+                  itemBuilder: (context, index) => RawChip(
+                    label: Text(noticeTimes[index].formatWithPrecision(5)),
+                    // onPressed: () {},
+                    onDeleted: () {
+                      noticeTimes.removeAt(index);
+                      setState(() {});
+                    },
+                  ),
                 ),
               ),
-              TextFormField(
-                autofocus: true,
-                controller: importanceController,
-                keyboardType: TextInputType.numberWithOptions(decimal: false, signed: false),
-                onChanged: importanceTextChanged,
-                validator: importanceTextValidator,
-                decoration: InputDecoration(
-                    prefixIconConstraints: BoxConstraints.tightForFinite(),
-                    prefixIcon: Icon(Icons.star_border_rounded),
-                    labelText: "评分",
-                    border: UnderlineInputBorder(),
-                    suffix: SimpleStarRating(
-                      isReadOnly: false,
-                      allowHalfRating: false,
-                      spacing: 4,
-                      rating: importance.toDouble(),
-                      onRated: importanceRateChanged,
-                    )),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  if (formKey.currentState!.validate()) {
-                    final task = Task.fromController(
-                      controllers,
-                      startTime: startTime,
-                      startTimePrecision: startTimePrecision,
-                      endTime: endTime,
-                      endTimePrecision: endTimePrecision,
-                      importance: importance,
-                      content: widget.old?.content,
-                      status: widget.old?.status ?? TaskStatus.unfinished,
-                    );
-                    if (widget.old == null) {
-                      DataController.to.addTask(task);
-                    } else {
-                      DataController.to.editTask(widget.old!, task);
-                    }
-                    Get.back();
+              IconButton(
+                onPressed: () async {
+                  final r = await Helper.showDateTimePicker(context);
+                  if (r != null) {
+                    noticeTimes.add(r);
+                    setState(() {});
                   }
                 },
-                child: Text("完成"),
+                icon: Icon(Icons.add_rounded),
               ),
             ],
           ),
-        ),
+          ElevatedButton(
+            onPressed: () {
+              if (formKey.currentState!.validate()) {
+                final task = Task.fromController(
+                  controllers,
+                  startTime: startTime,
+                  startTimePrecision: startTimePrecision,
+                  endTime: endTime,
+                  endTimePrecision: endTimePrecision,
+                  importance: importance,
+                  content: widget.old?.content,
+                  status: widget.old?.status ?? TaskStatus.unfinished,
+                  noticeTimes: noticeTimes,
+                );
+                if (widget.old == null) {
+                  DataController.to.addTask(task);
+                } else {
+                  DataController.to.editTask(widget.old!, task);
+                }
+                Get.back();
+              }
+            },
+            child: Text("完成"),
+          ),
+        ],
       ),
     );
   }
@@ -254,7 +295,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
     }
     final r = int.tryParse(importanceController.text) ?? 0;
     importance = max(0, r);
-    importance = min(5, r);
+    importance = min(5, importance);
     importanceController.text = importance.toString();
     setState(() {});
   }
