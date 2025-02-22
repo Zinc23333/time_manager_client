@@ -23,6 +23,8 @@ class Task extends TsData {
   String? content;
   TaskStatus status;
 
+  List<DateTime> noticeTimes;
+
   Task(
       {required this.title,
       this.summary,
@@ -37,18 +39,22 @@ class Task extends TsData {
       this.source,
       this.content,
       this.status = TaskStatus.unfinished,
+      List<DateTime>? noticeTimes,
       int? updateTimestampAt})
-      : super(updateTimestampAt) {
+      : noticeTimes = noticeTimes ?? <DateTime>[],
+        super(updateTimestampAt) {
     init();
   }
 
   Task.delete()
       : title = "",
-        status = TaskStatus.finished;
+        status = TaskStatus.finished,
+        noticeTimes = const [];
 
   Task.loading()
       : title = "",
         status = TaskStatus.finished,
+        noticeTimes = const [],
         super.loading();
 
   Task.fromController(
@@ -59,6 +65,7 @@ class Task extends TsData {
     this.endTimePrecision,
     this.importance,
     this.content,
+    this.noticeTimes = const [],
     this.status = TaskStatus.unfinished,
   })  : assert(controllers.length == 6),
         title = controllers[0].text,
@@ -83,7 +90,8 @@ class Task extends TsData {
         importance = map["importance"],
         location = map["location"],
         participant = map["participant"],
-        note = map["note"] {
+        note = map["note"],
+        noticeTimes = map["noticeTimes"] {
     init();
   }
 
@@ -100,7 +108,8 @@ class Task extends TsData {
         note = map["note"],
         source = map["source"],
         content = map["content"],
-        status = TaskStatus.fromCode(map["status"] ?? 1);
+        status = TaskStatus.fromCode(map["status"] ?? 1),
+        noticeTimes = map["noticeTimes"];
 
   static Task? fromMapNullable(Map<String, dynamic>? map) {
     if (map == null || map.isEmpty || !map.containsKey("title")) return null;

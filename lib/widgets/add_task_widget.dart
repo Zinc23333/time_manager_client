@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 import 'package:time_manager_client/data/controller/data_controller.dart';
 import 'package:time_manager_client/data/types/task.dart';
 import 'package:time_manager_client/helper/helper.dart';
@@ -129,6 +130,10 @@ class _AddTaskWidgetState extends State<AddTaskWidget> {
             )
           else ...[
             IconButton(
+              onPressed: bFromSound,
+              icon: Icon(Icons.mic_rounded),
+            ),
+            IconButton(
               onPressed: bFromImage,
               icon: Icon(Icons.image),
             ),
@@ -156,10 +161,27 @@ class _AddTaskWidgetState extends State<AddTaskWidget> {
     Navigator.of(context).pop();
   }
 
-  void bFromImage() async {
+  void bFromSound() => bFromOther(getTextFromSound());
+  void bFromImage() => bFromOther(getTextFromImage());
+  void bFromClipboard() => bFromOther(getTextFromClipboard());
+
+  void bFromOther(Future<String?> otherFuture) {
     Get.back();
-    AddTaskFromTextWidget.show(context, futureText: getTextFromImage());
-    // print(response);
+    AddTaskFromTextWidget.show(context, futureText: otherFuture);
+  }
+
+  Future<String?> getTextFromSound() async {
+    final speech = SpeechToText();
+    final available = await speech.initialize();
+
+    if (available) {
+      speech.listen(onResult: (r) {
+        print(r);
+      });
+    } else {
+      print("speech not available");
+    }
+    return null;
   }
 
   Future<String?> getTextFromImage() async {
@@ -170,12 +192,6 @@ class _AddTaskWidgetState extends State<AddTaskWidget> {
     final rec = TextRecognizer(script: TextRecognitionScript.chinese);
     final res = await rec.processImage(iimage);
     return res.blocks.map((b) => b.text).join("\n\n");
-  }
-
-  void bFromClipboard() {
-    // Navigator.push(context, MaterialPageRoute(builder: (context) => EditTaskPage()));
-    Get.back();
-    AddTaskFromTextWidget.show(context, futureText: getTextFromClipboard());
   }
 
   Future<String?> getTextFromClipboard() async {
