@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:time_manager_client/data/controller/data_controller.dart';
 import 'package:time_manager_client/data/types/task.dart';
 import 'package:time_manager_client/helper/helper.dart';
@@ -124,11 +127,16 @@ class _AddTaskWidgetState extends State<AddTaskWidget> {
                 // isSelected: true,
               ),
             )
-          else
+          else ...[
+            IconButton(
+              onPressed: bFromImage,
+              icon: Icon(Icons.image),
+            ),
             IconButton(
               onPressed: bFromClipboard,
               icon: Icon(Icons.copy),
             ),
+          ],
           SizedBox(width: 8),
         ],
       ),
@@ -148,10 +156,32 @@ class _AddTaskWidgetState extends State<AddTaskWidget> {
     Navigator.of(context).pop();
   }
 
+  void bFromImage() async {
+    Get.back();
+    AddTaskFromTextWidget.show(context, futureText: getTextFromImage());
+    // print(response);
+  }
+
+  Future<String?> getTextFromImage() async {
+    final ImagePicker picker = ImagePicker();
+    final image = await picker.pickImage(source: ImageSource.gallery);
+    if (image == null) return null;
+    final iimage = InputImage.fromFilePath(image.path);
+    final rec = TextRecognizer(script: TextRecognitionScript.chinese);
+    final res = await rec.processImage(iimage);
+    return res.blocks.map((b) => b.text).join("\n\n");
+  }
+
   void bFromClipboard() {
     // Navigator.push(context, MaterialPageRoute(builder: (context) => EditTaskPage()));
     Get.back();
-    AddTaskFromTextWidget.show(context);
+    AddTaskFromTextWidget.show(context, futureText: getTextFromClipboard());
+  }
+
+  Future<String?> getTextFromClipboard() async {
+    if (!await Clipboard.hasStrings()) return null;
+    final data = await Clipboard.getData(Clipboard.kTextPlain);
+    return data?.text;
   }
 
   void bSetDate() async {
