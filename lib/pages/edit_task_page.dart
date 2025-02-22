@@ -181,8 +181,8 @@ class _EditTaskPageState extends State<EditTaskPage> {
                   onRated: importanceRateChanged,
                 )),
           ),
+          // TODO
           Row(
-            // TODO
             children: [
               Text(
                 "提醒时间: ",
@@ -195,7 +195,12 @@ class _EditTaskPageState extends State<EditTaskPage> {
                   separatorBuilder: (context, index) => SizedBox(width: 8),
                   itemBuilder: (context, index) => RawChip(
                     label: Text(noticeTimes[index].formatWithPrecision(5)),
-                    // onPressed: () {},
+                    onPressed: () async {
+                      final r = await Helper.showDateTimePicker(context, initialDate: noticeTimes[index]);
+                      if (r == null) return;
+                      noticeTimes[index] = r;
+                      setState(() {});
+                    },
                     onDeleted: () {
                       noticeTimes.removeAt(index);
                       setState(() {});

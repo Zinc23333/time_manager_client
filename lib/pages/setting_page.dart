@@ -1,3 +1,4 @@
+import 'package:time_manager_client/pages/raw_text_page.dart';
 import 'package:time_manager_client/widgets/confirm_dialog.dart';
 import 'package:universal_io/io.dart';
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
@@ -55,11 +56,22 @@ class _SettingPageState extends State<SettingPage> {
               buildTileExportToFile(context),
               buildTileExportAsText(context),
               buildTileImportFromText(context),
-              buildTileDeleteAll(context)
+              buildTileDeleteAll(context),
+              buildTileOpenSource()
             ],
           ),
         ),
       ),
+    );
+  }
+
+  ListTile buildTileOpenSource() {
+    return ListTile(
+      title: Text("开源组件使用情况"),
+      onTap: () async {
+        final r = await rootBundle.loadString("text/open_source_project_usage.txt");
+        Get.to(() => RawTextPage(title: "开源组件使用情况", content: r));
+      },
     );
   }
 

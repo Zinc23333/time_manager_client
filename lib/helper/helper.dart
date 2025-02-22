@@ -38,10 +38,11 @@ class Helper {
     return (r[0], r[1]);
   }
 
-  static Future<DateTime?> showDateTimePicker(BuildContext context) => showOmniDateTimePicker(
+  static Future<DateTime?> showDateTimePicker(BuildContext context, {DateTime? initialDate}) => showOmniDateTimePicker(
         context: context,
         is24HourMode: true,
         isShowSeconds: true,
+        initialDate: initialDate,
       );
 
   static Iterable<(R, S)> zip<R, S>(Iterable<R> r, Iterable<S> s) sync* {
