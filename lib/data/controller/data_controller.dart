@@ -7,6 +7,7 @@ import 'dart:typed_data';
 import 'package:get/get.dart';
 import 'package:time_manager_client/data/environment/constant.dart';
 import 'package:time_manager_client/data/repository/local_storage.dart';
+import 'package:time_manager_client/data/repository/logger.dart';
 import 'package:time_manager_client/data/repository/remote_db.dart';
 import 'package:time_manager_client/data/types/group.dart';
 import 'package:time_manager_client/data/types/task.dart';
@@ -182,9 +183,9 @@ class DataController extends GetxController {
     }
 
     final gId = getRawIndexNo(group);
-    print(gId);
-    print(group);
-    print(rawGroup);
+    logger.t(gId);
+    logger.t(group);
+    logger.t(rawGroup);
     rawGroup.remove(gId);
     _needSubbmitDataController.add((gId, Group.delete()));
     currentGroupIndex.value = 0;
@@ -327,11 +328,11 @@ class DataController extends GetxController {
     _needSubbmitDataController.close();
     _needSubbmitDataController = StreamController();
     _needSubbmitDataController.stream.listen((d) {
-      print("ddd submit: $d");
+      logger.t("ddd submit: $d");
       RemoteDb.instance.updateOne(user!.id, d).then((_) {});
     });
 
-    print("ddd");
+    logger.t("ddd");
     _taskStreamController.close();
     _taskStreamController = StreamController()
       ..addStream(RemoteDb.instance.listenDataChange<Task>(user!.id))
@@ -344,10 +345,10 @@ class DataController extends GetxController {
   }
 
   void onDbChange<T extends TsData>((int, int, T?) d) {
-    print("ddd: onDbChange: $d");
+    logger.t("ddd: onDbChange: $d");
     final rawMap = _getRaw<T>();
     if (rawMap.containsKey(d.$1) && d.$2 <= rawMap[d.$1]!.updateTimestampAt) return;
-    print("ddd willDown $d");
+    logger.t("ddd willDown $d");
     // print("ddd ts:, ${(d.$3 as Task).status}");
 
     if (d.$3 == null) {
@@ -392,8 +393,8 @@ class DataController extends GetxController {
       }
     }
 
-    print("ddd cloud: $cloudNewIds");
-    print("ddd local: $localNewIds");
+    logger.t("ddd cloud: $cloudNewIds");
+    logger.t("ddd local: $localNewIds");
 
     // 2.1 更新本地数据
     final it = await RemoteDb.instance.getData<T>(user!.id, cloudNewIds.toList());

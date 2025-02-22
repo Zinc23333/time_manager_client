@@ -5,6 +5,7 @@ import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart
 import 'package:image_picker/image_picker.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:time_manager_client/data/controller/data_controller.dart';
+import 'package:time_manager_client/data/repository/logger.dart';
 import 'package:time_manager_client/data/types/task.dart';
 import 'package:time_manager_client/helper/helper.dart';
 import 'package:time_manager_client/widgets/add_task_from_text_widget.dart';
@@ -176,10 +177,10 @@ class _AddTaskWidgetState extends State<AddTaskWidget> {
 
     if (available) {
       speech.listen(onResult: (r) {
-        print(r);
+        logger.t(r);
       });
     } else {
-      print("speech not available");
+      logger.t("speech not available");
     }
     return null;
   }

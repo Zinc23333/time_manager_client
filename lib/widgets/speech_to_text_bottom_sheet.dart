@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:speech_to_text/speech_to_text.dart';
+import 'package:time_manager_client/data/repository/logger.dart';
 
 class SpeechToTextBottomSheet extends StatefulWidget {
   const SpeechToTextBottomSheet({super.key});
@@ -24,7 +25,7 @@ class _SpeechToTextBottomSheetState extends State<SpeechToTextBottomSheet> {
             listened = true;
             stt.listen(
               onResult: (result) {
-                print(result.recognizedWords);
+                logger.t(result.recognizedWords);
                 Get.back(result: result.recognizedWords);
               },
             );

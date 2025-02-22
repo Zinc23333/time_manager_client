@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:time_manager_client/data/controller/data_controller.dart';
+import 'package:time_manager_client/data/repository/logger.dart';
 import 'package:time_manager_client/data/types/task.dart';
 import 'package:time_manager_client/helper/extension.dart';
 import 'package:time_manager_client/widgets/view_task_widget.dart';
@@ -116,7 +117,7 @@ class _CalendarPageState extends State<CalendarPage> {
 
   void _onSelectedChanged() {
     Iterable<Task> tasks = DataController.to.tasks;
-    print("changed: $_selectedDay");
+    logger.t("changed: $_selectedDay");
 
     _taskYear = tasks.where((t) =>
         t.startTime != null &&

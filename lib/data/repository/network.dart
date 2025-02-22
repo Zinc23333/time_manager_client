@@ -1,5 +1,6 @@
 import 'package:openai_dart/openai_dart.dart';
 import 'package:time_manager_client/data/environment/env.dart';
+import 'package:time_manager_client/data/repository/logger.dart';
 import 'package:time_manager_client/data/types/task.dart';
 
 class Network {
@@ -9,7 +10,7 @@ class Network {
   static final aiClient = OpenAIClient(apiKey: aiApiKey, baseUrl: aiBasicUrl);
 
   static Future<List<Task>> getTaskFromText(String text) async {
-    print("SEND TEXT TO AI");
+    logger.t("SEND TEXT TO AI");
     final cccr = await aiClient.createChatCompletion(
       request: CreateChatCompletionRequest(
         model: ChatCompletionModel.modelId("deepseek-chat"),
@@ -24,7 +25,7 @@ class Network {
     );
 
     var r = cccr.choices.first.message.content;
-    print(r);
+    logger.t(r);
     if (r == null) return [];
 
     r = r.replaceAll("```json", "").replaceAll("```", "").trim();
@@ -33,7 +34,7 @@ class Network {
     for (final element in tl) {
       element.content = text;
     }
-    print(tl);
+    logger.t(tl);
 
     return tl;
   }

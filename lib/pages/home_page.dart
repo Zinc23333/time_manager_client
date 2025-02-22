@@ -1,3 +1,4 @@
+import 'package:time_manager_client/data/repository/logger.dart';
 import 'package:time_manager_client/pages/calendar_page.dart';
 import 'package:universal_io/io.dart';
 
@@ -53,7 +54,7 @@ class _HomePageState extends State<HomePage> {
                 IconButton(
                   onPressed: () async {
                     await DataController.to.syncAll();
-                    print("ddd fin");
+                    logger.t("ddd fin");
                     // RemoteDb.instance.submitTask(7, 1, Task(title: "HEl==="));
                   },
                   icon: Icon(Icons.refresh),
