@@ -464,7 +464,7 @@ class DataController extends GetxController {
     final m = w.join("\n\n");
     final s = "${Constant.aiSystemPrompt} \n\n 此外，用户提供如下信息可以参考: \n\n $m";
 
-    return Network.getTaskFromText(text, s);
+    return Network.getTaskFromText(text, systemPrompt: s);
   }
 }
 

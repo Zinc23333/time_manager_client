@@ -10,18 +10,22 @@ class Network {
 
   static final aiClient = OpenAIClient(apiKey: aiApiKey, baseUrl: aiBasicUrl);
 
-  static Future<List<Task>> getTaskFromText(String text, [String systemPrompt = Constant.aiSystemPrompt]) async {
+  static Future<List<Task>> getTaskFromText(
+    String text, {
+    String systemPrompt = Constant.aiSystemPrompt,
+    String modelId = "deepseek-chat",
+  }) async {
     logger.t("SEND TEXT TO AI");
     final cccr = await aiClient.createChatCompletion(
       request: CreateChatCompletionRequest(
-        model: ChatCompletionModel.modelId("deepseek-chat"),
+        model: ChatCompletionModel.modelId(modelId),
         messages: [
           ChatCompletionMessage.system(content: systemPrompt),
           ChatCompletionMessage.user(content: ChatCompletionUserMessageContent.string(text)),
         ],
         stream: false,
         temperature: 0.7,
-        maxTokens: 1024,
+        // maxTokens: 1024,
       ),
     );
 
@@ -39,4 +43,18 @@ class Network {
 
     return tl;
   }
+}
+
+enum AiModel {
+  deepseekChat("标准", "deepseek-chat"),
+  deepseekReason("推理", "deepseek-reasoner"),
+  ;
+
+  final String name;
+  final String id;
+
+  const AiModel(this.name, this.id);
+
+  @override
+  String toString() => name;
 }
