@@ -461,7 +461,7 @@ class DataController extends GetxController {
     final w = List.generate(p.length, (i) => "${i + 1}. ${p[i]}");
     w.add("当前的时间是: ${DateTime.now().toIso8601String()}");
     final m = w.join("\n\n");
-    final s = "${Constant.aiSystemPrompt} \n\n 此外，用户提供如下信息可以参考，请注意甄别: \n\n $m";
+    final s = "${Constant.aiSystemPrompt} \n\n 此外，用户提供如下信息可以参考: \n\n $m";
 
     return Network.getTaskFromText(text, s);
   }
