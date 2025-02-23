@@ -3,9 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:speech_to_text/speech_to_text.dart';
 import 'package:time_manager_client/data/controller/data_controller.dart';
-import 'package:time_manager_client/data/repository/logger.dart';
 import 'package:time_manager_client/data/types/task.dart';
 import 'package:time_manager_client/helper/helper.dart';
 import 'package:time_manager_client/widgets/add_task_from_text_widget.dart';
@@ -131,10 +129,6 @@ class _AddTaskWidgetState extends State<AddTaskWidget> {
             )
           else ...[
             IconButton(
-              onPressed: bFromSound,
-              icon: Icon(Icons.mic_rounded),
-            ),
-            IconButton(
               onPressed: bFromImage,
               icon: Icon(Icons.image),
             ),
@@ -162,27 +156,12 @@ class _AddTaskWidgetState extends State<AddTaskWidget> {
     Navigator.of(context).pop();
   }
 
-  void bFromSound() => bFromOther(getTextFromSound());
   void bFromImage() => bFromOther(getTextFromImage());
   void bFromClipboard() => bFromOther(getTextFromClipboard());
 
   void bFromOther(Future<String?> otherFuture) {
     Get.back();
     AddTaskFromTextWidget.show(context, futureText: otherFuture);
-  }
-
-  Future<String?> getTextFromSound() async {
-    final speech = SpeechToText();
-    final available = await speech.initialize();
-
-    if (available) {
-      speech.listen(onResult: (r) {
-        logger.t(r);
-      });
-    } else {
-      logger.t("speech not available");
-    }
-    return null;
   }
 
   Future<String?> getTextFromImage() async {
