@@ -54,7 +54,7 @@ class _AddTaskFromTextWidgetState extends State<AddTaskFromTextWidget> {
                         minLines: 4,
                         maxLines: null,
                         decoration: InputDecoration(
-                          hintText: "请在此粘贴文本，将由AI识别并提取任务信息。",
+                          hintText: "请在此输入文本，将由AI识别并提取任务信息。",
                         ),
                         onChanged: (value) {
                           setState(() {});
@@ -68,6 +68,13 @@ class _AddTaskFromTextWidgetState extends State<AddTaskFromTextWidget> {
                 ),
               Row(
                 children: [
+                  TextButton.icon(
+                    onPressed: Helper.if_(controller.text.isNotEmpty, () {
+                      controller.clear();
+                    }),
+                    icon: Icon(Icons.clear_rounded),
+                    label: Text("清空"),
+                  ),
                   Expanded(child: SizedBox()),
                   ElevatedButton(
                     onPressed: Helper.if_(enable && controller.text.isNotEmpty, bSend),
