@@ -71,17 +71,21 @@ class ViewTaskWidget extends StatelessWidget {
             Wrap(
               children: [
                 if (task.startTime != null)
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.date_range, color: iconColor),
-                      SizedBox(width: 8),
-                      Text(task.startTimeWithPrecision),
-                      if (task.endTime != null) Text(" ~ "),
-                      if (task.endTime != null) Text(task.endTimeWithPrecision),
-                      SizedBox(width: 16),
-                    ],
+                  InkWell(
+                    onTap: task.onDateTimeClick,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.date_range, color: iconColor),
+                        SizedBox(width: 8),
+                        Text(task.startTimeWithPrecision),
+                        if (task.endTime != null) Text(" ~ "),
+                        if (task.endTime != null) Text(task.endTimeWithPrecision),
+                        Icon(Icons.open_in_new_rounded, size: 16, color: iconColor),
+                        SizedBox(width: 16),
+                      ],
+                    ),
                   ),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,

@@ -4,7 +4,7 @@ import 'package:time_manager_client/data/types/task.dart';
 
 class TsData {
   int updateTimestampAt;
-  TsData([timestamp]) : updateTimestampAt = timestamp ?? DateTime.now().millisecondsSinceEpoch;
+  TsData([int? timestamp]) : updateTimestampAt = timestamp ?? DateTime.now().millisecondsSinceEpoch;
   TsData.zero() : updateTimestampAt = 0;
   TsData.loading() : updateTimestampAt = -1;
   // TsData.delete(): updateTimestampAt = -1;

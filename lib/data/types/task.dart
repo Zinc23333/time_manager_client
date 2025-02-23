@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:add_2_calendar/add_2_calendar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:location/location.dart';
@@ -218,13 +219,14 @@ class Task extends TsData {
   List<(String label, IconData icon, String?, void Function()?)> paramAndInfo() => [
         ("标题", Icons.flag_outlined, title, null),
         ("概述", Icons.label_outline, summary, null),
-        ("地点", Icons.location_on_outlined, location, _locationFunc),
+        ("地点", Icons.location_on_outlined, location, onLocationClick),
         ("参与者", Icons.people_alt_outlined, participant, null),
         ("备注", Icons.note_outlined, note, null),
         ("来源", Icons.source_outlined, source, null),
       ];
 
-  void _locationFunc() async {
+  // 地点点击事件
+  void onLocationClick() async {
     final deviceLocation = Location();
     if ((await deviceLocation.hasPermission()) == PermissionStatus.denied) {
       await deviceLocation.requestPermission();
@@ -246,6 +248,21 @@ class Task extends TsData {
       if (s) break;
     }
   }
+
+  // 日程点击事件
+  void onDateTimeClick() async {
+    if (startTime == null) return;
+    final Event event = Event(
+      title: title,
+      description: summary,
+      location: location,
+      startDate: startTime!,
+      endDate: endTime ?? startTime!,
+    );
+    await Add2Calendar.addEvent2Cal(event);
+  }
+
+  void onNoticeTimeClick() async {}
 
   bool contain(String text) =>
       title.contains(text) ||

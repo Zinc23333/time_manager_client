@@ -39,7 +39,7 @@ class DataController extends GetxController {
   User? get user => _rawUser.value;
 
   // List<int> rawGroupIds = [0];
-  Map<int, Group> rawGroup = {0: Group(title: "默认分组", icon: "📢", taskIds: [], updateTimestamp: 0)};
+  Map<int, Group> rawGroup = {0: Group(title: "默认分组", icon: "📢", taskIds: [], updateTimestamp: 1)};
   Map<int, Task> rawTask = {};
   final _rawUser = Rx<User?>(null);
 
@@ -397,25 +397,26 @@ class DataController extends GetxController {
       }
     }
 
-    logger.t("ddd cloud: $cloudNewIds");
-    logger.t("ddd local: $localNewIds");
+    logger.t("$T cloud: $cloudNewIds");
+    logger.t("$T local: $localNewIds");
 
     // 2.1 更新本地数据
     final it = await RemoteDb.instance.getData<T>(user!.id, cloudNewIds.toList());
     rawMap.cover(it);
 
     // 2.2 检测未分组数据转移至默认分组
-    final defaultGroupId = rawGroup.keys.min();
-    final defaultGroup = rawGroup[defaultGroupId]!;
-    final okTaskIds = rawGroup.values.map((g) => g.taskIds).expand((l) => l);
+    if (T == Group) {
+      final defaultGroupId = rawGroup.keys.min();
+      final defaultGroup = rawGroup[defaultGroupId]!;
+      final okTaskIds = rawGroup.values.map((g) => g.taskIds).expand((l) => l);
 
-    for (final ti in rawTask.keys) {
-      if (!okTaskIds.contains(ti)) {
-        defaultGroup.taskIds.add(ti);
-        localNewIds.add(defaultGroupId);
+      for (final ti in rawTask.keys) {
+        if (!okTaskIds.contains(ti)) {
+          defaultGroup.taskIds.add(ti);
+          localNewIds.add(defaultGroupId);
+        }
       }
     }
-
     // 3. 更新数据库数据
     await RemoteDb.instance.update<T>(user!.id, {for (var i in localNewIds) i: rawMap[i]!});
 
