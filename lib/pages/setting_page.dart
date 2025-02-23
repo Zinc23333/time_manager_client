@@ -57,7 +57,7 @@ class _SettingPageState extends State<SettingPage> {
               buildTileExportAsText(context),
               buildTileImportFromText(context),
               buildTileDeleteAll(context),
-              buildTileOpenSource()
+              buildTileOpenSource(),
             ],
           ),
         ),
@@ -69,7 +69,7 @@ class _SettingPageState extends State<SettingPage> {
     return ListTile(
       title: Text("开源组件使用情况"),
       onTap: () async {
-        final r = await rootBundle.loadString("text/open_source_project_usage.txt");
+        final r = await rootBundle.loadString("assets/text/open_source_project_usage.txt");
         Get.to(() => RawTextPage(title: "开源组件使用情况", content: r));
       },
     );

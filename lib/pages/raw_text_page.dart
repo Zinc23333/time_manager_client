@@ -13,7 +13,7 @@ class RawTextPage extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(title),
       ),
-      body: Text(content),
+      body: SelectableText(content),
     );
   }
 }
