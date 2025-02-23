@@ -1,4 +1,5 @@
 import 'package:time_manager_client/pages/raw_text_page.dart';
+import 'package:time_manager_client/pages/user_prompt_page.dart';
 import 'package:time_manager_client/widgets/confirm_dialog.dart';
 import 'package:universal_io/io.dart';
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
@@ -51,6 +52,7 @@ class _SettingPageState extends State<SettingPage> {
               const SizedBox(height: 16),
               buildCardUser(),
               const SizedBox(height: 16),
+              buildTileUserPrompt(),
               buildTileDarkmode(context),
               buildTileColorScheme(context),
               buildTileExportToFile(context),
@@ -64,6 +66,13 @@ class _SettingPageState extends State<SettingPage> {
       ),
     );
   }
+
+  ListTile buildTileUserPrompt() => ListTile(
+        title: Text("用户提示词"),
+        onTap: () {
+          Get.to(() => UserPromptPage());
+        },
+      );
 
   ListTile buildTileOpenSource() {
     return ListTile(
@@ -145,12 +154,6 @@ class _SettingPageState extends State<SettingPage> {
         } else {
           Get.snackbar("导入失败", "数据格式错误");
         }
-        // File? file = await Controller.to.saveDownloadDirectory();
-        // if (file == null) {
-        //   Get.snackbar("导出失败", "请检查是否有下载文件夹的写入权限");
-        //   return;
-        // }
-        // Get.snackbar("导出成功", "已保存到: ${file.path}");
       },
     );
   }

@@ -7,6 +7,8 @@ class User {
   List<UserAccount> accounts = [];
   String icon = "😀";
 
+  String? prompt;
+
   static int getControllerId = 01000;
 
   User({
@@ -17,9 +19,11 @@ class User {
   p.User toProto() => p.User(
         id: id.toInt64(),
         accounts: accounts.map((e) => e.toProto()),
+        prompt: prompt,
       );
 
   User.fromProto(p.User proto)
       : id = proto.id.toInt(),
-        accounts = proto.accounts.map((e) => UserAccount.fromProto(e)).toList();
+        accounts = proto.accounts.map((e) => UserAccount.fromProto(e)).toList(),
+        prompt = proto.hasPrompt() ? proto.prompt : null;
 }

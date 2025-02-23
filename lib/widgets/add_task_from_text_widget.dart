@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:time_manager_client/data/repository/network.dart';
+import 'package:time_manager_client/data/controller/data_controller.dart';
 import 'package:time_manager_client/helper/helper.dart';
 import 'package:time_manager_client/pages/edit_task_page.dart';
 import 'package:time_manager_client/widgets/multi_task_selector_bottom_sheet.dart';
@@ -85,7 +85,7 @@ class _AddTaskFromTextWidgetState extends State<AddTaskFromTextWidget> {
     startSendTime = DateTime.now();
     setState(() {});
 
-    final t = await Network.getTaskFromText(controller.text);
+    final t = await DataController.to.getTaskFromText(controller.text);
     startSendTime = null;
     setState(() {});
 

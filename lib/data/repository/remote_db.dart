@@ -130,4 +130,15 @@ class RemoteDb {
           )))
       .expand((ld) => ld)
       .handleError((e) => logger.d(e));
+
+  // 获取用户Prompt
+  Future<String?> getUserPrompt(int userId) async {
+    final d = await _supa.from("user_prompts").select("prompt").eq("userId", userId).maybeSingle();
+    return d?["prompt"];
+  }
+
+  // 更新用户Prompt
+  Future<void> updateUserPrompt(int userId, String prompts) async {
+    await _supa.from("user_prompts").upsert({"userId": userId, "prompt": prompts}, onConflict: "userId");
+  }
 }

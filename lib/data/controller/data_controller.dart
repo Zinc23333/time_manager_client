@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:time_manager_client/data/environment/constant.dart';
 import 'package:time_manager_client/data/repository/local_storage.dart';
 import 'package:time_manager_client/data/repository/logger.dart';
+import 'package:time_manager_client/data/repository/network.dart';
 import 'package:time_manager_client/data/repository/remote_db.dart';
 import 'package:time_manager_client/data/types/group.dart';
 import 'package:time_manager_client/data/types/task.dart';
@@ -311,7 +312,7 @@ class DataController extends GetxController {
   }
 
   // 获取用户账号
-  void getUserInfo() async {
+  void getUserInfoAccount() async {
     if (user == null) return;
     final r = await RemoteDb.instance.getUserAccounts(user!.id);
     _rawUser.update((u) {
@@ -321,7 +322,6 @@ class DataController extends GetxController {
   }
 
   // 数据同步
-
   void startSync() {
     if (user == null) return;
 
@@ -359,10 +359,14 @@ class DataController extends GetxController {
     _onDataChanged();
   }
 
+  // 同步所有数据
   Future<void> syncAll() async {
     await syncData<Group>();
     await syncData<Task>();
-    getUserInfo();
+
+    getUserInfoAccount();
+    getUserPrompt();
+
     _onDataChanged();
   }
 
@@ -423,6 +427,43 @@ class DataController extends GetxController {
     if (T == Task || d is Task) return rawTask as Map<int, T>;
     if (T == Group || d is Group) return rawGroup as Map<int, T>;
     throw Exception("Unknown type");
+  }
+
+  // 获取用户Prompt
+  Future<List<String>> getUserPrompt([bool forceFromCloud = false]) async {
+    if (user == null) return [];
+    if (!forceFromCloud && user!.prompt != null) return user!.prompt!.split("\n");
+
+    final r = await RemoteDb.instance.getUserPrompt(user!.id);
+    _rawUser.update((u) {
+      u?.prompt = r;
+    });
+    _onDataChanged(_DataChangeType.user);
+    return r?.split("\n") ?? [];
+  }
+
+  // 更新用户Prompt
+  Future<void> updateUserPrompt(Iterable<String> prompts) async {
+    if (user == null) return;
+
+    final prompt = prompts.where((l) => l.trim().isNotEmpty).join("\n");
+    await RemoteDb.instance.updateUserPrompt(user!.id, prompt);
+    _rawUser.update((u) {
+      u?.prompt = prompt;
+    });
+    _onDataChanged(_DataChangeType.user);
+  }
+
+  // 调用 NetWork部分
+  // 询问AI
+  Future<List<Task>> getTaskFromText(String text) async {
+    final p = await getUserPrompt();
+    final w = List.generate(p.length, (i) => "${i + 1}. ${p[i]}");
+    w.add("当前的时间是: ${DateTime.now().toIso8601String()}");
+    final m = w.join("\n\n");
+    final s = "${Constant.aiSystemPrompt} \n\n 此外，用户提供如下信息可以参考，请注意甄别: \n\n $m";
+
+    return Network.getTaskFromText(text, s);
   }
 }
 

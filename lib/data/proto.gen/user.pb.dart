@@ -22,6 +22,7 @@ class User extends $pb.GeneratedMessage {
   factory User({
     $fixnum.Int64? id,
     $core.Iterable<UserAccount>? accounts,
+    $core.String? prompt,
   }) {
     final $result = create();
     if (id != null) {
@@ -29,6 +30,9 @@ class User extends $pb.GeneratedMessage {
     }
     if (accounts != null) {
       $result.accounts.addAll(accounts);
+    }
+    if (prompt != null) {
+      $result.prompt = prompt;
     }
     return $result;
   }
@@ -39,6 +43,7 @@ class User extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'User', package: const $pb.PackageName(_omitMessageNames ? '' : 'time_manager'), createEmptyInstance: create)
     ..aInt64(1, _omitFieldNames ? '' : 'id')
     ..pc<UserAccount>(10, _omitFieldNames ? '' : 'accounts', $pb.PbFieldType.PM, subBuilder: UserAccount.create)
+    ..aOS(11, _omitFieldNames ? '' : 'prompt')
     ..hasRequiredFields = false
   ;
 
@@ -74,6 +79,15 @@ class User extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(10)
   $core.List<UserAccount> get accounts => $_getList(1);
+
+  @$pb.TagNumber(11)
+  $core.String get prompt => $_getSZ(2);
+  @$pb.TagNumber(11)
+  set prompt($core.String v) { $_setString(2, v); }
+  @$pb.TagNumber(11)
+  $core.bool hasPrompt() => $_has(2);
+  @$pb.TagNumber(11)
+  void clearPrompt() => clearField(11);
 }
 
 class UserAccount extends $pb.GeneratedMessage {

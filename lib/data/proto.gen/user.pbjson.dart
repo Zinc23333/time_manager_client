@@ -34,13 +34,18 @@ const User$json = {
   '2': [
     {'1': 'id', '3': 1, '4': 1, '5': 3, '10': 'id'},
     {'1': 'accounts', '3': 10, '4': 3, '5': 11, '6': '.time_manager.UserAccount', '10': 'accounts'},
+    {'1': 'prompt', '3': 11, '4': 1, '5': 9, '9': 0, '10': 'prompt', '17': true},
+  ],
+  '8': [
+    {'1': '_prompt'},
   ],
 };
 
 /// Descriptor for `User`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List userDescriptor = $convert.base64Decode(
     'CgRVc2VyEg4KAmlkGAEgASgDUgJpZBI1CghhY2NvdW50cxgKIAMoCzIZLnRpbWVfbWFuYWdlci'
-    '5Vc2VyQWNjb3VudFIIYWNjb3VudHM=');
+    '5Vc2VyQWNjb3VudFIIYWNjb3VudHMSGwoGcHJvbXB0GAsgASgJSABSBnByb21wdIgBAUIJCgdf'
+    'cHJvbXB0');
 
 @$core.Deprecated('Use userAccountDescriptor instead')
 const UserAccount$json = {

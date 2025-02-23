@@ -4,8 +4,10 @@ package time_manager;
 
 message User {
     int64 id = 1;
+
     
     repeated UserAccount accounts = 10;
+    optional string prompt = 11;
 
 }
 
