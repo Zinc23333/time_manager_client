@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:time_manager_client/data/environment/env.dart';
+import 'package:time_manager_client/data/repository/logger.dart';
 import 'package:time_manager_client/data/types/ts_data.dart';
 import 'package:time_manager_client/data/types/user_account.dart';
 
@@ -127,5 +128,6 @@ class RemoteDb {
             m["updateAt"] as int,
             TsData.fromMapNullable<T>(m["data"]),
           )))
-      .expand((ld) => ld);
+      .expand((ld) => ld)
+      .handleError((e) => logger.d(e));
 }

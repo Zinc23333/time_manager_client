@@ -1,10 +1,14 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:location/location.dart';
+import 'package:time_manager_client/data/repository/logger.dart';
 import 'package:time_manager_client/data/types/ts_data.dart';
+import 'package:time_manager_client/helper/coordinate_converter.dart';
 import 'package:time_manager_client/helper/extension.dart';
 import 'package:time_manager_client/data/proto.gen/task.pb.dart' as p;
 import 'package:time_manager_client/helper/helper.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Task extends TsData {
   String title;
@@ -91,7 +95,9 @@ class Task extends TsData {
         location = map["location"],
         participant = map["participant"],
         note = map["note"],
-        noticeTimes = map["noticeTimes"] {
+        noticeTimes = <DateTime>[
+          for (final e in map["noticeTimes"] ?? []) DateTime.fromMillisecondsSinceEpoch(e * 1000),
+        ] {
     init();
   }
 
@@ -109,7 +115,9 @@ class Task extends TsData {
         source = map["source"],
         content = map["content"],
         status = TaskStatus.fromCode(map["status"] ?? 1),
-        noticeTimes = map["noticeTimes"];
+        noticeTimes = <DateTime>[
+          for (final e in map["noticeTimes"] ?? []) DateTime.fromMillisecondsSinceEpoch(e),
+        ];
 
   static Task? fromMapNullable(Map<String, dynamic>? map) {
     if (map == null || map.isEmpty || !map.containsKey("title")) return null;
@@ -193,7 +201,7 @@ class Task extends TsData {
         "source": source,
         "content": content,
         "status": status.code,
-        "noticeTimes": noticeTimes.map((e) => e.millisecondsSinceEpoch),
+        "noticeTimes": noticeTimes.map((e) => e.millisecondsSinceEpoch).toList(),
       };
 
   String toJsonString() => JsonEncoder().convert(toMap());
@@ -207,14 +215,37 @@ class Task extends TsData {
     ("来源", Icons.source_outlined, true),
   ];
 
-  List<(String label, IconData icon, String?)> paramAndInfo() => [
-        ("标题", Icons.flag_outlined, title),
-        ("概述", Icons.label_outline, summary),
-        ("地点", Icons.location_on_outlined, location),
-        ("参与者", Icons.people_alt_outlined, participant),
-        ("备注", Icons.note_outlined, note),
-        ("来源", Icons.source_outlined, source),
+  List<(String label, IconData icon, String?, void Function()?)> paramAndInfo() => [
+        ("标题", Icons.flag_outlined, title, null),
+        ("概述", Icons.label_outline, summary, null),
+        ("地点", Icons.location_on_outlined, location, _locationFunc),
+        ("参与者", Icons.people_alt_outlined, participant, null),
+        ("备注", Icons.note_outlined, note, null),
+        ("来源", Icons.source_outlined, source, null),
       ];
+
+  void _locationFunc() async {
+    final deviceLocation = Location();
+    if ((await deviceLocation.hasPermission()) == PermissionStatus.denied) {
+      await deviceLocation.requestPermission();
+    }
+
+    if (await deviceLocation.hasPermission() == PermissionStatus.denied || await deviceLocation.hasPermission() == PermissionStatus.deniedForever) return;
+    final loc = await deviceLocation.getLocation();
+    if (loc.latitude == null || loc.longitude == null) return;
+    final latLng = CoordinateConverter.wgs84ToGcj02(loc.latitude!, loc.longitude!);
+    logger.d(latLng);
+
+    final us = [
+      "androidamap://arroundpoi?sourceApplication=softname&keywords=$location&lat=${latLng.$1}&lon=${latLng.$2}&dev=0",
+      "https://uri.amap.com/search?keyword=$location&amp;&center=${latLng.$2},${latLng.$1}&amp;&view=map&amp;&callnative=1&amp",
+    ];
+    for (final u in us) {
+      final r = Uri.parse(u);
+      final s = await launchUrl(r);
+      if (s) break;
+    }
+  }
 
   bool contain(String text) =>
       title.contains(text) ||

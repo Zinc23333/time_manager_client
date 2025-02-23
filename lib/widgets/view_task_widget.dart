@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:time_manager_client/data/types/task.dart';
+import 'package:time_manager_client/helper/extension.dart';
 import 'package:time_manager_client/helper/helper.dart';
 import 'package:time_manager_client/pages/edit_task_page.dart';
 
@@ -66,6 +67,7 @@ class ViewTaskWidget extends StatelessWidget {
                 ],
               ),
             Divider(),
+            // 日期和重要性
             Wrap(
               children: [
                 if (task.startTime != null)
@@ -91,18 +93,44 @@ class ViewTaskWidget extends StatelessWidget {
                 ),
               ],
             ),
+            // 提醒
+            if (task.noticeTimes.isNotEmpty)
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.notifications, color: iconColor),
+                  SizedBox(width: 8),
+                  Text(task.noticeTimes.map((d) => d.formatWithPrecision(5)).join(" ")),
+                ],
+              ),
+
+            // 其他文本信息
             for (final pi in task.paramAndInfo().sublist(2))
-              if (pi.$3?.isNotEmpty ?? false)
-                Row(
-                  children: [
-                    Icon(pi.$2, color: iconColor),
-                    SizedBox(width: 8),
-                    Expanded(child: Text(pi.$3!)),
-                  ],
-                ),
+              if (pi.$3?.isNotEmpty ?? false) buildInfoRow(pi, iconColor),
           ],
         ),
       ),
+    );
+  }
+
+  Row buildInfoRow((String, IconData, String?, void Function()?) pi, Color iconColor) {
+    return Row(
+      children: [
+        Icon(pi.$2, color: iconColor),
+        SizedBox(width: 8),
+        if (pi.$4 == null)
+          Expanded(child: Text(pi.$3!))
+        else
+          Expanded(
+              child: InkWell(
+            onTap: pi.$4,
+            child: Row(children: [
+              Text(pi.$3!),
+              Icon(Icons.open_in_new_rounded, size: 16, color: iconColor),
+            ]),
+          ))
+      ],
     );
   }
 }

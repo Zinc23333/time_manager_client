@@ -28,13 +28,13 @@ class _FourQuadrantPageState extends State<FourQuadrantPage> {
         return Column(children: [
           Expanded(
               child: Row(children: [
-            Expanded(child: buildTaskCard("不重要且紧急", colors[0], fqts[0])),
             Expanded(child: buildTaskCard("重要且紧急", colors[1], fqts[1])),
+            Expanded(child: buildTaskCard("不重要且紧急", colors[0], fqts[0])),
           ])),
           Expanded(
               child: Row(children: [
-            Expanded(child: buildTaskCard("不重要且不紧急", colors[2], fqts[2])),
             Expanded(child: buildTaskCard("重要且不紧急", colors[3], fqts[3])),
+            Expanded(child: buildTaskCard("不重要且不紧急", colors[2], fqts[2])),
           ])),
         ]);
       },

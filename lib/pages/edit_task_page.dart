@@ -32,6 +32,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
 
   late final controllers = widget.old?.paramAndInfo().map((e) => TextEditingController(text: e.$3)).toList() ??
       List.generate(Task.inputFieldParams.length, (_) => TextEditingController());
+  late final focusNodes = List.generate(controllers.length, (_) => FocusNode());
 
   late final List<DateTime> noticeTimes = widget.old?.noticeTimes ?? [];
 
@@ -81,18 +82,19 @@ class _EditTaskPageState extends State<EditTaskPage> {
       key: formKey,
       child: ListView(
         children: [
-          for (final pc in Helper.zip(Task.inputFieldParams, controllers))
+          for (final pcf in Helper.zip(Task.inputFieldParams, controllers, focusNodes))
             TextFormField(
               keyboardType: TextInputType.text,
-              controller: pc.$2,
+              controller: pcf.$2,
               autofocus: true,
+              focusNode: pcf.$3,
               decoration: InputDecoration(
                 prefixIconConstraints: BoxConstraints.tightForFinite(),
-                prefixIcon: Icon(pc.$1.$2),
-                labelText: pc.$1.$1,
+                prefixIcon: Icon(pcf.$1.$2),
+                labelText: pcf.$1.$1,
                 border: UnderlineInputBorder(),
               ),
-              validator: Helper.if_(!pc.$1.$3, (v) => Helper.if_(v == null || v.isEmpty, '请输入${pc.$1.$1}')),
+              validator: Helper.if_(!pcf.$1.$3, (v) => Helper.if_(v == null || v.isEmpty, '请输入${pcf.$1.$1}')),
             ),
           TextFormField(
             autofocus: true,
@@ -182,43 +184,49 @@ class _EditTaskPageState extends State<EditTaskPage> {
                 )),
           ),
           // TODO
-          Row(
-            children: [
-              Text(
-                "提醒时间: ",
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              Expanded(
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: noticeTimes.length,
-                  separatorBuilder: (context, index) => SizedBox(width: 8),
-                  itemBuilder: (context, index) => RawChip(
-                    label: Text(noticeTimes[index].formatWithPrecision(5)),
-                    onPressed: () async {
-                      final r = await Helper.showDateTimePicker(context, initialDate: noticeTimes[index]);
-                      if (r == null) return;
-                      noticeTimes[index] = r;
-                      setState(() {});
-                    },
-                    onDeleted: () {
-                      noticeTimes.removeAt(index);
-                      setState(() {});
-                    },
+          SizedBox(
+            height: 48,
+            child: Row(
+              children: [
+                Text(
+                  "提醒时间: ",
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                Expanded(
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: noticeTimes.length,
+                    separatorBuilder: (context, index) => SizedBox(width: 8),
+                    itemBuilder: (context, index) => RawChip(
+                      label: Text(noticeTimes[index].formatWithPrecision(5)),
+                      onPressed: () async {
+                        clearTextFieldFocusNode();
+                        final r = await Helper.showDateTimePicker(context, initialDate: noticeTimes[index]);
+                        if (r == null) return;
+                        noticeTimes[index] = r;
+                        setState(() {});
+                      },
+                      onDeleted: () {
+                        clearTextFieldFocusNode();
+                        noticeTimes.removeAt(index);
+                        setState(() {});
+                      },
+                    ),
                   ),
                 ),
-              ),
-              IconButton(
-                onPressed: () async {
-                  final r = await Helper.showDateTimePicker(context);
-                  if (r != null) {
-                    noticeTimes.add(r);
-                    setState(() {});
-                  }
-                },
-                icon: Icon(Icons.add_rounded),
-              ),
-            ],
+                IconButton(
+                  onPressed: () async {
+                    clearTextFieldFocusNode();
+                    final r = await Helper.showDateTimePicker(context);
+                    if (r != null) {
+                      noticeTimes.add(r);
+                      setState(() {});
+                    }
+                  },
+                  icon: Icon(Icons.add_rounded),
+                ),
+              ],
+            ),
           ),
           ElevatedButton(
             onPressed: () {
@@ -247,6 +255,12 @@ class _EditTaskPageState extends State<EditTaskPage> {
         ],
       ),
     );
+  }
+
+  void clearTextFieldFocusNode() {
+    for (var e in focusNodes) {
+      e.unfocus();
+    }
   }
 
   void dateEditClicked() {

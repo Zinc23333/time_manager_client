@@ -45,9 +45,9 @@ class Helper {
         initialDate: initialDate,
       );
 
-  static Iterable<(R, S)> zip<R, S>(Iterable<R> r, Iterable<S> s) sync* {
+  static Iterable<(R, S, T?)> zip<R, S, T>(Iterable<R> r, Iterable<S> s, [Iterable<T>? t]) sync* {
     for (int i = 0; i < min(r.length, s.length); i++) {
-      yield (r.elementAt(i), s.elementAt(i));
+      yield (r.elementAt(i), s.elementAt(i), t?.elementAt(i));
     }
     return;
   }

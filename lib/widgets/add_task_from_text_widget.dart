@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:time_manager_client/data/repository/network.dart';
 import 'package:time_manager_client/helper/helper.dart';
 import 'package:time_manager_client/pages/edit_task_page.dart';
+import 'package:time_manager_client/widgets/multi_task_selector_bottom_sheet.dart';
 
 class AddTaskFromTextWidget extends StatefulWidget {
   const AddTaskFromTextWidget({super.key, this.futureText});
@@ -85,9 +86,19 @@ class _AddTaskFromTextWidgetState extends State<AddTaskFromTextWidget> {
     setState(() {});
 
     final t = await Network.getTaskFromText(controller.text);
-    if (t.length == 1) Get.to(EditTaskPage(old: t.first));
-
     startSendTime = null;
     setState(() {});
+
+    if (t.length == 1) Get.to(() => EditTaskPage(old: t.first));
+
+    if (t.length > 1 && mounted) {
+      await MultiTaskSelectorBottomSheet.show(
+        context,
+        t,
+        onSelected: (ta) {
+          Get.to(() => EditTaskPage(old: ta));
+        },
+      );
+    }
   }
 }
