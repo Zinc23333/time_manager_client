@@ -222,8 +222,9 @@ jobs:
           mv ./release_macos/*/*.dmg                       release-macos.dmg
           mv ./release_macos/*/*.pkg                       release-macos.pkg
 
-          # zip -j -r release-windows.zip ./release_windows/*/*exe/**
-      
+          mv ./release_windows/*/*.exe                     release-windows.exe
+          mv ./release_windows/*/*.msix                    release-windows.msix
+
       - run: ls -lR
 
 
