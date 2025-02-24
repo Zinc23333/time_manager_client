@@ -50,7 +50,7 @@ jobs:
           dart run build_runner build -d 1 -r
           dart run flutter_launcher_icons
 
-      - run: flutter_distributor package --platform linux --targets deb,rpm,appimage
+      - run: flutter_distributor package --platform linux --targets deb,rpm,appimage,zip
 
       - run: ls -la dist/*/
 
