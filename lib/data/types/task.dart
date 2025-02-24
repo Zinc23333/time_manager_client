@@ -275,9 +275,7 @@ class Task extends TsData {
       (endTime?.toIso8601String().contains(text) ?? false);
 
   @override
-  String toString() {
-    return "Task($title, $summary, $startTime($startTimePrecision), $endTime($endTimePrecision))";
-  }
+  String toString() => "Task($title, $summary, $startTime($startTimePrecision), $endTime($endTimePrecision))";
 
   @override
   p.Task toProto() => p.Task(
