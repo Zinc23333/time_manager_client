@@ -3,12 +3,14 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:time_manager_client/data/controller/data_controller.dart';
-import 'package:time_manager_client/data/repository/local_storage.dart';
+import 'package:time_manager_client/data/repository/box.dart';
 import 'package:time_manager_client/helper/helper.dart';
 import 'package:time_manager_client/pages/home_page.dart';
 
 void main() async {
   await GetStorage.init(Box.settingKey);
+  await GetStorage.init(Box.simpleDataKey);
+
   runApp(const MyApp());
 }
 

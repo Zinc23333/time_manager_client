@@ -6,9 +6,10 @@ import 'dart:typed_data';
 
 import 'package:get/get.dart';
 import 'package:time_manager_client/data/environment/constant.dart';
+import 'package:time_manager_client/data/repository/box.dart';
 import 'package:time_manager_client/data/repository/local_storage.dart';
 import 'package:time_manager_client/data/repository/logger.dart';
-import 'package:time_manager_client/data/repository/network.dart';
+import 'package:time_manager_client/data/repository/network_ai.dart';
 import 'package:time_manager_client/data/repository/remote_db.dart';
 import 'package:time_manager_client/data/types/group.dart';
 import 'package:time_manager_client/data/types/task.dart';
@@ -462,9 +463,49 @@ class DataController extends GetxController {
     final w = List.generate(p.length, (i) => "${i + 1}. ${p[i]}");
     w.add("当前的时间是: ${DateTime.now().toIso8601String()}");
     final m = w.join("\n\n");
-    final s = "${Constant.aiSystemPrompt} \n\n 此外，用户提供如下信息可以参考: \n\n $m";
+    final s = "${Constant.aiSystemPromptForAddTask} \n\n 此外，用户提供如下信息可以参考: \n\n $m";
 
-    return Network.getTaskFromText(text, systemPrompt: s);
+    return NetworkAi.getTaskFromText(text, systemPrompt: s);
+  }
+
+  // 询问AI: 整理任务
+  Future<String?> getTaskOverallSummary([bool forceAsk = false]) async {
+    if (!forceAsk) {
+      final r = Box.simpleData.read<String>("overall_summary");
+      if (r != null) return r;
+    }
+    final s = await NetworkAi.getTaskOverallSummary(rawTask);
+    if (s == null || s.isEmpty) return null;
+
+    Box.simpleData.write("overall_summary", s);
+    return s;
+  }
+
+  final _reTask = RegExp(r"{(?<name>\S*?)}\[\[(?<no>[0-9]+)\]\]");
+  Future<List<(String text, int? taskId)>> getTaskOverallSummaryWithTask([bool forceAsk = false]) async {
+    final r = await getTaskOverallSummary(forceAsk);
+    if (r == null) return [];
+
+    final List<(String, int?)> l = [];
+    int lastHandle = 0;
+    // print(rawTask.keys.toList());
+    for (final m in _reTask.allMatches(r)) {
+      l.add((r.substring(lastHandle, m.start), null));
+      final no = m.namedGroup("no");
+      // print(no);
+      // print(rawTask[int.tryParse(no ?? "")]);
+      final name = m.namedGroup("name");
+      final t = no == null ? null : int.tryParse(no);
+
+      l.add((name ?? r.substring(m.start, m.end), t));
+      lastHandle = m.end + 1;
+      if (lastHandle >= r.length) break;
+    }
+    if (lastHandle < r.length) {
+      l.add((r.substring(lastHandle), null));
+    }
+
+    return l;
   }
 }
 

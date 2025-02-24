@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:card_loading/card_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 
@@ -74,4 +75,21 @@ class Helper {
 
     return int.tryParse(phoneNumber!.trim());
   }
+
+  static const _defaultCardLoadingThemeDark = CardLoadingTheme(
+    colorOne: Color.fromARGB(255, 56, 56, 56),
+    colorTwo: Color.fromARGB(255, 46, 45, 45),
+  );
+
+  static CardLoading cardLoading({
+    required BuildContext context,
+    required double height,
+    double? width,
+  }) =>
+      CardLoading(
+        height: height,
+        width: width,
+        borderRadius: BorderRadius.circular(8),
+        cardLoadingTheme: Theme.of(context).brightness == Brightness.dark ? _defaultCardLoadingThemeDark : CardLoadingTheme.defaultTheme,
+      );
 }

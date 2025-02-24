@@ -57,6 +57,7 @@ dependencies:
   location: ^8.0.0
   add_2_calendar: ^3.0.1
   card_loading: ^0.3.2
+  card_swiper: ^3.0.1
 
 dev_dependencies:
   flutter_test:

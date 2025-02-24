@@ -183,7 +183,6 @@ class _EditTaskPageState extends State<EditTaskPage> {
                   onRated: importanceRateChanged,
                 )),
           ),
-          // TODO
           SizedBox(
             height: 48,
             child: Row(

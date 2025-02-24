@@ -1,9 +1,10 @@
-import 'package:card_loading/card_loading.dart';
+import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:time_manager_client/3rd/check_mark_indicator.dart';
 import 'package:time_manager_client/data/controller/data_controller.dart';
 import 'package:time_manager_client/helper/helper.dart';
+import 'package:time_manager_client/widgets/task_overall_summary_card.dart';
 import 'package:time_manager_client/widgets/view_task_widget.dart';
 
 class ListPage extends StatefulWidget {
@@ -20,9 +21,10 @@ class _ListPageState extends State<ListPage> {
     color: Colors.grey,
   );
 
-  static final Widget _loading = ListTile(
+  late final Widget _loading = ListTile(
     leading: IconButton(icon: Icon(Icons.circle, color: Colors.grey.withAlpha(40)), onPressed: () {}),
-    title: CardLoading(height: 20, width: 40, borderRadius: BorderRadius.circular(8)),
+    // title: CardLoading(height: 20, width: 40, borderRadius: BorderRadius.circular(8)),
+    title: Helper.cardLoading(context: context, height: 20, width: 40),
   );
 
   @override
@@ -32,41 +34,64 @@ class _ListPageState extends State<ListPage> {
         final tasks = s.currentGroupTasks.toList();
         return CheckMarkIndicator(
           onRefresh: s.syncAll,
-          child: ListView.separated(
-            itemBuilder: (context, index) {
-              final task = tasks[index];
-
-              if (task.isLoading) return _loading;
-
-              final textStyle = Helper.if_(task.status.isFinished, taskFinishedTextStyle);
-              return ListTile(
-                title: Text(tasks[index].title, style: textStyle),
-                subtitle: (task.summary?.isNotEmpty ?? false)
-                    ? Text(
-                        task.summary!,
-                        style: textStyle,
-                        overflow: TextOverflow.ellipsis,
-                      )
-                    : null,
-                onTap: () {
-                  ViewTaskWidget.show(context, tasks[index]);
-                },
-                leading: IconButton(
-                  onPressed: () {
-                    DataController.to.changeTaskStatus(tasks[index]);
-                    setState(() {});
+          child: Column(
+            children: [
+              SizedBox(
+                height: 240,
+                child: Swiper(
+                  itemBuilder: (BuildContext context, int index) {
+                    return switch (index) {
+                      0 => TaskOverallSummaryCard(),
+                      _ => Placeholder(),
+                    };
                   },
-                  icon: task.status.isFinished ? Icon(Icons.check_circle) : Icon(Icons.circle_outlined),
+                  itemCount: 2,
+                  pagination: SwiperPagination(),
                 ),
-              );
-            },
-            separatorBuilder: (context, index) {
-              return SizedBox(height: 12);
-            },
-            itemCount: tasks.length,
+              ),
+              Expanded(
+                child: ListView.separated(
+                  itemBuilder: (context, index) {
+                    final task = tasks[index];
+
+                    if (task.isLoading) return _loading;
+
+                    final textStyle = Helper.if_(task.status.isFinished, taskFinishedTextStyle);
+                    return ListTile(
+                      title: Text(tasks[index].title, style: textStyle),
+                      subtitle: (task.summary?.isNotEmpty ?? false)
+                          ? Text(
+                              task.summary!,
+                              style: textStyle,
+                              overflow: TextOverflow.ellipsis,
+                            )
+                          : null,
+                      onTap: () {
+                        ViewTaskWidget.show(context, tasks[index]);
+                      },
+                      leading: IconButton(
+                        onPressed: () {
+                          DataController.to.changeTaskStatus(tasks[index]);
+                          setState(() {});
+                        },
+                        icon: task.status.isFinished ? Icon(Icons.check_circle) : Icon(Icons.circle_outlined),
+                      ),
+                    );
+                  },
+                  separatorBuilder: (context, index) {
+                    return SizedBox(height: 12);
+                  },
+                  itemCount: tasks.length,
+                ),
+              ),
+            ],
           ),
         );
       },
     );
   }
+
+  // Card buildCardSummary() => Card(
+  //       child: Text("sss"),
+  //     );
 }

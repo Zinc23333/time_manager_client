@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:time_manager_client/data/proto.gen/storage.pb.dart' as p;
 import 'package:time_manager_client/data/repository/logger.dart';
@@ -11,11 +10,6 @@ import 'package:time_manager_client/data/types/task.dart';
 import 'package:time_manager_client/data/types/user.dart';
 import 'package:time_manager_client/data/types/user_account.dart';
 import 'package:time_manager_client/helper/helper.dart';
-
-class Box {
-  static String settingKey = "Get-Settings";
-  static GetStorage setting = GetStorage(settingKey);
-}
 
 class LocalStorage {
   LocalStorage._();
