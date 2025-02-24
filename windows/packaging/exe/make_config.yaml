@@ -8,4 +8,3 @@ create_desktop_icon: true
 # install_dir_name: "D:\\HELLO-WORLD"
 locales:
   - en
-  - zh
