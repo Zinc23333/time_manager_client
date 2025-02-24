@@ -52,3 +52,7 @@ app.*.map.json
 # Env
 .env
 env.g.dart
+
+# output
+
+dist/

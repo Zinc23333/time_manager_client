@@ -1,3 +1,4 @@
+import 'package:card_loading/card_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:time_manager_client/3rd/check_mark_indicator.dart';
@@ -21,7 +22,7 @@ class _ListPageState extends State<ListPage> {
 
   static final Widget _loading = ListTile(
     leading: IconButton(icon: Icon(Icons.circle, color: Colors.grey.withAlpha(40)), onPressed: () {}),
-    title: Row(children: [Container(width: 120, height: 20, color: Colors.grey.withAlpha(40))]),
+    title: CardLoading(height: 20, width: 40, borderRadius: BorderRadius.circular(8)),
   );
 
   @override

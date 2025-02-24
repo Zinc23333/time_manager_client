@@ -1,0 +1,110 @@
+# name: Build Linux Application
+
+# on:
+#   push:
+#     branches: ["main"]
+#   workflow_dispatch:
+
+# jobs:
+#   build-linux:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Clone repository
+#         uses: actions/checkout@v4
+
+#       - shell: bash
+#         run: |
+#           echo -e "DS_KEY=$DS_KEY       \n"  > .env
+#           echo -e "SUPA_URL=$SUPA_URL   \n" >> .env
+#           echo -e "SUPA_ANON=$SUPA_ANON"    >> .env
+
+#       - name: Set up Flutter
+#         uses: subosito/flutter-action@v2
+#         with:
+#           channel: stable # or: beta, master (or main)
+#           cache: true
+
+#       - run: |
+#           sudo apt-get update -y
+#           sudo apt-get install -y ninja-build libgtk-3-dev locate
+
+#           wget -O appimagetool "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage"
+#           chmod +x appimagetool
+#           sudo mv appimagetool /usr/local/bin/
+
+#           mkdir dist
+
+#       - run: flutter --version
+
+#       - run: flutter pub get
+#       - run: |
+#           dart run build_runner clean
+#           dart run build_runner build -d 1 -r
+#           dart run flutter_launcher_icons
+      
+#       - run: flutter_distributor package --platform linux --targets deb
+
+#       - run: cd dist/*
+
+#       - uses: actions/upload-artifact@v4
+#         with:
+#           name: release_deb
+#           path: *.deb  
+
+name: Build Linux Application
+
+on:
+  push:
+    branches: ["main"]
+
+  workflow_dispatch:
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - shell: bash
+        # env:
+        #   DS_KEY: ${{ secrets.DS_KEY }}
+        run: |
+          echo -e "DS_KEY=$DS_KEY       \n"  > .env
+          echo -e "SUPA_URL=$SUPA_URL   \n" >> .env
+          echo -e "SUPA_ANON=$SUPA_ANON"    >> .env
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - run: |
+          sudo apt-get update -y
+          sudo apt-get install -y ninja-build libgtk-3-dev locate
+
+          wget -O appimagetool "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage"
+          chmod +x appimagetool
+          sudo mv appimagetool /usr/local/bin/
+
+          mkdir dist
+
+      - run: flutter --version
+
+      - run: flutter pub get
+
+      - run: |
+          dart run build_runner clean
+          dart run build_runner build -d 1 -r
+          dart run flutter_launcher_icons
+
+      - run: flutter_distributor package --platform linux --targets deb
+
+      - run: ls -la dist/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release_deb
+          path: dist/*/*.deb
