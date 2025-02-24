@@ -30,6 +30,7 @@ jobs:
         with:
           packages: ninja-build libgtk-3-dev locate rpm patchelf locate p7zip libfuse2
           version: 1.0
+          execute_install_scripts: true
 
       - run: |
           wget -O appimagetool "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage"
