@@ -9,20 +9,15 @@ keywords:
 
 generic_name: 时间管理助手
 
-# actions:
-#   - name: Say Hi
-#     label: say-hi
-#     arguments:
-#       - --say
-#       - hi
-#   - name: Say Bye
-#     label: say-bye
-#     arguments:
-#       - --say
-#       - bye
+actions:
+  -name: Start
+  label: start
+  arguments:
+    - --start
 
 categories:
-  - utils
+  - Utility
+  - TextEditor
 
 startup_notify: true
 

@@ -6,18 +6,18 @@ on:
 
   workflow_dispatch:
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
 
 jobs:
-  deploy:
+  deploy-page:
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+    concurrency:
+      group: "pages"
+      cancel-in-progress: false
+
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -29,8 +29,6 @@ jobs:
         uses: actions/checkout@v4
 
       - shell: bash
-        # env:
-        #   DS_KEY: ${{ secrets.DS_KEY }}
         run: |
           echo -e "DS_KEY=$DS_KEY       \n"  > .env
           echo -e "SUPA_URL=$SUPA_URL   \n" >> .env
@@ -42,7 +40,6 @@ jobs:
           channel: stable
           cache: true
       - run: flutter pub get
-    #   - run: flutter build web --no-tree-shake-icons --release --base-href=/rvc_client/
 
       - run: |
           dart run build_runner clean
