@@ -46,6 +46,8 @@ jobs:
           dart run flutter_launcher_icons
 
       - run: flutter_distributor package --platform linux --targets deb,rpm,appimage,zip
+      - run: flutter build apk --release --split-per-abi --no-tree-shake-icons 
+      - run: flutter build apk --release --no-tree-shake-icons 
 
       - run: ls -la dist/*/
 
@@ -56,7 +58,6 @@ jobs:
 
 
   build-on-windows:
-    name: Build Flutter Windows app
     runs-on: windows-latest
     steps:
       - name: Clone repository
@@ -90,7 +91,6 @@ jobs:
           path: dist/*/*.*
 
   build-on-macos:
-    name: Build Flutter MacOs app
     runs-on: macos-latest
     steps:
       - name: Clone repository
@@ -118,6 +118,7 @@ jobs:
           dart run flutter_launcher_icons
                     
       - run: flutter_distributor package --platform macos --targets dmg,pkg
+      - run: flutter_distributor package --platform ios --targets ipa --build-export-options-plist  ios/exportOptions.plist
       - run: ls -la dist/*/
 
       - uses: actions/upload-artifact@v4
