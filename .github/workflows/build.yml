@@ -205,3 +205,33 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
       - run: ls -R
+
+      - run: |
+          mv ./release_android/app-arm64-v8a-release.apk   release-android-arm64-v8a.apk
+          mv ./release_android/app-armeabi-v7a-release.apk release-android-armeabi-v7a.apk
+          mv ./release_android/app-x86_64-release.apk      release-android-x86_64.apk
+          mv ./release_android/app-release.apk             release-android-universal.apk
+
+          mv ./release_android_aab/app-release.aab         release-android.aab
+
+          mv ./release_linux/*/*.AppImage                  release-linux.AppImage
+          mv ./release_linux/*/*.deb                       release-linux.deb
+          mv ./release_linux/*/*.rpm                       release-linux.rpm
+          mv ./release_linux/*/*.zip                       release-linux.zip
+
+          mv ./release_macos/*/*.dmg                       release-macos.dmg
+          mv ./release_macos/*/*.pkg                       release-macos.pkg
+
+          zip -j -r release-windows.zip ./release_windows/*/*exe/**
+
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          tag_name: ${{ github.ref }}
+          name: Release ${{ github.ref }}
+          body: New Pre-Release.
+          draft: false
+          prerelease: true
+          files: release-*.*
