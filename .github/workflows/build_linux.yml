@@ -15,8 +15,6 @@ jobs:
         uses: actions/checkout@v4
 
       - shell: bash
-        # env:
-        #   DS_KEY: ${{ secrets.DS_KEY }}
         run: |
           echo -e "DS_KEY=$DS_KEY       \n"  > .env
           echo -e "SUPA_URL=$SUPA_URL   \n" >> .env
@@ -70,8 +68,6 @@ jobs:
           cache: true
       
       - shell: bash
-        env:
-          DS_KEY: ${{ secrets.DS_KEY }}
         run: |
           echo -e "DS_KEY=$DS_KEY       \n"  > .env
           echo -e "SUPA_URL=$SUPA_URL   \n" >> .env
@@ -89,4 +85,39 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: release_windows
+          path: dist/*/*.*
+
+  build-on-macos:
+    name: Build Flutter MacOs app
+    runs-on: macos-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      
+      - shell: bash
+        run: |
+          echo -e "DS_KEY=$DS_KEY       \n"  > .env
+          echo -e "SUPA_URL=$SUPA_URL   \n" >> .env
+          echo -e "SUPA_ANON=$SUPA_ANON"    >> .env
+
+      - run: |
+          npm install -g appdmg
+
+      - run: |
+          mkdir dist
+          dart pub global activate flutter_distributor
+          dart run build_runner clean
+          dart run build_runner build -d 1 -r
+          dart run flutter_launcher_icons
+                    
+      - run: flutter_distributor package --platform macos --targets dmg,pkg
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release_macos
           path: dist/*/*.*
