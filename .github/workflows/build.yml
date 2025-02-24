@@ -48,6 +48,7 @@ jobs:
       - run: flutter_distributor package --platform linux --targets deb,rpm,appimage,zip
       - run: flutter build apk --release --split-per-abi --no-tree-shake-icons 
       - run: flutter build apk --release --no-tree-shake-icons 
+      - run: flutter build appbundle --release --no-tree-shake-icons 
       - run: flutter build web --no-tree-shake-icons --release
 
       - run: ls -la dist/*/
@@ -57,7 +58,17 @@ jobs:
           name: release_linux
           path: dist/*/*.*
 
-      # 发布Github Page
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release_android
+          path: build/app/outputs/flutter-apk/*.apk
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release_android_aab
+          path: build/app/outputs/bundle/release/app-release.aab
+
+      # 上传 Github Page
       - name: Setup Pages
         uses: actions/configure-pages@v5
       
@@ -128,7 +139,7 @@ jobs:
           dart run flutter_launcher_icons
                     
       - run: flutter_distributor package --platform macos --targets dmg,pkg
-      - run: flutter build ipa --release --export-method ad-hoc
+      # - run: flutter build ipa --release --export-method ad-hoc
       - run: ls -la dist/*/
 
       - uses: actions/upload-artifact@v4
