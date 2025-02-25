@@ -2,8 +2,6 @@ name: Build Application
 
 on:
   push:
-    branches: ["main"]
-
   workflow_dispatch:
 
 jobs:
@@ -238,17 +236,4 @@ jobs:
           body: New Pre-Release.
           draft: false
           prerelease: true
-          files: |
-              release-android-arm64-v8a.apk
-              release-android-armeabi-v7a.apk
-              release-android-x86_64.apk
-              release-android-universal.apk
-              release-android.aab
-              release-linux.AppImage
-              release-linux.deb
-              release-linux.rpm
-              release-linux.zip
-              release-macos.dmg
-              release-macos.pkg
-              release-windows.exe
-              release-windows.msix
+          files: release-*.*
