@@ -4,6 +4,7 @@ import 'package:time_manager_client/data/types/task.dart';
 import 'package:time_manager_client/helper/extension.dart';
 import 'package:time_manager_client/helper/helper.dart';
 import 'package:time_manager_client/pages/edit_task_page.dart';
+import 'package:time_manager_client/widgets/link_text.dart';
 
 class ViewTaskWidget extends StatelessWidget {
   const ViewTaskWidget({super.key, required this.task});
@@ -54,7 +55,7 @@ class ViewTaskWidget extends StatelessWidget {
                           context: context,
                           builder: (context) => AlertDialog(
                             title: Text("原文"),
-                            content: Text(task.content ?? "无"),
+                            content: LinkText(task.content ?? "无"),
                           ),
                         );
                       },
