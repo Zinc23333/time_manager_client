@@ -105,7 +105,7 @@ class Task extends TsData {
         noticeTimes = <DateTime>[
           for (final e in map["noticeTimes"] ?? []) DateTime.fromMillisecondsSinceEpoch(e * 1000),
         ],
-        tags = map["tags"].cast<String>() ?? <String>[] {
+        tags = map["tags"]?.cast<String>() ?? <String>[] {
     init();
   }
 
@@ -126,7 +126,7 @@ class Task extends TsData {
         noticeTimes = <DateTime>[
           for (final e in map["noticeTimes"] ?? []) DateTime.fromMillisecondsSinceEpoch(e),
         ],
-        tags = map["tags"].cast<String>() ?? <String>[];
+        tags = map["tags"]?.cast<String>() ?? <String>[];
 
   static Task? fromMapNullable(Map<String, dynamic>? map) {
     if (map == null || map.isEmpty || !map.containsKey("title")) return null;
