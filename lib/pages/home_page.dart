@@ -1,6 +1,7 @@
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:time_manager_client/data/repository/logger.dart';
 import 'package:time_manager_client/pages/calendar_page.dart';
+import 'package:time_manager_client/pages/web_crawler_page.dart';
 import 'package:time_manager_client/widgets/add_task_from_text_widget.dart';
 import 'package:universal_io/io.dart';
 
@@ -87,12 +88,19 @@ class _HomePageState extends State<HomePage> {
 
       children: [
         FloatingActionButton(
+          heroTag: null,
           onPressed: _addTask,
           child: Icon(Icons.add),
         ),
         FloatingActionButton(
+          heroTag: null,
           onPressed: _addTaskFromText,
           child: Icon(Icons.input_rounded),
+        ),
+        FloatingActionButton(
+          heroTag: null,
+          onPressed: _addTaskFromWeb,
+          child: Icon(Icons.web_outlined),
         ),
       ],
     );
@@ -215,5 +223,10 @@ class _HomePageState extends State<HomePage> {
 
   void _addTaskFromText() {
     AddTaskFromTextWidget.show(context);
+  }
+
+  void _addTaskFromWeb() {
+    Get.to(() => WebCrawlerPage());
+    // AddTaskFromTextWidget.show(context);
   }
 }

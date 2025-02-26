@@ -3,8 +3,10 @@ import 'dart:async';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:time_manager_client/data/environment/env.dart';
 import 'package:time_manager_client/data/repository/logger.dart';
+import 'package:time_manager_client/data/types/task.dart';
 import 'package:time_manager_client/data/types/ts_data.dart';
 import 'package:time_manager_client/data/types/user_account.dart';
+import 'package:time_manager_client/data/types/web_crawler_web.dart';
 
 class RemoteDb {
   RemoteDb._();
@@ -140,5 +142,18 @@ class RemoteDb {
   // 更新用户Prompt
   Future<void> updateUserPrompt(int userId, String prompts) async {
     await _supa.from("user_prompts").upsert({"userId": userId, "prompt": prompts}, onConflict: "userId");
+  }
+
+  // 网页爬虫逻辑
+  Future<List<WebCrawlerWeb>> getWebCrawlerWebs() async {
+    final d = await _supa.from("crawler_web").select("id, name, summary, lastCrawl");
+    return d.map((l) => WebCrawlerWeb.fromMap(l)).toList();
+  }
+
+  // 网页爬虫: 某一网页任务
+  Future<List<Task>> getWebCrawlerTasks(int webId) async {
+    final d = await _supa.from("crawler_tasks").select("tasks").eq("webId", webId);
+    logger.t(d);
+    return d.map((l) => (l["tasks"] as List)).expand((l) => l).map((t) => Task.fromMap(t)).toList();
   }
 }

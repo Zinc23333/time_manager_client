@@ -132,13 +132,19 @@ class _AddTaskFromTextWidgetState extends State<AddTaskFromTextWidget> {
     if (t.length == 1) Get.to(() => EditTaskPage(old: t.first));
 
     if (t.length > 1 && mounted) {
-      await MultiTaskSelectorBottomSheet.show(
-        context,
-        t,
+      MultiTaskSelectorBottomSheet(
+        tasks: t,
         onSelected: (ta) {
           Get.to(() => EditTaskPage(old: ta));
         },
-      );
+      ).show(context);
+      // await MultiTaskSelectorBottomSheet.show(
+      //   context,
+      //   t,
+      //   onSelected: (ta) {
+      //     Get.to(() => EditTaskPage(old: ta));
+      //   },
+      // );
     }
   }
 }

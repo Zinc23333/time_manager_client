@@ -10,7 +10,7 @@ class Helper {
   static Future<T?> showModalBottomSheetWithTextField<T>(BuildContext context, Widget child) => showModalBottomSheet<T>(
         context: context,
         isScrollControlled: true,
-        useRootNavigator: true,
+        // useRootNavigator: true,
         useSafeArea: true,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
@@ -25,6 +25,22 @@ class Helper {
               child: child,
             ),
           );
+        },
+      );
+
+  static Future<T?> showModalBottomSheetSimple<T>(BuildContext context, Widget child) => showModalBottomSheet<T>(
+        context: context,
+        isScrollControlled: true,
+        // useRootNavigator: true,
+        useSafeArea: true,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(16.0),
+            topRight: Radius.circular(16.0),
+          ),
+        ),
+        builder: (BuildContext context) {
+          return child;
         },
       );
 
