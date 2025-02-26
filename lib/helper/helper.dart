@@ -32,16 +32,18 @@ class Helper {
         context: context,
         isScrollControlled: true,
         // useRootNavigator: true,
-        useSafeArea: true,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(16.0),
             topRight: Radius.circular(16.0),
           ),
         ),
-        builder: (BuildContext context) {
-          return child;
-        },
+        builder: (BuildContext context) => LayoutBuilder(
+          builder: (context, constraints) => SizedBox(
+            height: constraints.maxHeight * 3 / 4,
+            child: child,
+          ),
+        ),
       );
 
   static Future<(DateTime, DateTime?)?> showDateTimeRangePicker(BuildContext context) async {

@@ -36,6 +36,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
   late final focusNodes = List.generate(controllers.length, (_) => FocusNode());
 
   late final List<DateTime> noticeTimes = widget.old?.noticeTimes ?? [];
+  late final List<String> tags = widget.old?.tags ?? [];
 
   late final _timePrecisionList = [
     ("开始时间精度:", () => startTimePrecision, (index) => startTimePrecision = index),
@@ -88,13 +89,36 @@ class _EditTaskPageState extends State<EditTaskPage> {
           buildDateTimePrecision(expandTimePrecisionHeight, theme),
           buildImportance(),
           buildNoticeTime(),
-          if (widget.old?.source != null) buildSource(),
-          if (widget.old?.content != null) buildContent(),
+          buildTags(),
+          if (widget.old?.source?.isNotEmpty ?? false) buildSource(),
+          if (widget.old?.content?.isNotEmpty ?? false) buildContent(),
           SizedBox(height: 8),
           buildFinish(),
         ],
       ),
     );
+  }
+
+  Widget buildTags() {
+    return Row(children: [
+      Text("标签: ", style: Theme.of(context).textTheme.titleMedium),
+      Expanded(
+          child: Wrap(spacing: 2, runSpacing: 2, children: [
+        for (final tag in Task.defaultTags)
+          RawChip(
+            selected: tags.contains(tag),
+            label: Text(tag),
+            onPressed: () {
+              if (tags.contains(tag)) {
+                tags.remove(tag);
+              } else {
+                tags.add(tag);
+              }
+              setState(() {});
+            },
+          )
+      ])),
+    ]);
   }
 
   ElevatedButton buildFinish() {
@@ -111,6 +135,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
             content: widget.old?.content,
             status: widget.old?.status ?? TaskStatus.unfinished,
             noticeTimes: noticeTimes,
+            tags: tags,
           );
           if (widget.old == null) {
             DataController.to.addTask(task);

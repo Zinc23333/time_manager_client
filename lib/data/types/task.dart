@@ -29,6 +29,7 @@ class Task extends TsData {
   TaskStatus status;
 
   List<DateTime> noticeTimes;
+  List<String> tags;
 
   Task(
       {required this.title,
@@ -45,8 +46,10 @@ class Task extends TsData {
       this.content,
       this.status = TaskStatus.unfinished,
       List<DateTime>? noticeTimes,
+      List<String>? tags,
       int? updateTimestampAt})
       : noticeTimes = noticeTimes ?? <DateTime>[],
+        tags = tags ?? <String>[],
         super(updateTimestampAt) {
     init();
   }
@@ -54,12 +57,14 @@ class Task extends TsData {
   Task.delete()
       : title = "",
         status = TaskStatus.finished,
-        noticeTimes = const [];
+        noticeTimes = const [],
+        tags = const [];
 
   Task.loading()
       : title = "",
         status = TaskStatus.finished,
         noticeTimes = const [],
+        tags = const [],
         super.loading();
 
   Task.fromController(
@@ -71,6 +76,7 @@ class Task extends TsData {
     this.importance,
     this.content,
     this.noticeTimes = const [],
+    this.tags = const [],
     this.status = TaskStatus.unfinished,
   })  : assert(controllers.length == 6),
         title = controllers[0].text,
@@ -98,7 +104,8 @@ class Task extends TsData {
         note = map["note"],
         noticeTimes = <DateTime>[
           for (final e in map["noticeTimes"] ?? []) DateTime.fromMillisecondsSinceEpoch(e * 1000),
-        ] {
+        ],
+        tags = map["tags"].cast<String>() ?? <String>[] {
     init();
   }
 
@@ -118,7 +125,8 @@ class Task extends TsData {
         status = TaskStatus.fromCode(map["status"] ?? 1),
         noticeTimes = <DateTime>[
           for (final e in map["noticeTimes"] ?? []) DateTime.fromMillisecondsSinceEpoch(e),
-        ];
+        ],
+        tags = map["tags"].cast<String>() ?? <String>[];
 
   static Task? fromMapNullable(Map<String, dynamic>? map) {
     if (map == null || map.isEmpty || !map.containsKey("title")) return null;
@@ -156,6 +164,7 @@ class Task extends TsData {
         status: TaskStatus.fromCode(t.status),
         noticeTimes: t.noticeTimes.map((e) => e.toDateTime()).toList(),
         updateTimestampAt: t.updateTimestampAt.toInt(),
+        tags: t.tags,
       );
 
   // factory Task.fromUint8List(Uint8List data) => Task.fromProto(p.Task.fromBuffer(data));
@@ -203,6 +212,7 @@ class Task extends TsData {
         "content": content,
         "status": status.code,
         "noticeTimes": noticeTimes.map((e) => e.millisecondsSinceEpoch).toList(),
+        "tags": tags,
       };
 
   String toJsonString() => JsonEncoder().convert(toMap());
@@ -293,11 +303,24 @@ class Task extends TsData {
         content: content,
         status: status.code,
         noticeTimes: noticeTimes.map((e) => e.millisecondsSinceEpoch.toInt64()),
+        tags: tags,
         updateTimestampAt: updateTimestampAt.toInt64(),
       );
 
   static const importanceInfo = ["未设置", "不重要", "较不重要", "一般", "重要", "非常重要"];
   static const timePricisions = "年月日时分秒";
+  static const defaultTags = ['工作', '个人', '学习', '健康', '财务', '社交', '旅行', '家庭', '创意'];
+  static const defaultTagIcons = [
+    Icons.work,
+    Icons.person,
+    Icons.school,
+    Icons.favorite,
+    Icons.attach_money,
+    Icons.people,
+    Icons.flight,
+    Icons.home,
+    Icons.color_lens
+  ];
 }
 
 enum TaskStatus {

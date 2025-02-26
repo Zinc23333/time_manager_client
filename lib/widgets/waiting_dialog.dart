@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:time_manager_client/data/repository/logger.dart';
 
 class WaitingDialog<T> extends StatelessWidget {
   const WaitingDialog(this.future, {super.key});
@@ -18,11 +19,14 @@ class WaitingDialog<T> extends StatelessWidget {
       content: FutureBuilder(
           future: future,
           builder: (context, snapshot) {
+            logger.d("message: ${snapshot.data}");
             if (snapshot.hasData) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                Get.back(result: snapshot.data);
-              });
+              Get.back(result: snapshot.data);
             }
+            if (snapshot.hasError) {
+              logger.e(snapshot.error);
+            }
+
             return SizedBox(
               height: 64,
               child: Center(child: CircularProgressIndicator()),

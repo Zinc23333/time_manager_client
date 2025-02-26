@@ -9,20 +9,29 @@ class LinkText extends StatelessWidget {
   final String text;
   final int? maxLines;
 
+  static const _addBlank = "()（）";
+
   @override
   Widget build(BuildContext context) {
-    final linked = linkify(text);
+    String txt = text;
+    for (final c in _addBlank.split("")) {
+      txt = txt.replaceAll(c, " $c ");
+    }
+
+    final linked = linkify(txt);
     final color = Theme.of(context).colorScheme.primary;
+    final bodyMedium = Theme.of(context).textTheme.bodyMedium;
     return RichText(
         maxLines: maxLines,
         overflow: TextOverflow.ellipsis,
         text: TextSpan(
+            style: bodyMedium,
             children: linked
                 .map(
                   (e) => switch (e) {
                     LinkableElement _ => TextSpan(
                         text: e.text,
-                        style: TextStyle(color: color),
+                        style: bodyMedium?.copyWith(color: color),
                         recognizer: TapGestureRecognizer()..onTap = () => launchUrlString(e.url),
                       ),
                     _ => TextSpan(text: e.text)

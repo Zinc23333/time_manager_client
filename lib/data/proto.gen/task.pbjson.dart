@@ -31,6 +31,7 @@ const Task$json = {
     {'1': 'content', '3': 12, '4': 1, '5': 9, '9': 10, '10': 'content', '17': true},
     {'1': 'status', '3': 13, '4': 1, '5': 5, '9': 11, '10': 'status', '17': true},
     {'1': 'noticeTimes', '3': 14, '4': 3, '5': 3, '10': 'noticeTimes'},
+    {'1': 'tags', '3': 15, '4': 3, '5': 9, '10': 'tags'},
     {'1': 'updateTimestampAt', '3': 100, '4': 1, '5': 3, '10': 'updateTimestampAt'},
   ],
   '8': [
@@ -59,9 +60,9 @@ final $typed_data.Uint8List taskDescriptor = $convert.base64Decode(
     'ggASgJSAZSCGxvY2F0aW9uiAEBEiUKC3BhcnRpY2lwYW50GAkgASgJSAdSC3BhcnRpY2lwYW50'
     'iAEBEhcKBG5vdGUYCiABKAlICFIEbm90ZYgBARIbCgZzb3VyY2UYCyABKAlICVIGc291cmNliA'
     'EBEh0KB2NvbnRlbnQYDCABKAlIClIHY29udGVudIgBARIbCgZzdGF0dXMYDSABKAVIC1IGc3Rh'
-    'dHVziAEBEiAKC25vdGljZVRpbWVzGA4gAygDUgtub3RpY2VUaW1lcxIsChF1cGRhdGVUaW1lc3'
-    'RhbXBBdBhkIAEoA1IRdXBkYXRlVGltZXN0YW1wQXRCCgoIX3N1bW1hcnlCDAoKX3N0YXJ0VGlt'
-    'ZUIVChNfc3RhcnRUaW1lUHJlY2lzaW9uQgoKCF9lbmRUaW1lQhMKEV9lbmRUaW1lUHJlY2lzaW'
-    '9uQg0KC19pbXBvcnRhbmNlQgsKCV9sb2NhdGlvbkIOCgxfcGFydGljaXBhbnRCBwoFX25vdGVC'
-    'CQoHX3NvdXJjZUIKCghfY29udGVudEIJCgdfc3RhdHVz');
+    'dHVziAEBEiAKC25vdGljZVRpbWVzGA4gAygDUgtub3RpY2VUaW1lcxISCgR0YWdzGA8gAygJUg'
+    'R0YWdzEiwKEXVwZGF0ZVRpbWVzdGFtcEF0GGQgASgDUhF1cGRhdGVUaW1lc3RhbXBBdEIKCghf'
+    'c3VtbWFyeUIMCgpfc3RhcnRUaW1lQhUKE19zdGFydFRpbWVQcmVjaXNpb25CCgoIX2VuZFRpbW'
+    'VCEwoRX2VuZFRpbWVQcmVjaXNpb25CDQoLX2ltcG9ydGFuY2VCCwoJX2xvY2F0aW9uQg4KDF9w'
+    'YXJ0aWNpcGFudEIHCgVfbm90ZUIJCgdfc291cmNlQgoKCF9jb250ZW50QgkKB19zdGF0dXM=');
 

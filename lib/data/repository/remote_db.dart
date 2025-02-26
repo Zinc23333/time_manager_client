@@ -153,8 +153,16 @@ class RemoteDb {
   // 网页爬虫: 某一网页任务
   Future<List<Task>> getWebCrawlerTasks(int webId) async {
     final d = await _supa.from("crawler_tasks").select("tasks").eq("webId", webId);
-    logger.t(d);
-    return d.map((l) => (l["tasks"] as List)).expand((l) => l).map((t) => Task.fromMap(t)).toList();
+    // d as List<Map<String, dynamic>>;
+    // d => [{tasks: [{}, {}]}]
+    // final t = d.map((l) => (l["tasks"] as List)).cast<Map<String, dynamic>>().expand((l) => l);
+    final t = [
+      for (final l in d)
+        for (final t in (l["tasks"] as List)) Task.fromMap(t)
+    ];
+    // .expand((l) => l).map((t) => Task.fromMap(t)).toList();
+    logger.t(t);
+    return t;
   }
 
   // 网页爬虫: 提交

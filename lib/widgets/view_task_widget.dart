@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:time_manager_client/data/controller/data_controller.dart';
 import 'package:time_manager_client/data/types/task.dart';
 import 'package:time_manager_client/helper/extension.dart';
 import 'package:time_manager_client/helper/helper.dart';
 import 'package:time_manager_client/pages/edit_task_page.dart';
 import 'package:time_manager_client/widgets/link_text.dart';
+import 'package:time_manager_client/widgets/multi_task_selector_bottom_sheet.dart';
 
 class ViewTaskWidget extends StatelessWidget {
   const ViewTaskWidget({super.key, required this.task});
@@ -42,6 +44,7 @@ class ViewTaskWidget extends StatelessWidget {
                 ),
               ],
             ),
+
             if (task.summary != null) Text(task.summary!),
             if (task.content != null)
               Row(
@@ -98,6 +101,63 @@ class ViewTaskWidget extends StatelessWidget {
                 ),
               ],
             ),
+            // 标签 tags
+            if (task.tags.isNotEmpty)
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Icon(Icons.tag_rounded, color: iconColor),
+                  SizedBox(width: 8),
+                  Expanded(
+                    child: SizedBox(
+                      height: 24,
+                      child: ListView.separated(
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) {
+                          final dti = Task.defaultTags.indexOf(task.tags[index]);
+                          return InkWell(
+                            onTap: () {
+                              final t = task.tags[index];
+                              final ts = DataController.to.tasks.where((o) => o.tags.contains(t)).toList();
+                              MultiTaskSelectorBottomSheet(tasks: ts, title: "标签为 $t 的任务").show(context).then((tt) {
+                                if (tt != null) {
+                                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                                    ViewTaskWidget.show(context, tt);
+                                  });
+                                }
+                              });
+                            },
+                            child: Center(
+                                child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                if (dti != -1) Icon(Task.defaultTagIcons[dti], size: 12),
+                                Text(task.tags[index]),
+                              ],
+                            )),
+                          );
+                        },
+                        separatorBuilder: (context, index) => Text("、"),
+                        itemCount: task.tags.length,
+                      ),
+                    ),
+                  ),
+                  // for (final t in task.tags)
+                  //   InkWell(
+                  //     onTap: () {
+                  //       final ts = DataController.to.tasks.where((o) => o.tags.contains(t)).toList();
+                  //       MultiTaskSelectorBottomSheet(tasks: ts, title: "标签为 $t 的任务").show(context).then((tt) {
+                  //         if (tt != null) {
+                  //           WidgetsBinding.instance.addPostFrameCallback((_) {
+                  //             ViewTaskWidget.show(context, tt);
+                  //           });
+                  //         }
+                  //       });
+                  //     },
+                  //     child: Text(t),
+                  //   )
+                ],
+              ),
             // 提醒
             if (task.noticeTimes.isNotEmpty)
               Row(

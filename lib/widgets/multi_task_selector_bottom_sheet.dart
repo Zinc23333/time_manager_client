@@ -4,8 +4,11 @@ import 'package:time_manager_client/data/types/task.dart';
 import 'package:time_manager_client/helper/helper.dart';
 
 class MultiTaskSelectorBottomSheet extends StatelessWidget {
-  const MultiTaskSelectorBottomSheet({super.key, required this.tasks, this.onSelected});
+  const MultiTaskSelectorBottomSheet({super.key, required this.tasks, this.onSelected, this.title, this.subTitle, this.info});
 
+  final String? title;
+  final String? subTitle;
+  final String? info;
   final List<Task> tasks;
   final void Function(Task)? onSelected;
 
@@ -16,6 +19,7 @@ class MultiTaskSelectorBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         SizedBox(
           height: 32,
@@ -30,11 +34,33 @@ class MultiTaskSelectorBottomSheet extends StatelessWidget {
             ),
           ),
         ),
+        if (title != null) Text(title!, style: Theme.of(context).textTheme.titleLarge),
+        if (subTitle != null) Text(subTitle!, style: Theme.of(context).textTheme.bodyMedium),
+        if (info != null)
+          Text(
+            info!,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Colors.grey,
+                  fontStyle: FontStyle.italic,
+                ),
+          ),
+        if (title != null || subTitle != null || info != null) Divider(),
+        // Expanded(
+        //     child: Column(
+        //   mainAxisSize: MainAxisSize.min,
+        // ))
         Expanded(
           child: ListView.builder(
-            // shrinkWrap: true,
             itemCount: tasks.length,
             itemBuilder: (context, index) => ListTile(
+              leading: Text(
+                (index + 1).toString(),
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
               title: Text(tasks[index].title),
               subtitle: Text(tasks[index].summary ?? ""),
               onTap: () {
