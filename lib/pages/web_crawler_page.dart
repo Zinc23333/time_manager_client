@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:time_manager_client/data/repository/remote_db.dart';
 import 'package:time_manager_client/pages/edit_task_page.dart';
+import 'package:time_manager_client/pages/web_crawler_add_page.dart';
 import 'package:time_manager_client/widgets/multi_task_selector_bottom_sheet.dart';
 import 'package:time_manager_client/widgets/waiting_dialog.dart';
 
@@ -14,6 +15,13 @@ class WebCrawlerPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text("网页爬虫导入"),
+        actions: [
+          IconButton(
+              onPressed: () {
+                Get.to(() => WebCrawlerAddPage());
+              },
+              icon: Icon(Icons.add))
+        ],
       ),
       body: FutureBuilder(
           future: RemoteDb.instance.getWebCrawlerWebs(),

@@ -146,7 +146,7 @@ class RemoteDb {
 
   // 网页爬虫逻辑
   Future<List<WebCrawlerWeb>> getWebCrawlerWebs() async {
-    final d = await _supa.from("crawler_web").select("id, name, summary, lastCrawl");
+    final d = await _supa.from("crawler_web").select("id, name, summary, lastCrawl").eq("verify", true);
     return d.map((l) => WebCrawlerWeb.fromMap(l)).toList();
   }
 
@@ -155,5 +155,11 @@ class RemoteDb {
     final d = await _supa.from("crawler_tasks").select("tasks").eq("webId", webId);
     logger.t(d);
     return d.map((l) => (l["tasks"] as List)).expand((l) => l).map((t) => Task.fromMap(t)).toList();
+  }
+
+  // 网页爬虫: 提交
+  Future<void> submitWebCrawler(String name, String summary, String code, int? userId) async {
+    code = code.split("\n").where((l) => l.trim().isNotEmpty && !l.trimLeft().startsWith("#")).map((l) => l.trimRight()).join("\n");
+    await _supa.from("crawler_web").insert({"name": name, "summary": summary, "pythonCode": code, "userId": userId});
   }
 }

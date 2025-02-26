@@ -507,6 +507,9 @@ class DataController extends GetxController {
 
     return l;
   }
+
+  // 网页爬虫
+  Future<void> submitWebCrawler(String name, String summary, String code) => RemoteDb.instance.submitWebCrawler(name, summary, code, user?.id);
 }
 
 enum _DataChangeType {
