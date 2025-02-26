@@ -128,14 +128,14 @@ class _AddTaskWidgetState extends State<AddTaskWidget> {
               ),
             )
           else ...[
-            IconButton(
-              onPressed: bFromImage,
-              icon: Icon(Icons.image),
-            ),
-            IconButton(
-              onPressed: bFromClipboard,
-              icon: Icon(Icons.copy),
-            ),
+            // IconButton(
+            //   onPressed: bFromImage,
+            //   icon: Icon(Icons.image),
+            // ),
+            // IconButton(
+            //   onPressed: bFromClipboard,
+            //   icon: Icon(Icons.copy),
+            // ),
           ],
           SizedBox(width: 8),
         ],

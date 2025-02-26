@@ -1,5 +1,7 @@
+import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:time_manager_client/data/repository/logger.dart';
 import 'package:time_manager_client/pages/calendar_page.dart';
+import 'package:time_manager_client/widgets/add_task_from_text_widget.dart';
 import 'package:universal_io/io.dart';
 
 import 'package:flutter/foundation.dart';
@@ -62,16 +64,37 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
           bottomNavigationBar: Helper.if_(isPortrait, buildBottomNavigationBar()),
-          floatingActionButton: FloatingActionButton(
-            onPressed: _addTask,
-            tooltip: "添加",
-            shape: CircleBorder(),
-            child: Icon(Icons.add),
-          ),
-          floatingActionButtonLocation: Helper.if_(isPortrait, FloatingActionButtonLocation.centerDocked),
+          floatingActionButton: buildFAB(),
+
+          // floatingActionButtonLocation: Helper.if_(isPortrait, FloatingActionButtonLocation.centerDocked),
+          floatingActionButtonLocation: ExpandableFab.location,
           body: buildBody(orientation),
         );
       },
+    );
+  }
+
+  Widget buildFAB() {
+    // return FloatingActionButton(
+    //   onPressed: _addTask,
+    //   tooltip: "添加",
+    //   shape: CircleBorder(),
+    //   child: Icon(Icons.add),
+    // );
+    return ExpandableFab(
+      // pos: ExpandableFabPos.center,
+      // type: ExpandableFabType.fan,
+
+      children: [
+        FloatingActionButton(
+          onPressed: _addTask,
+          child: Icon(Icons.add),
+        ),
+        FloatingActionButton(
+          onPressed: _addTaskFromText,
+          child: Icon(Icons.input_rounded),
+        ),
+      ],
     );
   }
 
@@ -104,10 +127,11 @@ class _HomePageState extends State<HomePage> {
     return BottomNavigationBar(
       // landscapeLayout: BottomNavigationBarLandscapeLayout.centered,
       type: BottomNavigationBarType.fixed,
-      currentIndex: _currentIndex <= 1 ? _currentIndex : _currentIndex + 1,
+      currentIndex: _currentIndex,
+      // currentIndex: _currentIndex <= 1 ? _currentIndex : _currentIndex + 1,
       onTap: (index) {
-        if (index == 2) return;
-        if (index > 2) index--;
+        // if (index == 2) return;
+        // if (index > 2) index--;
 
         _currentIndex = index;
         setState(() {});
@@ -118,7 +142,8 @@ class _HomePageState extends State<HomePage> {
             icon: Icon(pages[i].$1),
             label: pages[i].$2,
           ),
-      ]..insert(2, BottomNavigationBarItem(icon: SizedBox(), label: "")),
+      ],
+      // ]..insert(2, BottomNavigationBarItem(icon: SizedBox(), label: "")),
     );
   }
 
@@ -186,5 +211,9 @@ class _HomePageState extends State<HomePage> {
 
   void _addTask() {
     AddTaskWidget.show(context);
+  }
+
+  void _addTaskFromText() {
+    AddTaskFromTextWidget.show(context);
   }
 }

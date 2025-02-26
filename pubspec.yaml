@@ -59,6 +59,7 @@ dependencies:
   card_loading: ^0.3.2
   card_swiper: ^3.0.1
   simple_circular_progress_bar: ^1.0.2
+  flutter_expandable_fab: ^2.3.0
 
 dev_dependencies:
   flutter_test:
