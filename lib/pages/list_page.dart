@@ -39,17 +39,7 @@ class _ListPageState extends State<ListPage> {
             children: [
               SizedBox(
                 height: 240,
-                child: Swiper(
-                  itemBuilder: (BuildContext context, int index) {
-                    return switch (index) {
-                      0 => TaskOverallSummaryCard(),
-                      1 => TaskStatisticsSummaryCard(),
-                      _ => Placeholder(),
-                    };
-                  },
-                  itemCount: 2,
-                  pagination: SwiperPagination(),
-                ),
+                child: buildCard(),
               ),
               Expanded(
                 child: ListView.separated(
@@ -89,6 +79,29 @@ class _ListPageState extends State<ListPage> {
             ],
           ),
         );
+      },
+    );
+  }
+
+  Widget buildCard() {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth <= 720) {
+          return Swiper(
+            itemBuilder: (BuildContext context, int index) => switch (index) {
+              0 => TaskOverallSummaryCard(),
+              1 => TaskStatisticsSummaryCard(),
+              _ => Placeholder(),
+            },
+            itemCount: 2,
+            pagination: SwiperPagination(),
+          );
+        } else {
+          return ListView(
+            scrollDirection: Axis.horizontal,
+            children: [TaskOverallSummaryCard(), TaskStatisticsSummaryCard()].map((e) => SizedBox(width: 640, child: e)).toList(),
+          );
+        }
       },
     );
   }
