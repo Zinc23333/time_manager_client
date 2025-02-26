@@ -75,36 +75,25 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget buildFAB() {
-    // return FloatingActionButton(
-    //   onPressed: _addTask,
-    //   tooltip: "添加",
-    //   shape: CircleBorder(),
-    //   child: Icon(Icons.add),
-    // );
-    return ExpandableFab(
-      // pos: ExpandableFabPos.center,
-      // type: ExpandableFabType.fan,
-
-      children: [
-        FloatingActionButton(
-          heroTag: null,
-          onPressed: _addTask,
-          child: Icon(Icons.add),
-        ),
-        FloatingActionButton(
-          heroTag: null,
-          onPressed: _addTaskFromText,
-          child: Icon(Icons.input_rounded),
-        ),
-        FloatingActionButton(
-          heroTag: null,
-          onPressed: _addTaskFromWeb,
-          child: Icon(Icons.web_outlined),
-        ),
-      ],
-    );
-  }
+  Widget buildFAB() => ExpandableFab(
+        children: [
+          FloatingActionButton(
+            heroTag: null,
+            onPressed: _addTask,
+            child: Icon(Icons.add),
+          ),
+          FloatingActionButton(
+            heroTag: null,
+            onPressed: _addTaskFromText,
+            child: Icon(Icons.input_rounded),
+          ),
+          FloatingActionButton(
+            heroTag: null,
+            onPressed: _addTaskFromWeb,
+            child: Icon(Icons.web_outlined),
+          ),
+        ],
+      );
 
   Widget buildBody(Orientation orientation) => orientation == Orientation.landscape
       ? Row(

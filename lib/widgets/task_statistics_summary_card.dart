@@ -12,10 +12,12 @@ class TaskStatisticsSummaryCard extends StatefulWidget {
 
 class _TaskStatisticsSummaryCardState extends State<TaskStatisticsSummaryCard> {
   final vn = ValueNotifier(0.0);
-  late final titleLarge = Theme.of(context).textTheme.titleLarge;
 
   @override
   Widget build(BuildContext context) {
+    final titleLarge = Theme.of(context).textTheme.titleLarge;
+    final bodyMedium = Theme.of(context).textTheme.bodyMedium;
+    final inversePrimary = Theme.of(context).colorScheme.inversePrimary;
     final tasks = DataController.to.tasks;
     final taskCount = tasks.length;
     final unfinCount = tasks.where((e) => e.status == TaskStatus.unfinished).length;
@@ -40,6 +42,7 @@ class _TaskStatisticsSummaryCardState extends State<TaskStatisticsSummaryCard> {
               mergeMode: true,
               progressStrokeWidth: 25,
               backStrokeWidth: 25,
+              backColor: inversePrimary.withAlpha(64),
               valueNotifier: vn,
               onGetText: (t) => Text(
                 "${t.toStringAsPrecision(3)}%",
@@ -53,19 +56,19 @@ class _TaskStatisticsSummaryCardState extends State<TaskStatisticsSummaryCard> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 RichText(
-                    text: TextSpan(children: [
+                    text: TextSpan(style: bodyMedium, children: [
                   TextSpan(text: "总共有 "),
                   TextSpan(text: taskCount.toString(), style: titleLarge?.copyWith(color: Colors.blue)),
                   TextSpan(text: " 个任务"),
                 ])),
                 RichText(
-                    text: TextSpan(children: [
+                    text: TextSpan(style: bodyMedium, children: [
                   TextSpan(text: "已完成 "),
                   TextSpan(text: finCount.toString(), style: titleLarge?.copyWith(color: Colors.green)),
                   TextSpan(text: " 个任务"),
                 ])),
                 RichText(
-                    text: TextSpan(children: [
+                    text: TextSpan(style: bodyMedium, children: [
                   TextSpan(text: "还剩下 "),
                   TextSpan(text: unfinCount.toString(), style: titleLarge?.copyWith(color: Colors.red)),
                   TextSpan(text: " 个任务"),

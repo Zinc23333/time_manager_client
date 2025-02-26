@@ -13,7 +13,7 @@ class WebCrawlerPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text("编辑分组"),
+        title: Text("网页爬虫导入"),
       ),
       body: FutureBuilder(
           future: RemoteDb.instance.getWebCrawlerWebs(),
