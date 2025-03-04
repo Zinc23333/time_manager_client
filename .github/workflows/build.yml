@@ -12,12 +12,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - shell: bash
-        run: |
-          echo -e "DS_KEY=$DS_KEY       \n"  > .env
-          echo -e "SUPA_URL=$SUPA_URL   \n" >> .env
-          echo -e "SUPA_ANON=$SUPA_ANON"    >> .env
-
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
@@ -35,6 +29,12 @@ jobs:
       - run: |
           flutter --version
           flutter pub get
+
+      - shell: bash
+        run: |
+          echo -e "DS_KEY=$DS_KEY       \n"  > .env
+          echo -e "SUPA_URL=$SUPA_URL   \n" >> .env
+          echo -e "SUPA_ANON=$SUPA_ANON"    >> .env
 
       - run: |
           mkdir dist
