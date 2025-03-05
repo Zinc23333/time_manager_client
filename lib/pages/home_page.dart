@@ -1,6 +1,9 @@
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
+import 'package:time_manager_client/data/environment/constant.dart';
+import 'package:time_manager_client/data/environment/env.dart';
 import 'package:time_manager_client/data/repository/logger.dart';
 import 'package:time_manager_client/pages/calendar_page.dart';
+import 'package:time_manager_client/pages/raw_text_page.dart';
 import 'package:time_manager_client/pages/web_crawler_page.dart';
 import 'package:time_manager_client/widgets/add_task_from_text_widget.dart';
 import 'package:universal_io/io.dart';
@@ -62,6 +65,11 @@ class _HomePageState extends State<HomePage> {
                   },
                   icon: Icon(Icons.refresh),
                 ),
+              IconButton(
+                  onPressed: () {
+                    Get.to(() => RawTextPage(title: "测试", content: "${Env.dsApiKey.length};${Env.supaUrl.length};${Env.supaAnon.length}"));
+                  },
+                  icon: Icon(Icons.deblur))
             ],
           ),
           bottomNavigationBar: Helper.if_(isPortrait, buildBottomNavigationBar()),
