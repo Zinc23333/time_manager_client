@@ -115,7 +115,8 @@ jobs:
           channel: stable
           cache: true
       
-      - run: |
+      - shell: bash
+        run: |
           echo -e "DS_KEY=${{ secrets.DS_KEY }}       \n"  > .env
           echo -e "SUPA_URL=${{ secrets.SUPA_URL }}   \n" >> .env
           echo -e "SUPA_ANON=${{ secrets.SUPA_ANON }}"    >> .env

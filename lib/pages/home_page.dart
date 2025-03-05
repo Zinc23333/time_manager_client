@@ -65,11 +65,11 @@ class _HomePageState extends State<HomePage> {
                   },
                   icon: Icon(Icons.refresh),
                 ),
-              IconButton(
-                  onPressed: () {
-                    Get.to(() => RawTextPage(title: "测试", content: "${Env.dsApiKey.length};${Env.supaUrl.length};${Env.supaAnon.length}"));
-                  },
-                  icon: Icon(Icons.deblur))
+              // IconButton(
+              //     onPressed: () {
+              //       Get.to(() => RawTextPage(title: "测试", content: "${Env.dsApiKey.length};${Env.supaUrl.length};${Env.supaAnon.length}"));
+              //     },
+              //     icon: Icon(Icons.deblur))
             ],
           ),
           bottomNavigationBar: Helper.if_(isPortrait, buildBottomNavigationBar()),
