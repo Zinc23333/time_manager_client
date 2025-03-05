@@ -22,5 +22,8 @@ message Task {
     repeated int64 noticeTimes = 14;
     repeated string tags = 15;
 
+    optional double lat = 16;
+    optional double lng = 17;
+
     int64 updateTimestampAt = 100;
 }

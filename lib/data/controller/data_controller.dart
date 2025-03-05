@@ -5,18 +5,22 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:get/get.dart';
+import 'package:location/location.dart';
 import 'package:time_manager_client/data/environment/constant.dart';
 import 'package:time_manager_client/data/repository/box.dart';
 import 'package:time_manager_client/data/repository/local_storage.dart';
 import 'package:time_manager_client/data/repository/logger.dart';
 import 'package:time_manager_client/data/repository/network_ai.dart';
+import 'package:time_manager_client/data/repository/network_amap.dart';
 import 'package:time_manager_client/data/repository/remote_db.dart';
 import 'package:time_manager_client/data/types/group.dart';
 import 'package:time_manager_client/data/types/task.dart';
 import 'package:time_manager_client/data/proto.gen/storage.pb.dart' as p;
 import 'package:time_manager_client/data/types/ts_data.dart';
+import 'package:time_manager_client/data/types/type.dart';
 import 'package:time_manager_client/data/types/user_account.dart';
 import 'package:time_manager_client/data/types/user.dart';
+import 'package:time_manager_client/helper/coordinate_converter.dart';
 import 'package:time_manager_client/helper/extension.dart';
 import 'package:time_manager_client/helper/helper.dart';
 
@@ -142,6 +146,44 @@ class DataController extends GetxController {
     _needSubbmitDataController.add((tId, Task.delete()));
 
     _onDataChanged();
+  }
+
+  // 设置任务坐标
+  void changeTaskLatLng(Task task, LatLng tatLng) {
+    task.latLng = tatLng;
+    task.updateTimestamp();
+
+    _needSubbmitDataController.add((getRawIndexNo(task), task));
+
+    _onDataChanged();
+  }
+
+  // 尝试获取当前位置距任务的目标点距离
+  final _deviceLocation = Location();
+  Future<double?> getTaskDistance(Task task) async {
+    try {
+      final locr = await _deviceLocation.getLocation().timeout(Duration(seconds: 10));
+      logger.d("r loc: $locr");
+      if (locr.latitude == null || locr.longitude == null) return null;
+
+      final loc = CoordinateHelper.wgs84ToGcj02(locr.latitude!, locr.longitude!);
+      if (task.latLng != null) return CoordinateHelper.calculateDistance(loc, task.latLng!);
+
+      if (task.location != null) {
+        try {
+          final ll = await NetworkAmap.queryPlace(task.location!, loc);
+          if (ll == null) return null;
+          changeTaskLatLng(task, ll);
+          return CoordinateHelper.calculateDistance(loc, task.latLng!);
+        } catch (e) {
+          logger.e(e);
+        }
+      }
+    } catch (e) {
+      logger.e(e);
+    }
+
+    return null;
   }
 
   // 添加组

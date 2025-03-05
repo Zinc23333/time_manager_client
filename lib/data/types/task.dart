@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:location/location.dart';
 import 'package:time_manager_client/data/repository/logger.dart';
 import 'package:time_manager_client/data/types/ts_data.dart';
+import 'package:time_manager_client/data/types/type.dart';
 import 'package:time_manager_client/helper/coordinate_converter.dart';
 import 'package:time_manager_client/helper/extension.dart';
 import 'package:time_manager_client/data/proto.gen/task.pb.dart' as p;
@@ -30,6 +31,7 @@ class Task extends TsData {
 
   List<DateTime> noticeTimes;
   List<String> tags;
+  LatLng? latLng;
 
   Task(
       {required this.title,
@@ -47,6 +49,7 @@ class Task extends TsData {
       this.status = TaskStatus.unfinished,
       List<DateTime>? noticeTimes,
       List<String>? tags,
+      this.latLng,
       int? updateTimestampAt})
       : noticeTimes = noticeTimes ?? <DateTime>[],
         tags = tags ?? <String>[],
@@ -126,7 +129,8 @@ class Task extends TsData {
         noticeTimes = <DateTime>[
           for (final e in map["noticeTimes"] ?? []) DateTime.fromMillisecondsSinceEpoch(e),
         ],
-        tags = map["tags"]?.cast<String>() ?? <String>[];
+        tags = map["tags"]?.cast<String>() ?? <String>[],
+        latLng = (map["lat"] != null && map["lng"] != null) ? (map["lat"], map["lng"]) : null;
 
   static Task? fromMapNullable(Map<String, dynamic>? map) {
     if (map == null || map.isEmpty || !map.containsKey("title")) return null;
@@ -165,6 +169,7 @@ class Task extends TsData {
         noticeTimes: t.noticeTimes.map((e) => e.toDateTime()).toList(),
         updateTimestampAt: t.updateTimestampAt.toInt(),
         tags: t.tags,
+        latLng: Helper.if_(t.hasLat() && t.hasLng(), (t.lat, t.lng)),
       );
 
   // factory Task.fromUint8List(Uint8List data) => Task.fromProto(p.Task.fromBuffer(data));
@@ -213,6 +218,8 @@ class Task extends TsData {
         "status": status.code,
         "noticeTimes": noticeTimes.map((e) => e.millisecondsSinceEpoch).toList(),
         "tags": tags,
+        "lat": latLng?.$1,
+        "lng": latLng?.$2,
       };
 
   String toJsonString() => JsonEncoder().convert(toMap());
@@ -236,16 +243,16 @@ class Task extends TsData {
       ];
 
   // 地点点击事件
+  final _deviceLocation = Location();
   void onLocationClick() async {
-    final deviceLocation = Location();
-    if ((await deviceLocation.hasPermission()) == PermissionStatus.denied) {
-      await deviceLocation.requestPermission();
+    if ((await _deviceLocation.hasPermission()) == PermissionStatus.denied) {
+      await _deviceLocation.requestPermission();
     }
 
-    if (await deviceLocation.hasPermission() == PermissionStatus.denied || await deviceLocation.hasPermission() == PermissionStatus.deniedForever) return;
-    final loc = await deviceLocation.getLocation();
+    if (await _deviceLocation.hasPermission() == PermissionStatus.denied || await _deviceLocation.hasPermission() == PermissionStatus.deniedForever) return;
+    final loc = await _deviceLocation.getLocation();
     if (loc.latitude == null || loc.longitude == null) return;
-    final latLng = CoordinateConverter.wgs84ToGcj02(loc.latitude!, loc.longitude!);
+    final latLng = CoordinateHelper.wgs84ToGcj02(loc.latitude!, loc.longitude!);
     logger.d(latLng);
 
     final us = [
@@ -305,6 +312,8 @@ class Task extends TsData {
         noticeTimes: noticeTimes.map((e) => e.millisecondsSinceEpoch.toInt64()),
         tags: tags,
         updateTimestampAt: updateTimestampAt.toInt64(),
+        lat: latLng?.$1,
+        lng: latLng?.$2,
       );
 
   static const importanceInfo = ["未设置", "不重要", "较不重要", "一般", "重要", "非常重要"];

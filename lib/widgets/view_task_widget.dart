@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:time_manager_client/data/controller/data_controller.dart';
+import 'package:time_manager_client/data/repository/logger.dart';
 import 'package:time_manager_client/data/types/task.dart';
 import 'package:time_manager_client/helper/extension.dart';
 import 'package:time_manager_client/helper/helper.dart';
@@ -172,14 +173,14 @@ class ViewTaskWidget extends StatelessWidget {
 
             // 其他文本信息
             for (final pi in task.paramAndInfo().sublist(2))
-              if (pi.$3?.isNotEmpty ?? false) buildInfoRow(pi, iconColor),
+              if (pi.$3?.isNotEmpty ?? false) buildInfoRow(task, pi, iconColor),
           ],
         ),
       ),
     );
   }
 
-  Row buildInfoRow((String, IconData, String?, void Function()?) pi, Color iconColor) {
+  Row buildInfoRow(Task task, (String, IconData, String?, void Function()?) pi, Color iconColor) {
     return Row(
       children: [
         Icon(pi.$2, color: iconColor),
@@ -193,6 +194,23 @@ class ViewTaskWidget extends StatelessWidget {
             child: Row(children: [
               Text(pi.$3!),
               Icon(Icons.open_in_new_rounded, size: 16, color: iconColor),
+              SizedBox(width: 16),
+              if (pi.$1 == "地点")
+                FutureBuilder(
+                  future: DataController.to.getTaskDistance(task),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      if (snapshot.hasError) logger.e(snapshot.error);
+                      if (snapshot.data != null) {
+                        return Text("${snapshot.data!.toStringAsFixed(1)}米");
+                      } else {
+                        return SizedBox();
+                      }
+                    }
+                    return Helper.cardLoading(context: context, height: 24, width: 45);
+                    // return Text("${}");
+                  },
+                )
             ]),
           ))
       ],

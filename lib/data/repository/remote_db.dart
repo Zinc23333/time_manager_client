@@ -131,7 +131,7 @@ class RemoteDb {
             TsData.fromMapNullable<T>(m["data"]),
           )))
       .expand((ld) => ld)
-      .handleError((e) => logger.d(e));
+      .handleError((e) => logger.e(e));
 
   // 获取用户Prompt
   Future<String?> getUserPrompt(int userId) async {

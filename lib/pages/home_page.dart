@@ -1,11 +1,9 @@
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
-import 'package:time_manager_client/data/environment/constant.dart';
-import 'package:time_manager_client/data/environment/env.dart';
 import 'package:time_manager_client/data/repository/logger.dart';
 import 'package:time_manager_client/pages/calendar_page.dart';
-import 'package:time_manager_client/pages/raw_text_page.dart';
 import 'package:time_manager_client/pages/web_crawler_page.dart';
 import 'package:time_manager_client/widgets/add_task_from_text_widget.dart';
+import 'package:time_manager_client/widgets/assistant_dialog.dart';
 import 'package:universal_io/io.dart';
 
 import 'package:flutter/foundation.dart';
@@ -128,27 +126,34 @@ class _HomePageState extends State<HomePage> {
         )
       : pages[_currentIndex].$3;
 
-  BottomNavigationBar buildBottomNavigationBar() {
-    return BottomNavigationBar(
-      // landscapeLayout: BottomNavigationBarLandscapeLayout.centered,
-      type: BottomNavigationBarType.fixed,
-      currentIndex: _currentIndex,
-      // currentIndex: _currentIndex <= 1 ? _currentIndex : _currentIndex + 1,
-      onTap: (index) {
-        // if (index == 2) return;
-        // if (index > 2) index--;
-
-        _currentIndex = index;
-        setState(() {});
+  late double _startDragY = MediaQuery.of(context).size.height;
+  Widget buildBottomNavigationBar() {
+    return GestureDetector(
+      onVerticalDragStart: (details) {
+        _startDragY = details.globalPosition.dy;
       },
-      items: [
-        for (int i = 0; i < pages.length; i++)
-          BottomNavigationBarItem(
-            icon: Icon(pages[i].$1),
-            label: pages[i].$2,
-          ),
-      ],
-      // ]..insert(2, BottomNavigationBarItem(icon: SizedBox(), label: "")),
+      onVerticalDragUpdate: (details) {
+        final y = details.globalPosition.dy;
+        if (_startDragY - y > 300) {
+          showDialog(context: context, builder: (context) => AssistantDialog());
+        }
+      },
+      child: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        currentIndex: _currentIndex,
+        onTap: (index) {
+          _currentIndex = index;
+          setState(() {});
+        },
+        items: [
+          for (int i = 0; i < pages.length; i++)
+            BottomNavigationBarItem(
+              icon: Icon(pages[i].$1),
+              label: pages[i].$2,
+            ),
+        ],
+        // ]..insert(2, BottomNavigationBarItem(icon: SizedBox(), label: "")),
+      ),
     );
   }
 

@@ -31,6 +31,8 @@ class Task extends $pb.GeneratedMessage {
     $core.int? status,
     $core.Iterable<$fixnum.Int64>? noticeTimes,
     $core.Iterable<$core.String>? tags,
+    $core.double? lat,
+    $core.double? lng,
     $fixnum.Int64? updateTimestampAt,
   }) {
     final $result = create();
@@ -79,6 +81,12 @@ class Task extends $pb.GeneratedMessage {
     if (tags != null) {
       $result.tags.addAll(tags);
     }
+    if (lat != null) {
+      $result.lat = lat;
+    }
+    if (lng != null) {
+      $result.lng = lng;
+    }
     if (updateTimestampAt != null) {
       $result.updateTimestampAt = updateTimestampAt;
     }
@@ -104,6 +112,8 @@ class Task extends $pb.GeneratedMessage {
     ..a<$core.int>(13, _omitFieldNames ? '' : 'status', $pb.PbFieldType.O3)
     ..p<$fixnum.Int64>(14, _omitFieldNames ? '' : 'noticeTimes', $pb.PbFieldType.K6, protoName: 'noticeTimes')
     ..pPS(15, _omitFieldNames ? '' : 'tags')
+    ..a<$core.double>(16, _omitFieldNames ? '' : 'lat', $pb.PbFieldType.OD)
+    ..a<$core.double>(17, _omitFieldNames ? '' : 'lng', $pb.PbFieldType.OD)
     ..aInt64(100, _omitFieldNames ? '' : 'updateTimestampAt', protoName: 'updateTimestampAt')
     ..hasRequiredFields = false
   ;
@@ -252,12 +262,30 @@ class Task extends $pb.GeneratedMessage {
   @$pb.TagNumber(15)
   $core.List<$core.String> get tags => $_getList(14);
 
+  @$pb.TagNumber(16)
+  $core.double get lat => $_getN(15);
+  @$pb.TagNumber(16)
+  set lat($core.double v) { $_setDouble(15, v); }
+  @$pb.TagNumber(16)
+  $core.bool hasLat() => $_has(15);
+  @$pb.TagNumber(16)
+  void clearLat() => clearField(16);
+
+  @$pb.TagNumber(17)
+  $core.double get lng => $_getN(16);
+  @$pb.TagNumber(17)
+  set lng($core.double v) { $_setDouble(16, v); }
+  @$pb.TagNumber(17)
+  $core.bool hasLng() => $_has(16);
+  @$pb.TagNumber(17)
+  void clearLng() => clearField(17);
+
   @$pb.TagNumber(100)
-  $fixnum.Int64 get updateTimestampAt => $_getI64(15);
+  $fixnum.Int64 get updateTimestampAt => $_getI64(17);
   @$pb.TagNumber(100)
-  set updateTimestampAt($fixnum.Int64 v) { $_setInt64(15, v); }
+  set updateTimestampAt($fixnum.Int64 v) { $_setInt64(17, v); }
   @$pb.TagNumber(100)
-  $core.bool hasUpdateTimestampAt() => $_has(15);
+  $core.bool hasUpdateTimestampAt() => $_has(17);
   @$pb.TagNumber(100)
   void clearUpdateTimestampAt() => clearField(100);
 }

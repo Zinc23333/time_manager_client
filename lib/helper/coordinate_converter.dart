@@ -1,6 +1,8 @@
 import 'dart:math';
 
-class CoordinateConverter {
+import 'package:time_manager_client/data/types/type.dart';
+
+class CoordinateHelper {
   static const double pi = 3.14159265358979324;
   static const double xPi = (pi * 3000.0) / 180.0;
   static const double a = 6378245.0;
@@ -28,7 +30,8 @@ class CoordinateConverter {
     return ret;
   }
 
-  static (double, double) wgs84ToGcj02(double wgslat, double wgslon) {
+  // static LatLng wgs84ToGcj02(double wgslat, double wgslon) {
+  static LatLng wgs84ToGcj02(double wgslat, double wgslon) {
     if (_outOfChina(wgslat, wgslon)) return (wgslat, wgslon);
 
     double dlat = _transformLat(wgslon - 105.0, wgslat - 35.0);
@@ -41,5 +44,32 @@ class CoordinateConverter {
     double mglat = wgslat + dlat;
     double mglng = wgslon + dlng;
     return (mglat, mglng);
+  }
+
+  static double calculateDistance(LatLng p1, LatLng p2) {
+    const int earthRadius = 6371; // 地球半径，单位为公里
+
+    // 将经纬度从度数转换为弧度
+    double radLat1 = _degreesToRadians(p1.$1);
+    double radLon1 = _degreesToRadians(p1.$2);
+    double radLat2 = _degreesToRadians(p2.$1);
+    double radLon2 = _degreesToRadians(p2.$2);
+
+    // 计算纬度和经度的差值
+    double deltaLat = radLat2 - radLat1;
+    double deltaLon = radLon2 - radLon1;
+
+    // 使用 Haversine 公式计算距离
+    double a = pow(sin(deltaLat / 2), 2) + cos(radLat1) * cos(radLat2) * pow(sin(deltaLon / 2), 2);
+    double c = 2 * atan2(sqrt(a), sqrt(1 - a));
+
+    // 计算最终的距离
+    double distance = earthRadius * c;
+
+    return distance;
+  }
+
+  static double _degreesToRadians(double degrees) {
+    return degrees * pi / 180.0;
   }
 }

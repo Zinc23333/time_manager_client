@@ -12,6 +12,9 @@ abstract class Env {
 
   @EnviedField(varName: 'SUPA_ANON')
   static const String supaAnon = _Env.supaAnon;
+
+  @EnviedField(varName: 'AMAP_KEY')
+  static const String amapKey = _Env.amapKey;
 }
 
 // dart run build_runner build
