@@ -2,7 +2,6 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:time_manager_client/data/controller/data_controller.dart';
-import 'package:time_manager_client/data/repository/logger.dart';
 import 'package:time_manager_client/data/types/task.dart';
 import 'package:time_manager_client/helper/coordinate_helper.dart';
 import 'package:time_manager_client/helper/extension.dart';
@@ -119,7 +118,7 @@ class _AssistantDialogState extends State<AssistantDialog> {
     final next = tasks[i + 1];
 
     String deltaTime = "";
-    logger.d("${prev.startTime} -> ${next.startTime}");
+    // logger.d("${prev.startTime} -> ${next.startTime}");
     if (next.startTime != null && prev.startTime != null) {
       int dtm = next.startTime!.difference(prev.startTime!).inMinutes;
       int dth = dtm ~/ 60;

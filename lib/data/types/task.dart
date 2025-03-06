@@ -61,13 +61,15 @@ class Task extends TsData {
       : title = "",
         status = TaskStatus.finished,
         noticeTimes = const [],
-        tags = const [];
+        tags = const [],
+        super.delete();
 
   Task.loading()
       : title = "",
         status = TaskStatus.finished,
         noticeTimes = const [],
-        tags = const [];
+        tags = const [],
+        super(-1);
 
   Task.fromController(
     List<TextEditingController> controllers, {

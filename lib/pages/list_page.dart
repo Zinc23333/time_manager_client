@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:time_manager_client/3rd/check_mark_indicator.dart';
 import 'package:time_manager_client/data/controller/data_controller.dart';
+import 'package:time_manager_client/data/repository/logger.dart';
 import 'package:time_manager_client/helper/helper.dart';
 import 'package:time_manager_client/widgets/task_overall_summary_card.dart';
 import 'package:time_manager_client/widgets/task_statistics_summary_card.dart';
@@ -60,6 +61,9 @@ class _ListPageState extends State<ListPage> {
                           : null,
                       onTap: () {
                         ViewTaskWidget.show(context, tasks[index]);
+                      },
+                      onLongPress: () {
+                        logger.d("task: $task\n${DataController.to.getRawIndexNo(task)} ${task.isDeleted}");
                       },
                       leading: IconButton(
                         onPressed: () {

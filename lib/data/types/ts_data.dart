@@ -7,7 +7,7 @@ class TsData {
   TsData([int? timestamp]) : updateTimestampAt = timestamp ?? DateTime.now().millisecondsSinceEpoch;
   TsData.zero() : updateTimestampAt = 0;
   TsData.loading() : updateTimestampAt = -1;
-  TsData.delete() : updateTimestampAt = 1111111111111;
+  TsData.delete() : updateTimestampAt = 9007199254740991;
   // String toJsonString() => "";
 
   void updateTimestamp() {

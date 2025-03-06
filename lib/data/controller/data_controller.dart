@@ -67,6 +67,7 @@ class DataController extends GetxController {
     }
   }
 
+  // Iterable<Task> get currentGroupTasks => currentGroup.taskIds.map((e) => rawTask[e] ?? Task.loading());
   Iterable<Task> get currentGroupTasks => currentGroup.taskIds.map((e) => rawTask[e] ?? Task.loading());
 
   final _rawRadom = Random();
@@ -392,7 +393,7 @@ class DataController extends GetxController {
   }
 
   void onDbChange<T extends TsData>((int, int, T?) d) {
-    logger.t("ddd: onDbChange: $d");
+    // logger.t("ddd: onDbChange: $d");
     final rawMap = _getRaw<T>();
     if (rawMap.containsKey(d.$1) && d.$2 <= rawMap[d.$1]!.updateTimestampAt) return;
     logger.t("ddd willDown $d");
@@ -408,11 +409,14 @@ class DataController extends GetxController {
 
   // 同步所有数据
   Future<void> syncAll() async {
-    await syncData<Group>();
     await syncData<Task>();
+    await syncData<Group>();
 
-    getUserInfoAccount();
-    getUserPrompt();
+    _correctGroupTaskIds();
+    await syncData<Group>();
+
+    // getUserInfoAccount();
+    // getUserPrompt();
 
     _onDataChanged();
   }
@@ -444,8 +448,8 @@ class DataController extends GetxController {
       }
     }
 
-    logger.t("$T cloud: $cloudNewIds");
-    logger.t("$T local: $localNewIds");
+    logger.t("$T cloud new: $cloudNewIds");
+    logger.t("$T local new: $localNewIds, ${localNewIds.map((e) => rawMap[e]?.updateTimestampAt).join(",")}");
 
     // 2.1 更新本地数据
     final it = await RemoteDb.instance.getData<T>(user!.id, cloudNewIds.toList());
@@ -475,6 +479,18 @@ class DataController extends GetxController {
     if (T == Task || d is Task) return rawTask as Map<int, T>;
     if (T == Group || d is Group) return rawGroup as Map<int, T>;
     throw Exception("Unknown type");
+  }
+
+  // 移除 Group 中不存在的 TaskId
+  void _correctGroupTaskIds() {
+    final taskIds = rawTask.keys.toList();
+    for (final g in rawGroup.values) {
+      final tids = g.taskIds.where((i) => !taskIds.contains(i));
+      if (tids.isNotEmpty) {
+        g.taskIds.removeWhere((i) => tids.contains(i));
+        g.updateTimestamp();
+      }
+    }
   }
 
   // 获取用户Prompt
