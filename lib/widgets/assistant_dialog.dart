@@ -47,7 +47,7 @@ class _AssistantDialogState extends State<AssistantDialog> {
                     child: SingleChildScrollView(
                         child: SizedBox(
                   width: screenSize.width * 0.8,
-                  height: tasks.length * 100 + 20,
+                  height: tasks.length * 100,
                   child: buildTasks(),
                 )))
               ],
@@ -74,24 +74,7 @@ class _AssistantDialogState extends State<AssistantDialog> {
             right: 0,
             height: 80,
             top: tno * 100,
-            child: Container(
-              padding: EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                color: Colors.white.withAlpha(24),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(task.title, style: textTheme.titleMedium),
-
-                  Row(children: [Icon(Icons.location_pin, color: Colors.white, size: 16), Text(task.location ?? "未知地点", style: textTheme.bodyMedium)]),
-                  Row(children: [Icon(Icons.date_range, color: Colors.white, size: 16), Text(task.startTimeWithPrecision, style: textTheme.bodyMedium)]),
-                  // Text(task.startTimeWithPrecision, style: TextStyle(fontSize: 12)),
-                  // Text(task.endTimeWithPrecision, style: TextStyle(fontSize: 12)),
-                ],
-              ),
-            ),
+            child: buildCard(task),
           ),
         for (final (tno, task) in Helper.enumerate(tasks))
           Positioned(
@@ -99,17 +82,42 @@ class _AssistantDialogState extends State<AssistantDialog> {
             top: tno * 100 + 25,
             width: 30,
             height: 30,
-            child: task.status == TaskStatus.finished
-                ? Container(
-                    padding: EdgeInsets.zero,
-                    decoration: BoxDecoration(color: Colors.green, shape: BoxShape.circle),
-                    child: Icon(Icons.check_rounded, color: Colors.white, size: 30),
-                  )
-                : Center(child: Icon(Icons.circle, color: Colors.white, size: 28)),
+            child: buildStatus(task),
             // child: task.status == TaskStatus.finished ? Icon(Icons.check_circle, color: Colors.green) : Icon(Icons.circle, color: Colors.white),
           ),
         for (int i = 0; i < tasks.length - 1; i++) buildDetla(i),
       ],
+    );
+  }
+
+  Widget buildStatus(Task task) {
+    return task.status == TaskStatus.finished
+        ? Container(
+            padding: EdgeInsets.zero,
+            decoration: BoxDecoration(color: Colors.green, shape: BoxShape.circle),
+            child: Icon(Icons.check_rounded, color: Colors.white, size: 30),
+          )
+        : Center(child: Icon(Icons.circle, color: Colors.white, size: 28));
+  }
+
+  Widget buildCard(Task task) {
+    return Container(
+      padding: EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: Colors.white.withAlpha(24),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(task.title, style: textTheme.titleMedium),
+
+          Row(children: [Icon(Icons.location_pin, color: Colors.white, size: 16), Text(task.location ?? "未知地点", style: textTheme.bodyMedium)]),
+          Row(children: [Icon(Icons.date_range, color: Colors.white, size: 16), Text(task.startTimeWithPrecision, style: textTheme.bodyMedium)]),
+          // Text(task.startTimeWithPrecision, style: TextStyle(fontSize: 12)),
+          // Text(task.endTimeWithPrecision, style: TextStyle(fontSize: 12)),
+        ],
+      ),
     );
   }
 

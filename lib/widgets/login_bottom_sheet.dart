@@ -43,7 +43,10 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
                 SizedBox(height: 24),
                 Text("欢迎用户", style: textTheme.titleLarge),
                 const SizedBox(height: 32),
-                if (phoneNumber == null) Text("请允许应用获取手机号码", style: textTheme.bodyLarge) else Text(phoneNumber.toString(), style: textTheme.displaySmall),
+                if (phoneNumber == null)
+                  Text("请允许应用获取手机号码\n完成授权后，请重新登录", style: textTheme.bodyLarge)
+                else
+                  Text(phoneNumber.toString(), style: textTheme.displaySmall),
                 const SizedBox(height: 24),
                 SizedBox(
                   width: 250,
