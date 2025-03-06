@@ -6,7 +6,7 @@ import 'package:location/location.dart';
 import 'package:time_manager_client/data/repository/logger.dart';
 import 'package:time_manager_client/data/types/ts_data.dart';
 import 'package:time_manager_client/data/types/type.dart';
-import 'package:time_manager_client/helper/coordinate_converter.dart';
+import 'package:time_manager_client/helper/coordinate_helper.dart';
 import 'package:time_manager_client/helper/extension.dart';
 import 'package:time_manager_client/data/proto.gen/task.pb.dart' as p;
 import 'package:time_manager_client/helper/helper.dart';
@@ -67,8 +67,7 @@ class Task extends TsData {
       : title = "",
         status = TaskStatus.finished,
         noticeTimes = const [],
-        tags = const [],
-        super.loading();
+        tags = const [];
 
   Task.fromController(
     List<TextEditingController> controllers, {

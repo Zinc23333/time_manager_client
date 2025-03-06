@@ -20,7 +20,7 @@ import 'package:time_manager_client/data/types/ts_data.dart';
 import 'package:time_manager_client/data/types/type.dart';
 import 'package:time_manager_client/data/types/user_account.dart';
 import 'package:time_manager_client/data/types/user.dart';
-import 'package:time_manager_client/helper/coordinate_converter.dart';
+import 'package:time_manager_client/helper/coordinate_helper.dart';
 import 'package:time_manager_client/helper/extension.dart';
 import 'package:time_manager_client/helper/helper.dart';
 
@@ -81,7 +81,7 @@ class DataController extends GetxController {
     return k;
   }
 
-  int getRawIndexNo<T extends TsData>(T d) => _getRaw<T>().entries.where((e) => e.value == d).single.key;
+  int? getRawIndexNo<T extends TsData>(T d) => _getRaw<T>().entries.where((e) => e.value == d).singleOrNull?.key;
 
   // 添加任务
   void addTask(Task task, [Group? group]) {
@@ -94,7 +94,7 @@ class DataController extends GetxController {
 
     final groupId = getRawIndexNo(group);
     _needSubbmitDataController.add((index, task));
-    _needSubbmitDataController.add((groupId, group));
+    if (groupId != null) _needSubbmitDataController.add((groupId, group));
 
     _onDataChanged();
   }
@@ -112,7 +112,8 @@ class DataController extends GetxController {
       group.taskIds.add(index);
       group.updateTimestamp();
 
-      _needSubbmitDataController.add((getRawIndexNo(group), group));
+      final gId = getRawIndexNo(group);
+      if (gId != null) _needSubbmitDataController.add((gId, group));
     }
 
     rawTask[index] = newTask;
@@ -127,7 +128,8 @@ class DataController extends GetxController {
     task.status = status;
     task.updateTimestamp();
 
-    _needSubbmitDataController.add((getRawIndexNo(task), task));
+    final tId = getRawIndexNo(task);
+    if (tId != null) _needSubbmitDataController.add((tId, task));
 
     _onDataChanged();
   }
@@ -142,8 +144,8 @@ class DataController extends GetxController {
     rawTask.remove(tId);
     rawGroup[gId]!.taskIds.remove(tId);
 
-    _needSubbmitDataController.add((gId, group));
-    _needSubbmitDataController.add((tId, Task.delete()));
+    if (gId != null) _needSubbmitDataController.add((gId, group));
+    if (tId != null) _needSubbmitDataController.add((tId, Task.delete()));
 
     _onDataChanged();
   }
@@ -153,7 +155,8 @@ class DataController extends GetxController {
     task.latLng = tatLng;
     task.updateTimestamp();
 
-    _needSubbmitDataController.add((getRawIndexNo(task), task));
+    final tId = getRawIndexNo(task);
+    if (tId != null) _needSubbmitDataController.add((tId, task));
 
     _onDataChanged();
   }
@@ -204,7 +207,8 @@ class DataController extends GetxController {
     group.title = title;
     group.updateTimestamp();
 
-    _needSubbmitDataController.add((getRawIndexNo(group), group));
+    final gId = getRawIndexNo(group);
+    if (gId != null) _needSubbmitDataController.add((gId, group));
 
     _onDataChanged();
   }
@@ -214,8 +218,8 @@ class DataController extends GetxController {
     group.icon = icon;
     group.updateTimestamp();
 
-    _needSubbmitDataController.add((getRawIndexNo(group), group));
-
+    final gId = getRawIndexNo(group);
+    if (gId != null) _needSubbmitDataController.add((gId, group));
     _onDataChanged();
   }
 
@@ -231,7 +235,7 @@ class DataController extends GetxController {
     logger.t(group);
     logger.t(rawGroup);
     rawGroup.remove(gId);
-    _needSubbmitDataController.add((gId, Group.delete()));
+    if (gId != null) _needSubbmitDataController.add((gId, Group.delete()));
     currentGroupIndex.value = 0;
 
     _onDataChanged();

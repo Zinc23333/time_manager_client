@@ -24,7 +24,8 @@ class Group extends TsData {
   Group.delete()
       : title = "",
         icon = "",
-        taskIds = [];
+        taskIds = const [],
+        super.delete();
 
   String get iconAndTitle => "$icon $title";
   @override

@@ -1,3 +1,5 @@
+import 'package:docx_to_text/docx_to_text.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -84,6 +86,10 @@ class _AddTaskFromTextWidgetState extends State<AddTaskFromTextWidget> {
                     icon: Icon(Icons.copy_outlined),
                   ),
                   IconButton(
+                    onPressed: bFromFile,
+                    icon: Icon(Icons.upload_file_outlined),
+                  ),
+                  IconButton(
                     onPressed: () => controller.clear(),
                     icon: Icon(Icons.clear_all_rounded),
                   ),
@@ -106,6 +112,16 @@ class _AddTaskFromTextWidgetState extends State<AddTaskFromTextWidget> {
     final data = await Clipboard.getData(Clipboard.kTextPlain);
     if (data == null || data.text == null) return null;
     controller.text = data.text!;
+  }
+
+  void bFromFile() async {
+    final f = await FilePicker.platform.pickFiles();
+    final p = f?.xFiles.firstOrNull;
+    if (p == null) return null;
+
+    final d = await p.readAsBytes();
+    final r = docxToText(d);
+    controller.text = r;
   }
 
   final _picker = ImagePicker();

@@ -225,27 +225,25 @@ class _EditTaskPageState extends State<EditTaskPage> {
     );
   }
 
-  TextFormField buildImportance() {
-    return TextFormField(
-      autofocus: true,
-      controller: importanceController,
-      keyboardType: TextInputType.numberWithOptions(decimal: false, signed: false),
-      onChanged: importanceTextChanged,
-      validator: importanceTextValidator,
-      decoration: InputDecoration(
-          prefixIconConstraints: BoxConstraints.tightForFinite(),
-          prefixIcon: Icon(Icons.star_border_rounded),
-          labelText: "评分",
-          border: UnderlineInputBorder(),
-          suffix: SimpleStarRating(
-            isReadOnly: false,
-            allowHalfRating: false,
-            spacing: 4,
-            rating: importance.toDouble(),
-            onRated: importanceRateChanged,
-          )),
-    );
-  }
+  TextFormField buildImportance() => TextFormField(
+        autofocus: true,
+        controller: importanceController,
+        keyboardType: TextInputType.numberWithOptions(decimal: false, signed: false),
+        onChanged: importanceTextChanged,
+        validator: importanceTextValidator,
+        decoration: InputDecoration(
+            prefixIconConstraints: BoxConstraints.tightForFinite(),
+            prefixIcon: Icon(Icons.star_border_rounded),
+            labelText: "重要性",
+            border: UnderlineInputBorder(),
+            suffix: SimpleStarRating(
+              isReadOnly: false,
+              allowHalfRating: false,
+              spacing: 4,
+              rating: importance.toDouble(),
+              onRated: importanceRateChanged,
+            )),
+      );
 
   AnimatedContainer buildDateTimePrecision(double expandTimePrecisionHeight, ThemeData theme) {
     return AnimatedContainer(
