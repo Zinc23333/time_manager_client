@@ -202,7 +202,7 @@ class ViewTaskWidget extends StatelessWidget {
                     if (snapshot.connectionState == ConnectionState.done) {
                       if (snapshot.hasError) logger.e(snapshot.error);
                       if (snapshot.data != null) {
-                        return Text("${snapshot.data!.toStringAsFixed(1)}米");
+                        return Text("${snapshot.data!.toStringAsFixed(1)}千米");
                       } else {
                         return SizedBox();
                       }

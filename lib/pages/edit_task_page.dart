@@ -355,7 +355,6 @@ class _EditTaskPageState extends State<EditTaskPage> {
   }
 
   void dateEditClicked() {
-    final now = DateTime.now();
     Helper.showDateTimeRangePicker(context).then((dts) {
       startTime = dts?.$1;
       endTime = dts?.$2;
@@ -366,7 +365,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
         startTimePrecision = startTimePrecision ?? 5;
       }
 
-      if (endTime == null || endTime!.difference(now).inSeconds < 5) {
+      if (endTime == null) {
         endTimePrecision = null;
       } else {
         endTimePrecision = endTimePrecision ?? 5;

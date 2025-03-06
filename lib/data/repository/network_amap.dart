@@ -10,12 +10,16 @@ class NetworkAmap {
   // static final url = Uri.https("restapi.amap.com");
   static Future<LatLng?> queryPlace(String keywords, LatLng rawCenter) async {
     final center = CoordinateHelper.wgs84ToGcj02(rawCenter.$1, rawCenter.$2);
-    final url = Uri.https("restapi.amap.com", "/v5/place/around", {
-      "key": Env.amapKey,
-      "keywords": keywords,
-      "location": "${center.$2.toStringAsFixed(6)},${center.$1.toStringAsFixed(6)}}",
-      // "radius": "50000",
-    });
+    // final url = Uri.https("restapi.amap.com", "/v5/place/around", {
+    //   "key": Env.amapKey,
+    //   "keywords": keywords,
+    //   "location": "${center.$2.toStringAsFixed(6)},${center.$1.toStringAsFixed(6)}}",
+    //   // "radius": "50000",
+    // });
+
+    final url = Uri.parse(
+        "https://restapi.amap.com/v5/place/around?key=${Env.amapKey}&keywords=$keywords&location=${center.$2.toStringAsFixed(6)},${center.$1.toStringAsFixed(6)}");
+    // final
     logger.d("request place: ${url.toString()}");
 
     final r = await http.get(url);

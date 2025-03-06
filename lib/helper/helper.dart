@@ -47,13 +47,16 @@ class Helper {
       );
 
   static Future<(DateTime, DateTime?)?> showDateTimeRangePicker(BuildContext context) async {
+    final now = DateTime.now();
     final r = await showOmniDateTimeRangePicker(
       context: context,
       is24HourMode: true,
       isShowSeconds: true,
+      startInitialDate: now,
+      endInitialDate: now,
     );
     if (r == null || r.length != 2) return null;
-    if (r[1].difference(r[0]).inSeconds < 2) return (r[0], null);
+    if (r[1].difference(r[0]).inSeconds < 2 || r[1].difference(now).inSeconds < 2) return (r[0], null);
     return (r[0], r[1]);
   }
 
@@ -69,6 +72,14 @@ class Helper {
       yield (r.elementAt(i), s.elementAt(i), t?.elementAt(i));
     }
     return;
+  }
+
+  static Iterable<(int, T)> enumerate<T>(Iterable<T> iterable) sync* {
+    int i = 0;
+    for (final e in iterable) {
+      yield (i, e);
+      i++;
+    }
   }
 
   static Color? fromHexString(String hexColor) {
