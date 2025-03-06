@@ -30,10 +30,7 @@ jobs:
           flutter --version
           flutter pub get
 
-      - run: |
-          echo -e "DS_KEY=${{ secrets.DS_KEY }}       \n"  > .env
-          echo -e "SUPA_URL=${{ secrets.SUPA_URL }}   \n" >> .env
-          echo -e "SUPA_ANON=${{ secrets.SUPA_ANON }}"    >> .env
+      - run: echo -e "${{ secrets.ENV }}"  > .env
 
       - run: |
           mkdir dist
@@ -68,10 +65,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - run: |
-          echo -e "DS_KEY=${{ secrets.DS_KEY }}       \n"  > .env
-          echo -e "SUPA_URL=${{ secrets.SUPA_URL }}   \n" >> .env
-          echo -e "SUPA_ANON=${{ secrets.SUPA_ANON }}"    >> .env
+      - run: echo -e "${{ secrets.ENV }}"  > .env
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
@@ -116,10 +110,7 @@ jobs:
           cache: true
       
       - shell: bash
-        run: |
-          echo -e "DS_KEY=${{ secrets.DS_KEY }}       \n"  > .env
-          echo -e "SUPA_URL=${{ secrets.SUPA_URL }}   \n" >> .env
-          echo -e "SUPA_ANON=${{ secrets.SUPA_ANON }}"    >> .env
+        run: echo -e "${{ secrets.ENV }}"  > .env
 
       - run: |
           mkdir dist
@@ -148,13 +139,9 @@ jobs:
           channel: stable
           cache: true
       
-      - run: |
-          echo -e "DS_KEY=${{ secrets.DS_KEY }}       \n"  > .env
-          echo -e "SUPA_URL=${{ secrets.SUPA_URL }}   \n" >> .env
-          echo -e "SUPA_ANON=${{ secrets.SUPA_ANON }}"    >> .env
+      - run: echo -e "${{ secrets.ENV }}"  > .env
 
-      - run: |
-          npm install -g appdmg
+      - run: npm install -g appdmg
 
       - run: |
           mkdir dist
