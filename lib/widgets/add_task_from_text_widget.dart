@@ -112,6 +112,7 @@ class _AddTaskFromTextWidgetState extends State<AddTaskFromTextWidget> {
     final data = await Clipboard.getData(Clipboard.kTextPlain);
     if (data == null || data.text == null) return null;
     controller.text = data.text!;
+    setState(() {});
   }
 
   void bFromFile() async {
@@ -122,6 +123,7 @@ class _AddTaskFromTextWidgetState extends State<AddTaskFromTextWidget> {
     final d = await p.readAsBytes();
     final r = docxToText(d);
     controller.text = r;
+    setState(() {});
   }
 
   final _picker = ImagePicker();
@@ -133,6 +135,7 @@ class _AddTaskFromTextWidgetState extends State<AddTaskFromTextWidget> {
       final res = await rec.processImage(iimage);
       final text = res.blocks.map((b) => b.text).join("\n\n");
       controller.text = text;
+      setState(() {});
     });
   }
 
