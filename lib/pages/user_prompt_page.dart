@@ -43,6 +43,13 @@ class _UserPromptPageState extends State<UserPromptPage> {
     });
   }
 
+  final userCareers = [
+    ("学生", "🧑‍🎓"),
+    ("老师", "🧑‍🏫"),
+    ("医生", "🧑‍⚕️"),
+    ("其他", "🧑‍💼"),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,6 +72,9 @@ class _UserPromptPageState extends State<UserPromptPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              const SizedBox(height: 16),
+              Text("用户身份:", style: Theme.of(context).textTheme.titleLarge),
+              SizedBox(height: 128, child: Row(children: userCareers.map((e) => IconButton(onPressed: () {}, icon: Text(e.$2))).toList())),
               ...textFields,
               const SizedBox(height: 16),
               ElevatedButton.icon(

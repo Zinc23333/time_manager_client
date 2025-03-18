@@ -6,7 +6,7 @@ import 'package:time_manager_client/data/types/task.dart';
 
 class NetworkAi {
   static const String aiApiKey = Env.dsApiKey;
-  static const String aiBasicUrl = "https://api.deepseek.com";
+  static const String aiBasicUrl = "https://dashscope.aliyuncs.com/compatible-mode/v1";
 
   static final aiClient = OpenAIClient(apiKey: aiApiKey, baseUrl: aiBasicUrl);
 
@@ -66,8 +66,8 @@ class NetworkAi {
 }
 
 enum AiModel {
-  deepseekChat("标准", "deepseek-chat"),
-  deepseekReason("推理", "deepseek-reasoner"),
+  deepseekChat("标准", "deepseek-v3"),
+  deepseekReason("推理", "deepseek-r1"),
   ;
 
   final String name;
