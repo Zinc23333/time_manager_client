@@ -22,6 +22,7 @@ const Storage$json = {
     {'1': 'groupIds', '3': 3, '4': 3, '5': 4, '10': 'groupIds'},
     {'1': 'currentGroupId', '3': 4, '4': 1, '5': 4, '10': 'currentGroupId'},
     {'1': 'user', '3': 5, '4': 1, '5': 11, '6': '.time_manager.User', '9': 0, '10': 'user', '17': true},
+    {'1': 'mindmaps', '3': 6, '4': 3, '5': 11, '6': '.time_manager.Mindmap', '10': 'mindmaps'},
   ],
   '3': [Storage_TasksEntry$json, Storage_GroupsEntry$json],
   '8': [
@@ -55,8 +56,9 @@ final $typed_data.Uint8List storageDescriptor = $convert.base64Decode(
     'RyeVIFdGFza3MSOQoGZ3JvdXBzGAIgAygLMiEudGltZV9tYW5hZ2VyLlN0b3JhZ2UuR3JvdXBz'
     'RW50cnlSBmdyb3VwcxIaCghncm91cElkcxgDIAMoBFIIZ3JvdXBJZHMSJgoOY3VycmVudEdyb3'
     'VwSWQYBCABKARSDmN1cnJlbnRHcm91cElkEisKBHVzZXIYBSABKAsyEi50aW1lX21hbmFnZXIu'
-    'VXNlckgAUgR1c2VyiAEBGkwKClRhc2tzRW50cnkSEAoDa2V5GAEgASgEUgNrZXkSKAoFdmFsdW'
-    'UYAiABKAsyEi50aW1lX21hbmFnZXIuVGFza1IFdmFsdWU6AjgBGk4KC0dyb3Vwc0VudHJ5EhAK'
-    'A2tleRgBIAEoBFIDa2V5EikKBXZhbHVlGAIgASgLMhMudGltZV9tYW5hZ2VyLkdyb3VwUgV2YW'
-    'x1ZToCOAFCBwoFX3VzZXI=');
+    'VXNlckgAUgR1c2VyiAEBEjEKCG1pbmRtYXBzGAYgAygLMhUudGltZV9tYW5hZ2VyLk1pbmRtYX'
+    'BSCG1pbmRtYXBzGkwKClRhc2tzRW50cnkSEAoDa2V5GAEgASgEUgNrZXkSKAoFdmFsdWUYAiAB'
+    'KAsyEi50aW1lX21hbmFnZXIuVGFza1IFdmFsdWU6AjgBGk4KC0dyb3Vwc0VudHJ5EhAKA2tleR'
+    'gBIAEoBFIDa2V5EikKBXZhbHVlGAIgASgLMhMudGltZV9tYW5hZ2VyLkdyb3VwUgV2YWx1ZToC'
+    'OAFCBwoFX3VzZXI=');
 

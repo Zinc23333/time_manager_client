@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+package time_manager;
+
+message Mindmap {
+    repeated uint64 taskIds = 1;
+    string mindmap = 2; 
+}

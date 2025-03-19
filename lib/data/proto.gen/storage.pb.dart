@@ -14,17 +14,19 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'group.pb.dart' as $2;
-import 'task.pb.dart' as $1;
+import 'group.pb.dart' as $3;
+import 'mindmap.pb.dart' as $1;
+import 'task.pb.dart' as $2;
 import 'user.pb.dart' as $0;
 
 class Storage extends $pb.GeneratedMessage {
   factory Storage({
-    $core.Map<$fixnum.Int64, $1.Task>? tasks,
-    $core.Map<$fixnum.Int64, $2.Group>? groups,
+    $core.Map<$fixnum.Int64, $2.Task>? tasks,
+    $core.Map<$fixnum.Int64, $3.Group>? groups,
     $core.Iterable<$fixnum.Int64>? groupIds,
     $fixnum.Int64? currentGroupId,
     $0.User? user,
+    $core.Iterable<$1.Mindmap>? mindmaps,
   }) {
     final $result = create();
     if (tasks != null) {
@@ -42,6 +44,9 @@ class Storage extends $pb.GeneratedMessage {
     if (user != null) {
       $result.user = user;
     }
+    if (mindmaps != null) {
+      $result.mindmaps.addAll(mindmaps);
+    }
     return $result;
   }
   Storage._() : super();
@@ -49,11 +54,12 @@ class Storage extends $pb.GeneratedMessage {
   factory Storage.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'Storage', package: const $pb.PackageName(_omitMessageNames ? '' : 'time_manager'), createEmptyInstance: create)
-    ..m<$fixnum.Int64, $1.Task>(1, _omitFieldNames ? '' : 'tasks', entryClassName: 'Storage.TasksEntry', keyFieldType: $pb.PbFieldType.OU6, valueFieldType: $pb.PbFieldType.OM, valueCreator: $1.Task.create, valueDefaultOrMaker: $1.Task.getDefault, packageName: const $pb.PackageName('time_manager'))
-    ..m<$fixnum.Int64, $2.Group>(2, _omitFieldNames ? '' : 'groups', entryClassName: 'Storage.GroupsEntry', keyFieldType: $pb.PbFieldType.OU6, valueFieldType: $pb.PbFieldType.OM, valueCreator: $2.Group.create, valueDefaultOrMaker: $2.Group.getDefault, packageName: const $pb.PackageName('time_manager'))
+    ..m<$fixnum.Int64, $2.Task>(1, _omitFieldNames ? '' : 'tasks', entryClassName: 'Storage.TasksEntry', keyFieldType: $pb.PbFieldType.OU6, valueFieldType: $pb.PbFieldType.OM, valueCreator: $2.Task.create, valueDefaultOrMaker: $2.Task.getDefault, packageName: const $pb.PackageName('time_manager'))
+    ..m<$fixnum.Int64, $3.Group>(2, _omitFieldNames ? '' : 'groups', entryClassName: 'Storage.GroupsEntry', keyFieldType: $pb.PbFieldType.OU6, valueFieldType: $pb.PbFieldType.OM, valueCreator: $3.Group.create, valueDefaultOrMaker: $3.Group.getDefault, packageName: const $pb.PackageName('time_manager'))
     ..p<$fixnum.Int64>(3, _omitFieldNames ? '' : 'groupIds', $pb.PbFieldType.KU6, protoName: 'groupIds')
     ..a<$fixnum.Int64>(4, _omitFieldNames ? '' : 'currentGroupId', $pb.PbFieldType.OU6, protoName: 'currentGroupId', defaultOrMaker: $fixnum.Int64.ZERO)
     ..aOM<$0.User>(5, _omitFieldNames ? '' : 'user', subBuilder: $0.User.create)
+    ..pc<$1.Mindmap>(6, _omitFieldNames ? '' : 'mindmaps', $pb.PbFieldType.PM, subBuilder: $1.Mindmap.create)
     ..hasRequiredFields = false
   ;
 
@@ -79,10 +85,10 @@ class Storage extends $pb.GeneratedMessage {
   static Storage? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.Map<$fixnum.Int64, $1.Task> get tasks => $_getMap(0);
+  $core.Map<$fixnum.Int64, $2.Task> get tasks => $_getMap(0);
 
   @$pb.TagNumber(2)
-  $core.Map<$fixnum.Int64, $2.Group> get groups => $_getMap(1);
+  $core.Map<$fixnum.Int64, $3.Group> get groups => $_getMap(1);
 
   @$pb.TagNumber(3)
   $core.List<$fixnum.Int64> get groupIds => $_getList(2);
@@ -106,6 +112,9 @@ class Storage extends $pb.GeneratedMessage {
   void clearUser() => clearField(5);
   @$pb.TagNumber(5)
   $0.User ensureUser() => $_ensure(4);
+
+  @$pb.TagNumber(6)
+  $core.List<$1.Mindmap> get mindmaps => $_getList(5);
 }
 
 
