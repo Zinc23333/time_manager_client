@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:time_manager_client/data/repository/logger.dart';
 import 'package:time_manager_client/data/repository/remote_db.dart';
-import 'package:time_manager_client/helper/extension.dart';
-import 'package:time_manager_client/pages/edit_task_page.dart';
+
 import 'package:time_manager_client/pages/web_crawler_add_page.dart';
-import 'package:time_manager_client/widgets/multi_task_selector_bottom_sheet.dart';
 import 'package:time_manager_client/widgets/waiting_dialog.dart';
+import 'package:time_manager_client/widgets/web_crawler_tasks_bottom_sheet.dart';
 
 class WebCrawlerPage extends StatelessWidget {
   const WebCrawlerPage({super.key});
@@ -38,19 +37,22 @@ class WebCrawlerPage extends StatelessWidget {
                     title: Text(web.name),
                     subtitle: Text(web.summary),
                     onTap: () {
-                      WaitingDialog(RemoteDb.instance.getWebCrawlerTasks(web.id)).show(context).then((ts) {
+                      WaitingDialog(RemoteDb.instance.getWebCrawlerTasks(web.id)).show(context).then((wt) {
                         WidgetsBinding.instance.addPostFrameCallback((_) {
                           logger.d("OK");
-                          if (ts == null || ts.isEmpty) return;
-                          MultiTaskSelectorBottomSheet(
-                            tasks: ts,
-                            title: web.name,
-                            subTitle: web.summary,
-                            info: "更新时间: ${web.lastCrawl.formatWithPrecision(5)}",
-                          ).show(context).then((t) {
-                            if (t == null) return;
-                            Get.to(() => EditTaskPage(old: t));
-                          });
+                          if (wt == null || wt.isEmpty) return;
+                          logger.d(wt);
+                          WebCrawlerTasksBottomSheet(web, wt).show(context);
+
+                          // MultiTaskSelectorBottomSheet(
+                          //   tasks: ts,
+                          //   title: web.name,
+                          //   subTitle: web.summary,
+                          //   info: "更新时间: ${web.lastCrawl.formatWithPrecision(5)}",
+                          // ).show(context).then((t) {
+                          //   if (t == null) return;
+                          //   Get.to(() => EditTaskPage(old: t));
+                          // });
                         });
                       }, onError: (t) {
                         logger.e(t);

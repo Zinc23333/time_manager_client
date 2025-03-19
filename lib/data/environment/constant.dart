@@ -2,6 +2,32 @@ class Constant {
   static const domain = "https://todo.zinc233.top";
   static const qrLoginPrefix = "$domain/qr_login?token=";
 
+  static const String mindmapWebCode = """
+<style>
+	.markmap {
+		position: relative;
+	}
+	.markmap > svg {
+		width: 100%;
+		height: 100%;
+	}
+
+  body {
+    background-color: Canvas;
+    color: var(--text-color);
+    color-scheme: light dark;
+  }
+</style>
+
+<div class="markmap">
+	<script type="text/template">
+###MINDMAP###
+	</script>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/markmap-autoloader@latest"></script>
+""";
+
   static const String aiSystemPromptForAddTask = """
 用户将提供给你一段信息，请你分析这段信息是否包含一个或多个事件，并按照括号内的要求提取关键信息，若是，则以 JSON 的形式输出，输出的 JSON 需遵守以下的格式：
 [
@@ -52,5 +78,22 @@ class Constant {
     [[任务编号]] 被两层中括号所包裹，与 “任务编号” 相同，但无需加引号；
 3. 输出内容为纯文本，不要Markdown格式；
 4. 字数不得超过160字。
+""";
+
+  static const String aiSystemPromptForMindmap = """
+你作为一个为用户安排事项的小秘书，用户将提供给你一段文本，请判断该文本是否可以转换成为一个思维导图，便于用户去浏览和执行任务。
+
+如果可以，你需要输出一段使用缩进表示层级关系的文本，每层节点以 "- " 开头，不要带有任何其他信息，例如
+```
+- 节点1
+  - 节点1.1
+  - 节点1.2
+- 节点2
+  - 节点2.1
+    - 节点2.1.1
+    - 节点2.1.2
+```
+
+如果不可以，请直接输出 "无法转换"。
 """;
 }

@@ -6,6 +6,7 @@ import 'package:time_manager_client/data/repository/logger.dart';
 import 'package:time_manager_client/data/types/task.dart';
 import 'package:time_manager_client/data/types/ts_data.dart';
 import 'package:time_manager_client/data/types/user_account.dart';
+import 'package:time_manager_client/data/types/web_crawler_tasks.dart';
 import 'package:time_manager_client/data/types/web_crawler_web.dart';
 
 class RemoteDb {
@@ -151,16 +152,11 @@ class RemoteDb {
   }
 
   // 网页爬虫: 某一网页任务
-  Future<List<Task>> getWebCrawlerTasks(int webId) async {
-    final d = await _supa.from("crawler_tasks").select("tasks").eq("webId", webId);
-    // d as List<Map<String, dynamic>>;
-    // d => [{tasks: [{}, {}]}]
-    // final t = d.map((l) => (l["tasks"] as List)).cast<Map<String, dynamic>>().expand((l) => l);
+  Future<List<WebCrawlerTasks>> getWebCrawlerTasks(int webId) async {
+    final d = await _supa.from("crawler_tasks").select("title, url, tasks, mindmap").eq("webId", webId);
     final t = [
-      for (final l in d)
-        for (final t in (l["tasks"] as List)) Task.fromMap(t)
+      for (final l in d) WebCrawlerTasks(l["title"], l["url"], [for (final t in (l["tasks"] as List)) Task.fromMap(t)], l["mindmap"]),
     ];
-    // .expand((l) => l).map((t) => Task.fromMap(t)).toList();
     logger.t(t);
     return t;
   }

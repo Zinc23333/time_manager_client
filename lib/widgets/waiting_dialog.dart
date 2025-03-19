@@ -25,6 +25,7 @@ class WaitingDialog<T> extends StatelessWidget {
             }
             if (snapshot.hasError) {
               logger.e(snapshot.error);
+              logger.e(snapshot.stackTrace);
             }
 
             return SizedBox(
