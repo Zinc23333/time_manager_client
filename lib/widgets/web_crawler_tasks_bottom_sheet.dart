@@ -8,6 +8,7 @@ import 'package:time_manager_client/helper/helper.dart';
 import 'package:time_manager_client/pages/edit_task_page.dart';
 import 'package:time_manager_client/pages/web_crawler_task_page.dart';
 import 'package:time_manager_client/widgets/mindmap_painter.dart';
+import 'package:time_manager_client/widgets/multi_task_selector_bottom_sheet.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class WebCrawlerTasksBottomSheet extends StatelessWidget {
@@ -85,30 +86,56 @@ class WebCrawlerTasksBottomSheet extends StatelessWidget {
       if (wct.mindmap != null) buildMindmapOutline(wct),
       SizedBox(
         height: 96,
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: wct.tasks.length,
-          itemBuilder: (context, index) => SizedBox(
-            width: 328,
+        child: Row(children: [
+          Expanded(
             child: Card(
               margin: EdgeInsets.all(8),
               child: ListTile(
-                leading: Text(
-                  (index + 1).toString(),
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    fontStyle: FontStyle.italic,
-                  ),
-                ),
-                title: Text(wct.tasks[index].title, maxLines: 1),
-                subtitle: Text(wct.tasks[index].summary ?? "", maxLines: 2),
+                leading: Icon(Icons.task_alt_sharp),
+                title: Text(wct.tasks.first.title, maxLines: 1),
+                subtitle: Text(wct.tasks.first.summary ?? "", maxLines: 2),
                 isThreeLine: true,
-                onTap: () => Get.to(() => EditTaskPage(old: wct.tasks[index])),
+                onTap: () => Get.to(() => EditTaskPage(old: wct.tasks.first)),
               ),
             ),
           ),
-        ),
+          if (wct.tasks.length > 1)
+            SizedBox(
+              width: 96,
+              height: 96,
+              child: InkWell(
+                child: Card(
+                  margin: EdgeInsets.all(8),
+                  child: Center(child: Text("+${wct.tasks.length - 1}", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold))),
+                ),
+                onTap: () => MultiTaskSelectorBottomSheet(tasks: wct.tasks, onSelected: (t) => Get.to(() => EditTaskPage(old: t))).show(context),
+              ),
+            )
+        ]),
+        // child: ListView.builder(
+        //   scrollDirection: Axis.horizontal,
+        //   itemCount: wct.tasks.length,
+        //   itemBuilder: (context, index) => SizedBox(
+        //     width: 328,
+        //     child: Card(
+        //       margin: EdgeInsets.all(8),
+        //       child: ListTile(
+        //         leading: Text(
+        //           (index + 1).toString(),
+        //           style: TextStyle(
+        //             fontSize: 24,
+        //             fontWeight: FontWeight.bold,
+        //             fontStyle: FontStyle.italic,
+        //           ),
+        //         ),
+        //         title: Text(wct.tasks[index].title, maxLines: 1),
+        //         subtitle: Text(wct.tasks[index].summary ?? "", maxLines: 2),
+        //         isThreeLine: true,
+        //         onTap: () => Get.to(() => EditTaskPage(old: wct.tasks[index])),
+        //       ),
+        //     ),
+        //   ),
+        // ),
       ),
       // SizedBox(height: 1, child: DashedDivider()),
       SizedBox(height: 16),
