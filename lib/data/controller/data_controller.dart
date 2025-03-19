@@ -14,7 +14,6 @@ import 'package:time_manager_client/data/repository/network_ai.dart';
 import 'package:time_manager_client/data/repository/network_amap.dart';
 import 'package:time_manager_client/data/repository/remote_db.dart';
 import 'package:time_manager_client/data/types/group.dart';
-import 'package:time_manager_client/data/types/mindmap.dart';
 import 'package:time_manager_client/data/types/task.dart';
 import 'package:time_manager_client/data/proto.gen/storage.pb.dart' as p;
 import 'package:time_manager_client/data/types/ts_data.dart';
@@ -47,7 +46,6 @@ class DataController extends GetxController {
   // List<int> rawGroupIds = [0];
   Map<int, Group> rawGroup = {0: Group(title: "默认分组", icon: "📢", taskIds: [], updateTimestamp: 1)};
   Map<int, Task> rawTask = {};
-  List<Mindmap> rawMindmap = [];
   final _rawUser = Rx<User?>(null);
 
   // 数据同步->本地更新后 需要提交的数据
@@ -280,7 +278,6 @@ class DataController extends GetxController {
         // groupIds: rawGroupIds.map((e) => e.toInt64()),
         currentGroupId: currentGroupIndex.value.toInt64(),
         user: Helper.if_(needUserInfo, user?.toProto()),
-        mindmaps: rawMindmap.map((e) => e.toProto()),
       );
 
   Future<File?> saveDownloadDirectory() => LocalStorage.instance?.writeToDownloadDirectory(toProto()) ?? Future.value(null);

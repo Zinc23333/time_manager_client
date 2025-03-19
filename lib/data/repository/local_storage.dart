@@ -5,7 +5,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:time_manager_client/data/proto.gen/storage.pb.dart' as p;
 import 'package:time_manager_client/data/repository/logger.dart';
 import 'package:time_manager_client/data/types/group.dart';
-import 'package:time_manager_client/data/types/mindmap.dart';
 import 'package:time_manager_client/data/types/storage.dart';
 import 'package:time_manager_client/data/types/task.dart';
 import 'package:time_manager_client/data/types/user.dart';
@@ -58,7 +57,6 @@ class LocalStorage {
     final Map<int, Group> g = {};
     final Map<int, Task> t = {};
     final List<int> gis = [];
-    final List<Mindmap> m = [];
 
     if (rawData == null && !storageFile.existsSync()) return null;
 
@@ -77,10 +75,6 @@ class LocalStorage {
       gis.add(element.toInt());
     }
 
-    for (var element in s.mindmaps) {
-      m.add(Mindmap.fromProto(element));
-    }
-
     return Storage(
       groups: g,
       tasks: t,
@@ -93,7 +87,6 @@ class LocalStorage {
           accounts: s.user.accounts.map((e) => UserAccount.fromProto(e)).toList(),
         ),
       ),
-      mindmaps: m,
     );
   }
 
