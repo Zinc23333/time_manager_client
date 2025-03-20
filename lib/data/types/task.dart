@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:location/location.dart';
 import 'package:time_manager_client/data/repository/logger.dart';
+import 'package:time_manager_client/data/types/auto_task.dart';
 import 'package:time_manager_client/data/types/ts_data.dart';
 import 'package:time_manager_client/data/types/type.dart';
 import 'package:time_manager_client/helper/coordinate_helper.dart';
@@ -32,26 +33,28 @@ class Task extends TsData {
   List<DateTime> noticeTimes;
   List<String> tags;
   LatLng? latLng;
+  AutoTask? autoTask;
 
-  Task(
-      {required this.title,
-      this.summary,
-      this.startTime,
-      this.startTimePrecision,
-      this.endTime,
-      this.endTimePrecision,
-      this.importance,
-      this.location,
-      this.participant,
-      this.note,
-      this.source,
-      this.content,
-      this.status = TaskStatus.unfinished,
-      List<DateTime>? noticeTimes,
-      List<String>? tags,
-      this.latLng,
-      int? updateTimestampAt})
-      : noticeTimes = noticeTimes ?? <DateTime>[],
+  Task({
+    required this.title,
+    this.summary,
+    this.startTime,
+    this.startTimePrecision,
+    this.endTime,
+    this.endTimePrecision,
+    this.importance,
+    this.location,
+    this.participant,
+    this.note,
+    this.source,
+    this.content,
+    this.status = TaskStatus.unfinished,
+    List<DateTime>? noticeTimes,
+    List<String>? tags,
+    this.latLng,
+    int? updateTimestampAt,
+    this.autoTask,
+  })  : noticeTimes = noticeTimes ?? <DateTime>[],
         tags = tags ?? <String>[],
         super(updateTimestampAt) {
     init();
@@ -82,6 +85,7 @@ class Task extends TsData {
     this.noticeTimes = const [],
     this.tags = const [],
     this.status = TaskStatus.unfinished,
+    this.autoTask,
   })  : assert(controllers.length == 6),
         title = controllers[0].text,
         summary = controllers[1].text,
@@ -131,7 +135,8 @@ class Task extends TsData {
           for (final e in map["noticeTimes"] ?? []) DateTime.fromMillisecondsSinceEpoch(e),
         ],
         tags = map["tags"]?.cast<String>() ?? <String>[],
-        latLng = (map["lat"] != null && map["lng"] != null) ? (map["lat"], map["lng"]) : null;
+        latLng = (map["lat"] != null && map["lng"] != null) ? (map["lat"], map["lng"]) : null,
+        autoTask = AutoTask.fromMapNullable(map["autoTask"]);
 
   static Task? fromMapNullable(Map<String, dynamic>? map) {
     if (map == null || map.isEmpty || !map.containsKey("title")) return null;
@@ -171,6 +176,7 @@ class Task extends TsData {
         updateTimestampAt: t.updateTimestampAt.toInt(),
         tags: t.tags,
         latLng: Helper.if_(t.hasLat() && t.hasLng(), (t.lat, t.lng)),
+        autoTask: t.hasAutoTask() ? AutoTask.fromProto(t.autoTask) : null,
       );
 
   // factory Task.fromUint8List(Uint8List data) => Task.fromProto(p.Task.fromBuffer(data));
@@ -221,6 +227,7 @@ class Task extends TsData {
         "tags": tags,
         "lat": latLng?.$1,
         "lng": latLng?.$2,
+        "autoTask": autoTask?.toMap(),
       };
 
   String toJsonString() => JsonEncoder().convert(toMap());
@@ -315,6 +322,7 @@ class Task extends TsData {
         updateTimestampAt: updateTimestampAt.toInt64(),
         lat: latLng?.$1,
         lng: latLng?.$2,
+        autoTask: autoTask?.toProto(),
       );
 
   static const importanceInfo = ["未设置", "不重要", "较不重要", "一般", "重要", "非常重要"];

@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package time_manager;
 
+import "auto_task.proto";
+
 message Task {
     string title = 1;
     optional string summary = 2;
@@ -24,6 +26,8 @@ message Task {
 
     optional double lat = 16;
     optional double lng = 17;
+
+    optional AutoTask autoTask = 20;
 
     int64 updateTimestampAt = 100;
 }

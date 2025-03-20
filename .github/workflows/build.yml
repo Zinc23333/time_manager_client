@@ -191,24 +191,31 @@ jobs:
       - uses: actions/download-artifact@v4
       - run: ls -R
 
+      - name: Get tag
+        id: tag
+        uses: dawidd6/action-get-tag@v1
+        # with:
+        #   # Optionally strip `v` prefix
+        #   strip_v: true
+
       - run: |
-          mv ./release_android/app-arm64-v8a-release.apk   release-android-arm64-v8a.apk
-          mv ./release_android/app-armeabi-v7a-release.apk release-android-armeabi-v7a.apk
-          mv ./release_android/app-x86_64-release.apk      release-android-x86_64.apk
-          mv ./release_android/app-release.apk             release-android-universal.apk
+          mv ./release_android/app-arm64-v8a-release.apk   release-${{steps.tag.outputs.tag}}-android-arm64-v8a.apk
+          mv ./release_android/app-armeabi-v7a-release.apk release-${{steps.tag.outputs.tag}}-android-armeabi-v7a.apk
+          mv ./release_android/app-x86_64-release.apk      release-${{steps.tag.outputs.tag}}-android-x86_64.apk
+          mv ./release_android/app-release.apk             release-${{steps.tag.outputs.tag}}-android-universal.apk
 
-          mv ./release_android_aab/app-release.aab         release-android.aab
+          mv ./release_android_aab/app-release.aab         release-${{steps.tag.outputs.tag}}-android.aab
 
-          mv ./release_linux/*/*.AppImage                  release-linux.AppImage
-          mv ./release_linux/*/*.deb                       release-linux.deb
-          mv ./release_linux/*/*.rpm                       release-linux.rpm
-          mv ./release_linux/*/*.zip                       release-linux.zip
+          mv ./release_linux/*/*.AppImage                  release-${{steps.tag.outputs.tag}}-linux.AppImage
+          mv ./release_linux/*/*.deb                       release-${{steps.tag.outputs.tag}}-linux.deb
+          mv ./release_linux/*/*.rpm                       release-${{steps.tag.outputs.tag}}-linux.rpm
+          mv ./release_linux/*/*.zip                       release-${{steps.tag.outputs.tag}}-linux.zip
 
-          mv ./release_macos/*/*.dmg                       release-macos.dmg
-          mv ./release_macos/*/*.pkg                       release-macos.pkg
+          mv ./release_macos/*/*.dmg                       release-${{steps.tag.outputs.tag}}-macos.dmg
+          mv ./release_macos/*/*.pkg                       release-${{steps.tag.outputs.tag}}-macos.pkg
 
-          mv ./release_windows/*/*.exe                     release-windows.exe
-          mv ./release_windows/*/*.msix                    release-windows.msix
+          mv ./release_windows/*/*.exe                     release-${{steps.tag.outputs.tag}}-windows.exe
+          mv ./release_windows/*/*.msix                    release-${{steps.tag.outputs.tag}}-windows.msix
 
       - run: ls -lR
 
