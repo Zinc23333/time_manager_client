@@ -93,8 +93,8 @@ class AutoTask {
 }
 
 enum AutoTaskState {
-  done(Icons.check_circle_outline, "执行成功"),
-  fail(Icons.cancel_outlined, "执行失败"),
+  done(Icons.check_circle_outline, "执行成功", Colors.green),
+  fail(Icons.cancel_outlined, "执行失败", Colors.red),
   wait(Icons.hourglass_bottom, "等待执行"),
   loss(Icons.block, "已丢弃"),
 
@@ -103,8 +103,9 @@ enum AutoTaskState {
 
   final IconData icon;
   final String text;
+  final Color? color;
 
-  const AutoTaskState(this.icon, this.text);
+  const AutoTaskState(this.icon, this.text, [this.color]);
 
   @override
   String toString() => "AutoTaskState.$name";

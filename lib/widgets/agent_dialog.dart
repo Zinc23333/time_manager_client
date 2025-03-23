@@ -72,7 +72,7 @@ class _AgentDialogState extends State<AgentDialog> {
     return Column(
       children: [
         Expanded(child: SizedBox(width: 1, child: VerticalDivider())),
-        Icon(t.autoTask!.state.icon),
+        Icon(t.autoTask!.state.icon, color: t.autoTask!.state.color),
         Expanded(child: SizedBox(width: 1, child: VerticalDivider())),
       ],
     );
