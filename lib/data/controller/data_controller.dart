@@ -135,6 +135,15 @@ class DataController extends GetxController {
     _onDataChanged();
   }
 
+  void updateTask(Task task) {
+    task.updateTimestamp();
+
+    final tId = getRawIndexNo(task);
+    if (tId != null) _needSubbmitDataController.add((tId, task));
+
+    _onDataChanged();
+  }
+
   // 删除任务
   void deleteTask(Task task, [Group? group]) {
     group ??= currentGroup;

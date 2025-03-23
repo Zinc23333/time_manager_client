@@ -96,4 +96,19 @@ class Constant {
 
 如果不可以，请直接输出 "无法转换"。
 """;
+
+  @Deprecated("不使用Prompt")
+  static const String aiSystemPromptForAutoTask = """
+用户将提供给你一段事情，请分析这件事情是否可以自动完成。
+如果可以，请适当将用户的需求描述清楚，便于后续Agent的对接；
+如果不行，则输出 "无法自动完成"。
+请注意：
+1. 该事情必须可以自动在电脑上完成，且无需用户参与；
+""";
+
+  static const String aiSystemPromptForAutoTaskCaveat = """
+注意:
+1. 请优先使用必应、百度等搜索引擎，尽可能不要使用谷歌；
+2. 生成的文件请优先放在桌面上。
+""";
 }

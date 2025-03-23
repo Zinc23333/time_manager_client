@@ -82,8 +82,8 @@ class Task extends TsData {
     this.endTimePrecision,
     this.importance,
     this.content,
-    this.noticeTimes = const [],
-    this.tags = const [],
+    List<DateTime>? noticeTimes,
+    List<String>? tags,
     this.status = TaskStatus.unfinished,
     this.autoTask,
   })  : assert(controllers.length == 6),
@@ -92,7 +92,9 @@ class Task extends TsData {
         location = controllers[2].text,
         participant = controllers[3].text,
         note = controllers[4].text,
-        source = controllers[5].text {
+        source = controllers[5].text,
+        noticeTimes = noticeTimes ?? <DateTime>[],
+        tags = tags ?? <String>[] {
     init();
   }
 

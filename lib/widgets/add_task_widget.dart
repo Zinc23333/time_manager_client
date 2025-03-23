@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:time_manager_client/data/controller/data_controller.dart';
+import 'package:time_manager_client/data/types/auto_task.dart';
 import 'package:time_manager_client/data/types/task.dart';
 import 'package:time_manager_client/helper/helper.dart';
 import 'package:time_manager_client/widgets/add_task_from_text_widget.dart';
@@ -23,6 +24,7 @@ class _AddTaskWidgetState extends State<AddTaskWidget> {
   int? importance;
   DateTime? startDateTime;
   DateTime? endDateTime;
+  AutoTask? autoTask;
 
   bool _lastTaskTitleIsEmpty = true;
   late final _inputList = Task.inputFieldParams.map((e) => (e.$1, e.$2, e.$3, TextEditingController())).toList();
@@ -116,6 +118,11 @@ class _AddTaskWidgetState extends State<AddTaskWidget> {
             isSelected: expand,
             icon: Icon(Icons.more_horiz_rounded),
           ),
+          IconButton(
+            onPressed: bToAgent,
+            isSelected: autoTask != null,
+            icon: Icon(Icons.smart_toy_rounded),
+          ),
           Expanded(child: SizedBox()),
           if (_inputList[0].$4.text.isNotEmpty)
             SizedBox(
@@ -143,6 +150,28 @@ class _AddTaskWidgetState extends State<AddTaskWidget> {
     );
   }
 
+  void bToAgent() async {
+    if (autoTask != null) {
+      autoTask = null;
+      setState(() {});
+      return;
+    }
+    if (startDateTime == null) {
+      Get.snackbar("错误", "请在【日期】中设置执行时间");
+      return;
+    }
+    final demand = _inputList[1].$4.text;
+    if (demand.isEmpty) {
+      Get.snackbar("错误", "请在【内容概述】中描述任务");
+      return;
+    }
+    final at = AutoTask(startDateTime!, demand);
+    autoTask = at;
+    setState(() {});
+    // final at = await NetworkAi.getAutoTaskFromText(demand, startDateTime!);
+    // print(at);
+  }
+
   void bFinish() {
     if (_inputList[0].$4.text.isEmpty) return;
     DataController.to.addTask(
@@ -151,6 +180,7 @@ class _AddTaskWidgetState extends State<AddTaskWidget> {
         startTime: startDateTime,
         endTime: endDateTime,
         importance: importance,
+        autoTask: autoTask,
       ),
     );
     Navigator.of(context).pop();

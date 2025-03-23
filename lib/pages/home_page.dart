@@ -3,6 +3,7 @@ import 'package:time_manager_client/data/repository/logger.dart';
 import 'package:time_manager_client/pages/calendar_page.dart';
 import 'package:time_manager_client/pages/web_crawler_page.dart';
 import 'package:time_manager_client/widgets/add_task_from_text_widget.dart';
+import 'package:time_manager_client/widgets/agent_dialog.dart';
 import 'package:time_manager_client/widgets/assistant_dialog.dart';
 import 'package:universal_io/io.dart';
 
@@ -101,30 +102,50 @@ class _HomePageState extends State<HomePage> {
         ],
       );
 
-  Widget buildBody(Orientation orientation) => orientation == Orientation.landscape
-      ? Row(
-          children: [
-            SizedBox(
-              width: 250,
-              child: Column(
+  Widget buildBody(Orientation orientation) => orientation == Orientation.landscape ? buildLandscapeRow() : pages[_currentIndex].$3;
+
+  Row buildLandscapeRow() {
+    return Row(
+      children: [
+        SizedBox(
+          width: 250,
+          child: Column(
+            children: [
+              for (int i = 0; i < pages.length; i++)
+                ListTile(
+                  leading: Icon(pages[i].$1),
+                  title: Text(pages[i].$2),
+                  onTap: () {
+                    _currentIndex = i;
+                    setState(() {});
+                  },
+                ),
+              Expanded(child: SizedBox()),
+              Divider(),
+              Row(
                 children: [
-                  for (int i = 0; i < pages.length; i++)
-                    ListTile(
-                      leading: Icon(pages[i].$1),
-                      title: Text(pages[i].$2),
-                      onTap: () {
-                        _currentIndex = i;
-                        setState(() {});
-                      },
-                    )
+                  IconButton(
+                    onPressed: () {
+                      showDialog(context: context, builder: (context) => AssistantDialog());
+                    },
+                    icon: Icon(Icons.lightbulb_outline_rounded),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      showDialog(context: context, builder: (context) => AgentDialog());
+                    },
+                    icon: Icon(Icons.smart_toy_outlined),
+                  ),
                 ],
               ),
-            ),
-            VerticalDivider(),
-            Expanded(child: pages[_currentIndex].$3),
-          ],
-        )
-      : pages[_currentIndex].$3;
+            ],
+          ),
+        ),
+        VerticalDivider(),
+        Expanded(child: pages[_currentIndex].$3),
+      ],
+    );
+  }
 
   late double _startDragY = MediaQuery.of(context).size.height;
   Widget buildBottomNavigationBar() {

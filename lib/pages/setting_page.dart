@@ -1,4 +1,5 @@
 import 'package:time_manager_client/data/repository/box.dart';
+import 'package:time_manager_client/data/repository/logger.dart';
 import 'package:time_manager_client/pages/raw_text_page.dart';
 import 'package:time_manager_client/pages/user_prompt_page.dart';
 import 'package:time_manager_client/widgets/confirm_dialog.dart';
@@ -60,11 +61,27 @@ class _SettingPageState extends State<SettingPage> {
               buildTileExportAsText(context),
               buildTileImportFromText(context),
               buildTileDeleteAll(context),
+              buildTileAgentLocation(),
               buildTileOpenSource(),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  ListTile buildTileAgentLocation() {
+    return ListTile(
+      title: Text("人工智能代理地址"),
+      onTap: () async {
+        final r = Box.setting.read<String>("agentLocation");
+        logger.d(r);
+        final s = await SimpleTextBottomSheet(text: r).show(context);
+        if (s != null) {
+          logger.d(r);
+          await Box.setting.write("agentLocation", s);
+        }
+      },
     );
   }
 
@@ -144,7 +161,7 @@ class _SettingPageState extends State<SettingPage> {
     return ListTile(
       title: Text("从文字导入"),
       onTap: () async {
-        final s = await SimpleTextBottomSheet.show(context);
+        final s = await SimpleTextBottomSheet().show(context);
         if (s?.isEmpty ?? true) {
           Get.snackbar("导入失败", "文本为空");
           return;

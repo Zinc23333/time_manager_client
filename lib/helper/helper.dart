@@ -121,4 +121,13 @@ class Helper {
         borderRadius: BorderRadius.circular(8),
         cardLoadingTheme: Theme.of(context).brightness == Brightness.dark ? _defaultCardLoadingThemeDark : CardLoadingTheme.defaultTheme,
       );
+
+  static void showSnackBar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: Duration(seconds: 2),
+      ),
+    );
+  }
 }

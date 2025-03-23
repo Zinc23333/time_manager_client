@@ -3,10 +3,12 @@ import 'package:get/get.dart';
 import 'package:time_manager_client/helper/helper.dart';
 
 class SimpleTextBottomSheet extends StatelessWidget {
-  SimpleTextBottomSheet({super.key});
+  SimpleTextBottomSheet({super.key, this.text});
 
-  static Future<String?> show(BuildContext context) => Helper.showModalBottomSheetWithTextField<String>(context, SimpleTextBottomSheet());
-  final c = TextEditingController();
+  final String? text;
+
+  Future<String?> show(BuildContext context) => Helper.showModalBottomSheetWithTextField<String>(context, this);
+  late final c = TextEditingController(text: text);
 
   @override
   Widget build(BuildContext context) {

@@ -2,6 +2,7 @@ import 'package:openai_dart/openai_dart.dart';
 import 'package:time_manager_client/data/environment/constant.dart';
 import 'package:time_manager_client/data/environment/env.dart';
 import 'package:time_manager_client/data/repository/logger.dart';
+import 'package:time_manager_client/data/types/auto_task.dart';
 import 'package:time_manager_client/data/types/task.dart';
 
 class NetworkAi {
@@ -47,6 +48,12 @@ class NetworkAi {
     logger.t(tl);
 
     return tl;
+  }
+
+  static Future<AutoTask?> getAutoTaskFromText(String text, DateTime executeAt) async {
+    final r = await askAi(text, AutoTask.prompt, AiModel.deepseekChat);
+    if (r == null || r.contains("无法自动完成")) return null;
+    return AutoTask(executeAt, r);
   }
 
   static Future<String?> getTaskOverallSummary(Map<int, Task> tasks) async {

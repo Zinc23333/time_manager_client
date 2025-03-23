@@ -1,11 +1,10 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:time_manager_client/data/controller/data_controller.dart';
 import 'package:time_manager_client/data/types/task.dart';
 import 'package:time_manager_client/helper/coordinate_helper.dart';
 import 'package:time_manager_client/helper/extension.dart';
 import 'package:time_manager_client/helper/helper.dart';
+import 'package:time_manager_client/widgets/fullscreen_blur_dialog.dart';
 
 class AssistantDialog extends StatefulWidget {
   const AssistantDialog({super.key});
@@ -29,33 +28,24 @@ class _AssistantDialogState extends State<AssistantDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return Builder(builder: (context) {
-      return BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-        child: Center(
-          child: SizedBox(
+    return FullscreenBlurDialog(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("助手", style: textTheme.headlineLarge),
+          const SizedBox(height: 8),
+          Text("以下是为您规划的今天的行程。", style: textTheme.bodyMedium),
+          const SizedBox(height: 16),
+          Expanded(
+              child: SingleChildScrollView(
+                  child: SizedBox(
             width: screenSize.width * 0.8,
-            height: screenSize.height * 0.8,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("助手", style: textTheme.headlineLarge),
-                const SizedBox(height: 8),
-                Text("以下是为您规划的今天的行程。", style: textTheme.bodyMedium),
-                const SizedBox(height: 16),
-                Expanded(
-                    child: SingleChildScrollView(
-                        child: SizedBox(
-                  width: screenSize.width * 0.8,
-                  height: tasks.length * 100,
-                  child: buildTasks(),
-                )))
-              ],
-            ),
-          ),
-        ),
-      );
-    });
+            height: tasks.length * 100,
+            child: buildTasks(),
+          )))
+        ],
+      ),
+    );
   }
 
   Widget buildTasks() {
