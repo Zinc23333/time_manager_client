@@ -7,8 +7,8 @@ import 'package:time_manager_client/data/controller/data_controller.dart';
 import 'package:time_manager_client/data/types/auto_task.dart';
 import 'package:time_manager_client/data/types/task.dart';
 import 'package:time_manager_client/helper/helper.dart';
-import 'package:time_manager_client/widgets/add_task_from_text_widget.dart';
-import 'package:time_manager_client/widgets/star_rate_widget.dart';
+import 'package:time_manager_client/widgets/pages/add_task_from_text_widget.dart';
+import 'package:time_manager_client/widgets/pages/star_rate_widget.dart';
 
 class AddTaskWidget extends StatefulWidget {
   const AddTaskWidget({super.key});

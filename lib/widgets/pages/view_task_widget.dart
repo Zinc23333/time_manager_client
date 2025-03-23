@@ -7,7 +7,7 @@ import 'package:time_manager_client/helper/extension.dart';
 import 'package:time_manager_client/helper/helper.dart';
 import 'package:time_manager_client/pages/edit_task_page.dart';
 import 'package:time_manager_client/widgets/link_text.dart';
-import 'package:time_manager_client/widgets/multi_task_selector_bottom_sheet.dart';
+import 'package:time_manager_client/widgets/pages/multi_task_selector_bottom_sheet.dart';
 
 class ViewTaskWidget extends StatelessWidget {
   const ViewTaskWidget({super.key, required this.task});

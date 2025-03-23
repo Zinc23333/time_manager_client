@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:time_manager_client/data/controller/data_controller.dart';
 import 'package:time_manager_client/data/types/task.dart';
 import 'package:time_manager_client/helper/extension.dart';
-import 'package:time_manager_client/widgets/agent_running_dialog.dart';
+import 'package:time_manager_client/widgets/pages/agent_running_dialog.dart';
 import 'package:time_manager_client/widgets/fullscreen_blur_dialog.dart';
 
 class AgentDialog extends StatefulWidget {

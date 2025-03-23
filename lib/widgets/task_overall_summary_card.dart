@@ -2,7 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:time_manager_client/data/controller/data_controller.dart';
 import 'package:time_manager_client/helper/helper.dart';
-import 'package:time_manager_client/widgets/view_task_widget.dart';
+import 'package:time_manager_client/widgets/pages/view_task_widget.dart';
 
 class TaskOverallSummaryCard extends StatefulWidget {
   const TaskOverallSummaryCard({super.key});

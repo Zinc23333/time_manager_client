@@ -2,9 +2,9 @@ import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:time_manager_client/data/repository/logger.dart';
 import 'package:time_manager_client/pages/calendar_page.dart';
 import 'package:time_manager_client/pages/web_crawler_page.dart';
-import 'package:time_manager_client/widgets/add_task_from_text_widget.dart';
-import 'package:time_manager_client/widgets/agent_dialog.dart';
-import 'package:time_manager_client/widgets/assistant_dialog.dart';
+import 'package:time_manager_client/widgets/pages/add_task_from_text_widget.dart';
+import 'package:time_manager_client/widgets/pages/agent_dialog.dart';
+import 'package:time_manager_client/widgets/pages/assistant_dialog.dart';
 import 'package:universal_io/io.dart';
 
 import 'package:flutter/foundation.dart';
@@ -18,7 +18,7 @@ import 'package:time_manager_client/pages/four_quadrant_page.dart';
 import 'package:time_manager_client/pages/list_page.dart';
 import 'package:time_manager_client/pages/qr_scanner_page.dart';
 import 'package:time_manager_client/pages/setting_page.dart';
-import 'package:time_manager_client/widgets/add_task_widget.dart';
+import 'package:time_manager_client/widgets/pages/add_task_widget.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

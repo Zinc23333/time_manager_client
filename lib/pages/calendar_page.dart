@@ -5,7 +5,7 @@ import 'package:time_manager_client/data/controller/data_controller.dart';
 import 'package:time_manager_client/data/repository/logger.dart';
 import 'package:time_manager_client/data/types/task.dart';
 import 'package:time_manager_client/helper/extension.dart';
-import 'package:time_manager_client/widgets/view_task_widget.dart';
+import 'package:time_manager_client/widgets/pages/view_task_widget.dart';
 
 class CalendarPage extends StatefulWidget {
   const CalendarPage({super.key});

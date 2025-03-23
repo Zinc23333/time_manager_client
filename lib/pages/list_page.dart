@@ -7,7 +7,7 @@ import 'package:time_manager_client/data/repository/logger.dart';
 import 'package:time_manager_client/helper/helper.dart';
 import 'package:time_manager_client/widgets/task_overall_summary_card.dart';
 import 'package:time_manager_client/widgets/task_statistics_summary_card.dart';
-import 'package:time_manager_client/widgets/view_task_widget.dart';
+import 'package:time_manager_client/widgets/pages/view_task_widget.dart';
 
 class ListPage extends StatefulWidget {
   const ListPage({super.key});

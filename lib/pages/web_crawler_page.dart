@@ -4,8 +4,8 @@ import 'package:time_manager_client/data/repository/logger.dart';
 import 'package:time_manager_client/data/repository/remote_db.dart';
 
 import 'package:time_manager_client/pages/web_crawler_add_page.dart';
-import 'package:time_manager_client/widgets/waiting_dialog.dart';
-import 'package:time_manager_client/widgets/web_crawler_tasks_bottom_sheet.dart';
+import 'package:time_manager_client/widgets/pages/waiting_dialog.dart';
+import 'package:time_manager_client/widgets/pages/web_crawler_tasks_bottom_sheet.dart';
 
 class WebCrawlerPage extends StatelessWidget {
   const WebCrawlerPage({super.key});
@@ -43,28 +43,10 @@ class WebCrawlerPage extends StatelessWidget {
                           if (wt == null || wt.isEmpty) return;
                           logger.d(wt);
                           WebCrawlerTasksBottomSheet(web, wt).show(context);
-
-                          // MultiTaskSelectorBottomSheet(
-                          //   tasks: ts,
-                          //   title: web.name,
-                          //   subTitle: web.summary,
-                          //   info: "更新时间: ${web.lastCrawl.formatWithPrecision(5)}",
-                          // ).show(context).then((t) {
-                          //   if (t == null) return;
-                          //   Get.to(() => EditTaskPage(old: t));
-                          // });
                         });
                       }, onError: (t) {
                         logger.e(t);
                       });
-                      // final ts = await ;
-                      // // if (mounted)
-                      // WidgetsBinding.instance.addPostFrameCallback((d) {
-                      //   MultiTaskSelectorBottomSheet(tasks: ts).show(context).then((t) {
-                      //     if (t == null) return;
-                      //     Get.to(() => EditTaskPage(old: t));
-                      //   });
-                      // });
                     },
                   );
                 },

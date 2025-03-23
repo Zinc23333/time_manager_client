@@ -8,7 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:time_manager_client/data/controller/data_controller.dart';
 import 'package:time_manager_client/helper/helper.dart';
 import 'package:time_manager_client/pages/edit_task_page.dart';
-import 'package:time_manager_client/widgets/multi_task_selector_bottom_sheet.dart';
+import 'package:time_manager_client/widgets/pages/multi_task_selector_bottom_sheet.dart';
 
 class AddTaskFromTextWidget extends StatefulWidget {
   const AddTaskFromTextWidget({super.key, this.futureText});

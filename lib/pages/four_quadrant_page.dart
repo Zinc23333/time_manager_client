@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:time_manager_client/data/controller/data_controller.dart';
 import 'package:time_manager_client/data/types/task.dart';
-import 'package:time_manager_client/widgets/view_task_widget.dart';
+import 'package:time_manager_client/widgets/pages/view_task_widget.dart';
 
 class FourQuadrantPage extends StatefulWidget {
   const FourQuadrantPage({super.key});

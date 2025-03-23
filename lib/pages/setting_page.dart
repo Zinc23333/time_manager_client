@@ -2,7 +2,7 @@ import 'package:time_manager_client/data/repository/box.dart';
 import 'package:time_manager_client/data/repository/logger.dart';
 import 'package:time_manager_client/pages/raw_text_page.dart';
 import 'package:time_manager_client/pages/user_prompt_page.dart';
-import 'package:time_manager_client/widgets/confirm_dialog.dart';
+import 'package:time_manager_client/widgets/pages/confirm_dialog.dart';
 import 'package:universal_io/io.dart';
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/material.dart';
@@ -14,10 +14,10 @@ import 'package:time_manager_client/data/controller/data_controller.dart';
 import 'package:time_manager_client/data/repository/local_storage.dart';
 import 'package:time_manager_client/data/types/user.dart';
 import 'package:time_manager_client/helper/helper.dart';
-import 'package:time_manager_client/widgets/login_bottom_sheet.dart';
-import 'package:time_manager_client/widgets/qr_login_request_dialog.dart';
-import 'package:time_manager_client/widgets/simple_text_bottom_sheet.dart';
-import 'package:time_manager_client/widgets/user_profile_dialog.dart';
+import 'package:time_manager_client/widgets/pages/login_bottom_sheet.dart';
+import 'package:time_manager_client/widgets/pages/qr_login_request_dialog.dart';
+import 'package:time_manager_client/widgets/pages/simple_text_bottom_sheet.dart';
+import 'package:time_manager_client/widgets/pages/user_profile_dialog.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});

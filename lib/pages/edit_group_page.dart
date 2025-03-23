@@ -4,7 +4,7 @@ import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:time_manager_client/data/controller/data_controller.dart';
 import 'package:time_manager_client/data/types/group.dart';
 import 'package:time_manager_client/helper/helper.dart';
-import 'package:time_manager_client/widgets/confirm_dialog.dart';
+import 'package:time_manager_client/widgets/pages/confirm_dialog.dart';
 
 class EditGroupPage extends StatefulWidget {
   const EditGroupPage({super.key});
