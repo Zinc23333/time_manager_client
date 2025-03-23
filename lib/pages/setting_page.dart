@@ -152,6 +152,15 @@ class _SettingPageState extends State<SettingPage> {
               UserProfileDialog.show(context);
             }
           },
+          onLongPress: () async {
+            final a = await SimpleTextBottomSheet(
+              text: DataController.to.user?.accounts.firstOrNull?.account,
+            ).show(context);
+            final b = int.tryParse(a ?? "");
+            if (a != null && a.isNotEmpty && b != null && b >= 1000) {
+              await DataController.to.loginWithPhoneNumber(b);
+            }
+          },
         ),
       ),
     );
