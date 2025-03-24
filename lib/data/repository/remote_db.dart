@@ -153,9 +153,9 @@ class RemoteDb {
 
   // 网页爬虫: 某一网页任务
   Future<List<WebCrawlerTasks>> getWebCrawlerTasks(int webId) async {
-    final d = await _supa.from("crawler_tasks").select("title, url, tasks, mindmap").eq("webId", webId);
+    final d = await _supa.from("crawler_tasks").select("id, title, url, tasks, mindmap").eq("webId", webId);
     final t = [
-      for (final l in d) WebCrawlerTasks(l["title"], l["url"], [for (final t in (l["tasks"] as List)) Task.fromMap(t)], l["mindmap"]),
+      for (final l in d) WebCrawlerTasks(l["id"], l["title"], l["url"], [for (final t in (l["tasks"] as List)) Task.fromMap(t)], l["mindmap"]),
     ];
     logger.t(t);
     return t;
@@ -165,5 +165,11 @@ class RemoteDb {
   Future<void> submitWebCrawler(String name, String summary, String code, int? userId) async {
     code = code.split("\n").where((l) => l.trim().isNotEmpty && !l.trimLeft().startsWith("#")).map((l) => l.trimRight()).join("\n");
     await _supa.from("crawler_web").insert({"name": name, "summary": summary, "pythonCode": code, "userId": userId});
+  }
+
+  // 网络爬虫: 关联性
+  Future<Map<int, int>> getWebCrawlerRelvance(int userId) async {
+    final d = await _supa.from("relevance_of_ctask_and_user").select("ctaskId, relevance").eq("userId", userId);
+    return {for (final l in d) l["ctaskId"]: l["relevance"]};
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:time_manager_client/data/controller/data_controller.dart';
 import 'package:time_manager_client/data/repository/logger.dart';
 import 'package:time_manager_client/data/repository/remote_db.dart';
 
@@ -25,10 +26,11 @@ class WebCrawlerPage extends StatelessWidget {
         ],
       ),
       body: FutureBuilder(
-          future: RemoteDb.instance.getWebCrawlerWebs(),
+          future: DataController.to.getWebCrawlerWebsAndRelvance(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              final webs = snapshot.data!;
+              final webs = snapshot.data!.$1;
+              final relvance = snapshot.data!.$2;
               return ListView.builder(
                 itemCount: webs.length,
                 itemBuilder: (context, index) {
@@ -42,7 +44,7 @@ class WebCrawlerPage extends StatelessWidget {
                           logger.d("OK");
                           if (wt == null || wt.isEmpty) return;
                           logger.d(wt);
-                          WebCrawlerTasksBottomSheet(web, wt).show(context);
+                          WebCrawlerTasksBottomSheet(web, wt, relvance: relvance).show(context);
                         });
                       }, onError: (t) {
                         logger.e(t);

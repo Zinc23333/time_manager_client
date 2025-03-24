@@ -20,6 +20,7 @@ import 'package:time_manager_client/data/types/ts_data.dart';
 import 'package:time_manager_client/data/types/type.dart';
 import 'package:time_manager_client/data/types/user_account.dart';
 import 'package:time_manager_client/data/types/user.dart';
+import 'package:time_manager_client/data/types/web_crawler_web.dart';
 import 'package:time_manager_client/helper/coordinate_helper.dart';
 import 'package:time_manager_client/helper/extension.dart';
 import 'package:time_manager_client/helper/helper.dart';
@@ -581,6 +582,11 @@ class DataController extends GetxController {
 
   // 网页爬虫
   Future<void> submitWebCrawler(String name, String summary, String code) => RemoteDb.instance.submitWebCrawler(name, summary, code, user?.id);
+  Future<(List<WebCrawlerWeb>, Map<int, int>)> getWebCrawlerWebsAndRelvance() async {
+    final lw = await RemoteDb.instance.getWebCrawlerWebs();
+    final mr = user == null ? <int, int>{} : await RemoteDb.instance.getWebCrawlerRelvance(user!.id);
+    return (lw, mr);
+  }
 }
 
 enum _DataChangeType {
