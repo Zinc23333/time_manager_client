@@ -39,7 +39,7 @@ jobs:
           dart run build_runner build -d 1 -r
           dart run flutter_launcher_icons
 
-      - run: flutter_distributor package --platform linux --targets deb,rpm,appimage,zip
+      - run: flutter_distributor package --platform linux --targets deb,rpm,appimage,zip --build-dart-define no-tree-shake-icons=true
       - run: flutter build web --no-tree-shake-icons --release
 
       - run: ls -la dist/*/
@@ -119,7 +119,7 @@ jobs:
           dart run build_runner build -d 1 -r
           dart run flutter_launcher_icons
                     
-      - run: flutter_distributor package --platform windows --targets exe,msix
+      - run: flutter_distributor package --platform windows --targets exe,msix --build-dart-define no-tree-shake-icons=true
 
       - run: ls dist/*/
 
@@ -150,7 +150,7 @@ jobs:
           dart run build_runner build -d 1 -r
           dart run flutter_launcher_icons
                     
-      - run: flutter_distributor package --platform macos --targets dmg,pkg
+      - run: flutter_distributor package --platform macos --targets dmg,pkg --build-dart-define no-tree-shake-icons=true
       # - run: flutter build ipa --release --export-method ad-hoc
       - run: ls -la dist/*/
 
