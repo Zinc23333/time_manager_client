@@ -41,7 +41,7 @@ class NetworkAi {
 
     r = r.replaceAll("```json", "").replaceAll("```", "").trim();
 
-    final tl = Task.fromJsonString(r);
+    final tl = Task.fromAiJsonString(r);
     for (final element in tl) {
       element.content = text;
     }

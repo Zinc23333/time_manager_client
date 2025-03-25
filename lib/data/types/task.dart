@@ -104,17 +104,15 @@ class Task extends TsData {
     this.source = "自动识别",
   ])  : title = map["title"],
         summary = map["summary"],
-        startTime = map["startTime"] == null ? null : DateTime.fromMillisecondsSinceEpoch(map["startTime"] * 1000),
+        startTime = map["startTime"] == null ? null : DateTime.tryParse(map["startTime"]),
         startTimePrecision = map["startTimePrecision"],
-        endTime = map["endTime"] == null ? null : DateTime.fromMillisecondsSinceEpoch(map["endTime"] * 1000),
+        endTime = map["endTime"] == null ? null : DateTime.tryParse(map["endTime"]),
         endTimePrecision = map["endTimePrecision"],
         importance = map["importance"],
         location = map["location"],
         participant = map["participant"],
         note = map["note"],
-        noticeTimes = <DateTime>[
-          for (final e in map["noticeTimes"] ?? []) DateTime.fromMillisecondsSinceEpoch(e * 1000),
-        ],
+        noticeTimes = map["noticeTimes"]?.whereType<String>().map((e) => DateTime.tryParse(e)).whereType<DateTime>().toList(),
         tags = map["tags"]?.cast<String>() ?? <String>[] {
     init();
   }
@@ -145,7 +143,7 @@ class Task extends TsData {
     return Task.fromMap(map);
   }
 
-  static List<Task> fromJsonString(String text) {
+  static List<Task> fromAiJsonString(String text) {
     final List<Task> res = [];
     final jl = jsonDecode(text);
     if (jl is List) {
