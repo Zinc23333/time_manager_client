@@ -9,6 +9,7 @@ import 'package:time_manager_client/data/controller/data_controller.dart';
 import 'package:time_manager_client/helper/helper.dart';
 import 'package:time_manager_client/pages/edit_task_page.dart';
 import 'package:time_manager_client/widgets/pages/multi_task_selector_bottom_sheet.dart';
+import 'package:time_manager_client/widgets/pages/recognize_task_confirm_dialog.dart';
 
 class AddTaskFromTextWidget extends StatefulWidget {
   const AddTaskFromTextWidget({super.key, this.futureText});
@@ -74,23 +75,23 @@ class _AddTaskFromTextWidgetState extends State<AddTaskFromTextWidget> {
               Row(
                 children: [
                   IconButton(
-                    onPressed: bFromGallery,
+                    onPressed: enableBFunc(bFromGallery),
                     icon: Icon(Icons.photo_outlined),
                   ),
                   IconButton(
-                    onPressed: bFromCamera,
+                    onPressed: enableBFunc(bFromCamera),
                     icon: Icon(Icons.camera_alt_outlined),
                   ),
                   IconButton(
-                    onPressed: bFromClipboard,
+                    onPressed: enableBFunc(bFromClipboard),
                     icon: Icon(Icons.copy_outlined),
                   ),
                   IconButton(
-                    onPressed: bFromFile,
+                    onPressed: enableBFunc(bFromFile),
                     icon: Icon(Icons.upload_file_outlined),
                   ),
                   IconButton(
-                    onPressed: () => controller.clear(),
+                    onPressed: enableBFunc(() => controller.clear()),
                     icon: Icon(Icons.clear_all_rounded),
                   ),
                   Expanded(child: SizedBox()),
@@ -105,6 +106,7 @@ class _AddTaskFromTextWidgetState extends State<AddTaskFromTextWidget> {
         });
   }
 
+  void Function()? enableBFunc(void Function() func) => enable ? func : null;
   void bFromCamera() => fromImage(ImageSource.camera);
   void bFromGallery() => fromImage(ImageSource.gallery);
   void bFromClipboard() async {
@@ -146,9 +148,10 @@ class _AddTaskFromTextWidgetState extends State<AddTaskFromTextWidget> {
 
     final t = await DataController.to.getTaskFromText(controller.text);
     startSendTime = null;
-    setState(() {});
+    if (mounted) setState(() {});
 
-    if (t.length == 1) Get.to(() => EditTaskPage(old: t.first));
+    // if (t.length == 1) Get.to(() => EditTaskPage(old: t.first));
+    if (t.length == 1 && mounted) RecognizeTaskConfirmDialog(t.first).show(context);
 
     if (t.length > 1 && mounted) {
       MultiTaskSelectorBottomSheet(

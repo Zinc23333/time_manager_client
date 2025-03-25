@@ -202,6 +202,12 @@ class Task extends TsData {
 
   String get startTimeWithPrecision => startTime?.formatWithPrecision(startTimePrecision ?? 5) ?? "";
   String get endTimeWithPrecision => endTime?.formatWithPrecision(endTimePrecision ?? 5) ?? "";
+  String get timeString {
+    String r = "";
+    if (startTime != null) r += startTimeWithPrecision;
+    if (endTime != null) r += " ~ $endTimeWithPrecision";
+    return r;
+  }
 
   @override
   bool get isDeleted => title.isEmpty;
