@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:add_2_calendar/add_2_calendar.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:location/location.dart';
@@ -11,6 +12,7 @@ import 'package:time_manager_client/helper/coordinate_helper.dart';
 import 'package:time_manager_client/helper/extension.dart';
 import 'package:time_manager_client/data/proto.gen/task.pb.dart' as p;
 import 'package:time_manager_client/helper/helper.dart';
+import 'package:universal_io/io.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Task extends TsData {
@@ -259,6 +261,9 @@ class Task extends TsData {
   // 地点点击事件
   final _deviceLocation = Location();
   void onLocationClick() async {
+    if (!(Platform.isAndroid || Platform.isIOS || Platform.isMacOS || kIsWeb)) {
+      return;
+    }
     if ((await _deviceLocation.hasPermission()) == PermissionStatus.denied) {
       await _deviceLocation.requestPermission();
     }

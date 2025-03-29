@@ -44,6 +44,7 @@ class _ListPageState extends State<ListPage> {
               ),
               Expanded(
                 child: ListView.separated(
+                  reverse: true,
                   itemBuilder: (context, index) {
                     final task = tasks[index];
 

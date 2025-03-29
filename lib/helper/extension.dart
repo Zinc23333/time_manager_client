@@ -11,6 +11,10 @@ extension DateTimeEx on DateTime {
   bool isSameDay(DateTime other) {
     return year == other.year && month == other.month && day == other.day;
   }
+
+  bool isDayAfter(DateTime other) {
+    return year > other.year || (year == other.year && month > other.month) || (year == other.year && month == other.month && day > other.day);
+  }
 }
 
 extension IntEx on int {

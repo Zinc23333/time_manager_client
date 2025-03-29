@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:time_manager_client/data/controller/data_controller.dart';
 import 'package:time_manager_client/data/types/task.dart';
+import 'package:time_manager_client/helper/extension.dart';
 import 'package:time_manager_client/widgets/pages/view_task_widget.dart';
 
 class FourQuadrantPage extends StatefulWidget {
@@ -23,7 +24,7 @@ class _FourQuadrantPageState extends State<FourQuadrantPage> {
   Widget build(BuildContext context) {
     return GetBuilder<DataController>(
       builder: (s) {
-        final tasks = DataController.to.currentGroupTasks;
+        final tasks = s.currentGroupTasks;
         final fqts = _getTaskFourQuadrant(tasks);
         return Column(children: [
           Expanded(
@@ -114,6 +115,9 @@ class _FourQuadrantPageState extends State<FourQuadrantPage> {
       (t.startTime != null ? t.startTime!.difference(DateTime.now()).inDays <= 7 : false);
 
   List<List<Task>> _getTaskFourQuadrant(Iterable<Task> tasks) {
+    final now = DateTime.now();
+    tasks = tasks.where((e) =>
+        !(e.status == TaskStatus.finished && ((e.endTime != null && now.isDayAfter(e.endTime!)) || (e.startTime != null && now.isDayAfter(e.startTime!)))));
     List<List<Task>> ims = [[], []]; // 不重要，重要
     List<List<Task>> ius = [[], [], [], []]; // 不重要&紧急，重要&紧急，不重要&不紧急，重要&不紧急
 
