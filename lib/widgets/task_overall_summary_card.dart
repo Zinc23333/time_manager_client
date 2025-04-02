@@ -83,7 +83,7 @@ class _TaskOverallSummaryCardState extends State<TaskOverallSummaryCard> {
             if (loading)
               buildLoading()
             else
-              Text.rich(TextSpan(
+              SelectableText.rich(TextSpan(
                 text: "　　",
                 children: ts,
                 style: Theme.of(context).textTheme.titleMedium,

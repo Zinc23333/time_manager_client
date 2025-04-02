@@ -2,6 +2,7 @@ import 'package:time_manager_client/data/repository/box.dart';
 import 'package:time_manager_client/data/repository/logger.dart';
 import 'package:time_manager_client/pages/raw_text_page.dart';
 import 'package:time_manager_client/pages/user_prompt_page.dart';
+import 'package:time_manager_client/widgets/pages/aide_dialog.dart';
 import 'package:time_manager_client/widgets/pages/confirm_dialog.dart';
 import 'package:universal_io/io.dart';
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
@@ -90,6 +91,7 @@ class _SettingPageState extends State<SettingPage> {
         onTap: () {
           Get.to(() => UserPromptPage());
         },
+        onLongPress: () => showDialog(context: context, builder: (context) => AideDialog()),
       );
 
   ListTile buildTileOpenSource() {
