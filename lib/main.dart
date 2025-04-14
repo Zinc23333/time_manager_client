@@ -23,7 +23,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     _themeMode = Box.setting.read<bool>("darkmode");
-    _colorSeed = Helper.fromHexString(Box.setting.read<String>("colorseed") ?? "");
+    _colorSeed =
+        Helper.fromHexString(Box.setting.read<String>("colorseed") ?? "");
 
     return GetMaterialApp(
       onInit: () {
@@ -32,14 +33,19 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: '时间助手',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: _colorSeed ?? Colors.deepPurple),
+        colorScheme:
+            ColorScheme.fromSeed(seedColor: _colorSeed ?? Colors.deepPurple),
         useMaterial3: true,
       ),
       darkTheme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: _colorSeed ?? Colors.deepPurple, brightness: Brightness.dark),
+        colorScheme: ColorScheme.fromSeed(
+            seedColor: _colorSeed ?? Colors.deepPurple,
+            brightness: Brightness.dark),
         useMaterial3: true,
       ),
-      themeMode: _themeMode == null ? ThemeMode.system : (_themeMode! ? ThemeMode.dark : ThemeMode.light),
+      themeMode: _themeMode == null
+          ? ThemeMode.system
+          : (_themeMode! ? ThemeMode.dark : ThemeMode.light),
       locale: Locale("zh", "CN"),
       supportedLocales: [
         Locale("zh", "CN"),
@@ -50,9 +56,6 @@ class MyApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
       ],
       home: const HomePage(),
-      // actions: [
-
-      // ],
     );
   }
 }
